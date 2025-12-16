@@ -42,5 +42,8 @@ int main() {
                   << asterism->ngs3.y() << "}" << std::endl;
     }
 
+    //Asterism a = Asterism {41.0575,-208.222,-130.117,252.363,-22.8068,-151.347};
+    //draw(a, board_1, board_2, board_3);
+
     return 0;
 }
