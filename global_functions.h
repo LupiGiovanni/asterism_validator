@@ -38,10 +38,4 @@ inline void draw (const Asterism& asterism, const Board& board_1, const Board& b
     CGAL::draw(polys);
 }
 
-inline void reset_boards (Board& board_1, Board& board_2, Board& board_3) {
-    board_1.reset_to_starting_position();
-    board_2.reset_to_starting_position();
-    board_3.reset_to_starting_position();
-}
-
 #endif //ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H

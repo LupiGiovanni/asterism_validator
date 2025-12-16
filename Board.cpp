@@ -152,8 +152,3 @@ bool Board::move (double delta_x, double delta_y) {
 bool Board::move_to_ngs (const Point& ngs) {
     return move(ngs.x() - pom_centre.x(), ngs.y() - pom_centre.y());
 }
-
-void Board::reset_to_starting_position() {
-    move(starting_pom_centre.x() - pom_centre.x(), starting_pom_centre.y() - pom_centre.y());
-}
-

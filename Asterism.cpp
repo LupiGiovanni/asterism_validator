@@ -13,15 +13,11 @@ Asterism::Asterism(double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, d
 
 bool Asterism::is_valid (Board &board_1, Board &board_2, Board &board_3) const {
 
-    reset_boards(board_1, board_2, board_3);
-
     if (board_1.move_to_ngs(ngs1)
         && board_2.move_to_ngs(ngs2)
         && board_3.move_to_ngs(ngs3)
         && !detect_collision(board_1, board_2, board_3))
         return true;
-
-    reset_boards(board_1, board_2, board_3);
 
     if (board_1.move_to_ngs(ngs1)
         && board_2.move_to_ngs(ngs3)
@@ -29,15 +25,11 @@ bool Asterism::is_valid (Board &board_1, Board &board_2, Board &board_3) const {
         && !detect_collision(board_1, board_2, board_3))
         return true;
 
-    reset_boards(board_1, board_2, board_3);
-
     if (board_1.move_to_ngs(ngs2)
         && board_2.move_to_ngs(ngs1)
         && board_3.move_to_ngs(ngs3)
         && !detect_collision(board_1, board_2, board_3))
         return true;
-
-    reset_boards(board_1, board_2, board_3);
 
     if (board_1.move_to_ngs(ngs2)
         && board_2.move_to_ngs(ngs3)
@@ -45,15 +37,11 @@ bool Asterism::is_valid (Board &board_1, Board &board_2, Board &board_3) const {
         && !detect_collision(board_1, board_2, board_3))
         return true;
 
-    reset_boards(board_1, board_2, board_3);
-
     if (board_1.move_to_ngs(ngs3)
         && board_2.move_to_ngs(ngs1)
         && board_3.move_to_ngs(ngs2)
         && !detect_collision(board_1, board_2, board_3))
         return true;
-
-    reset_boards(board_1, board_2, board_3);
 
     if (board_1.move_to_ngs(ngs3)
         && board_2.move_to_ngs(ngs2)

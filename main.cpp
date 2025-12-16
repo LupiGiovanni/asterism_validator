@@ -12,18 +12,19 @@ int main() {
     int count_total = 0;
     int count_valid = 0;
     int count_not_valid = 0;
-    std::vector<Asterism> asterisms_not_valid {};
-    std::vector<Asterism> asterisms_valid;
+
+    std::vector<Asterism> not_valid;
 
     for (auto asterism = dataset.begin(); asterism != dataset.end(); ++asterism) {
         count_total++;
         if (asterism->is_valid(board_1, board_2, board_3)) {
             count_valid++;
-            asterisms_valid.push_back(*asterism);
+            //draw(*asterism, board_1, board_2, board_3);
         }
         else {
             count_not_valid++;
-            asterisms_not_valid.push_back(*asterism);
+            //draw(*asterism, board_1, board_2, board_3);
+            not_valid.push_back(*asterism);
         }
     }
 
@@ -32,11 +33,14 @@ int main() {
     std::cout << "Valid NGSs: " << count_valid << std::endl;
     std::cout << "Not valid NGSs: " << count_not_valid << std::endl;
 
-    for (auto asterism = asterisms_not_valid.begin(); asterism != asterisms_not_valid.end(); ++asterism) {
-        draw(*asterism, board_1, board_2, board_3);
+   for (auto asterism = not_valid.begin(); asterism != not_valid.end(); ++asterism) {
+        std::cout << "{" << asterism->ngs1.x() << ","
+                  << asterism->ngs2.x() << ","
+                  << asterism->ngs3.x() << ","
+                  << asterism->ngs1.y() << ","
+                  << asterism->ngs2.y() << ","
+                  << asterism->ngs3.y() << "}," << std::endl;
     }
 
-    for (auto asterism = asterisms_valid.begin(); asterism != asterisms_valid.end(); ++asterism) {
-        draw(*asterism, board_1, board_2, board_3);
-    }
+    return 0;
 }

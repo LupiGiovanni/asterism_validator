@@ -28,7 +28,6 @@ struct Board {
     bool is_in_range (const Point& point) const;
     bool move (double delta_x, double delta_y);
     bool move_to_ngs (const Point& ngs);
-    void reset_to_starting_position();
 };
 
 
