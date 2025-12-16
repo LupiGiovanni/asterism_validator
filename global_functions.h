@@ -8,7 +8,7 @@
 #include"Board.h"
 #include"Asterism.h"
 
-bool detect_collision (const Board& board_1, const Board& board_2, const Board& board_3) {
+inline bool detect_collision (const Board& board_1, const Board& board_2, const Board& board_3) {
     bool detected = true;
 
     if (!CGAL::do_intersect(board_1.profile, board_2.profile)
@@ -20,7 +20,7 @@ bool detect_collision (const Board& board_1, const Board& board_2, const Board& 
     return detected;
 }
 
-void draw (const Asterism& asterism, const Board& board_1, const Board& board_2, const Board& board_3) {
+inline void draw (const Asterism& asterism, const Board& board_1, const Board& board_2, const Board& board_3) {
     Polygon ngs_triangle;
     ngs_triangle.push_back(asterism.ngs1);
     ngs_triangle.push_back(asterism.ngs2);
@@ -36,6 +36,12 @@ void draw (const Asterism& asterism, const Board& board_1, const Board& board_2,
     polys.insert(board_3.pom_range);
 
     CGAL::draw(polys);
+}
+
+inline void reset_boards (Board& board_1, Board& board_2, Board& board_3) {
+    board_1.reset_to_starting_position();
+    board_2.reset_to_starting_position();
+    board_3.reset_to_starting_position();
 }
 
 #endif //ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H
