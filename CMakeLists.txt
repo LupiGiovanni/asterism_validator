@@ -6,8 +6,11 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(CGAL REQUIRED OPTIONAL_COMPONENTS Qt6)
 
-add_executable(asterism_validator
+add_executable (asterism_validator
                 main.cpp
-                Board.cpp Board.h)
+                Board.cpp Board.h
+                Asterism.cpp Asterism.h
+                global_functions.h
+                dataset.h)
 
 target_link_libraries(asterism_validator CGAL::CGAL_Basic_viewer)

@@ -1,0 +1,8 @@
+//
+// Created by gionimbus on 12/16/25.
+//
+
+#ifndef ASTERISM_VALIDATOR_DATASET_H
+#define ASTERISM_VALIDATOR_DATASET_H
+
+#endif //ASTERISM_VALIDATOR_DATASET_H
