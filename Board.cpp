@@ -4,8 +4,6 @@
 
 #include "Board.h"
 
-
-
 Board::Board (const Board_type type) {
     if (type == Board_type::type_1) {
         Point A1(-304.000000, 465.000000);
@@ -128,3 +126,34 @@ Board::Board (const Board_type type) {
         pom_range.push_back(Q3);
     }
 }
+
+bool Board::is_in_range (const Point& point) const {
+    if (pom_range.bounded_side(point) == CGAL::ON_BOUNDED_SIDE
+        || pom_range.bounded_side(point) == CGAL::ON_BOUNDARY)
+        return true;
+    return false;
+}
+
+bool Board::move (double delta_x, double delta_y) {
+    Vector displacement (delta_x, delta_y);
+    Point destination = pom_centre + displacement;
+
+    if (!is_in_range(destination))
+        return false;
+
+    for (auto it = profile.begin(); it != profile.end(); ++it)
+        *it = *it + displacement;
+
+    pom_centre = destination;
+
+    return true;
+}
+
+bool Board::move_to_ngs (const Point& ngs) {
+    return move(ngs.x() - pom_centre.x(), ngs.y() - pom_centre.y());
+}
+
+void Board::reset_to_starting_position() {
+    move(starting_pom_centre.x() - pom_centre.x(), starting_pom_centre.y() - pom_centre.y());
+}
+
