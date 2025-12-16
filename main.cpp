@@ -39,7 +39,7 @@ int main() {
                   << asterism->ngs3.x() << ","
                   << asterism->ngs1.y() << ","
                   << asterism->ngs2.y() << ","
-                  << asterism->ngs3.y() << "}," << std::endl;
+                  << asterism->ngs3.y() << "}" << std::endl;
     }
 
     return 0;
