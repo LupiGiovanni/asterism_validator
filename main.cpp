@@ -19,19 +19,17 @@ int main() {
         count_total++;
         if (asterism->is_valid(board_1, board_2, board_3)) {
             count_valid++;
-            //draw(*asterism, board_1, board_2, board_3);
         }
         else {
             count_not_valid++;
-            //draw(*asterism, board_1, board_2, board_3);
             not_valid.push_back(*asterism);
         }
     }
 
     std::cout << "---------------------------------" << std::endl;
-    std::cout << "Total NGSs: " << count_total << std::endl;
-    std::cout << "Valid NGSs: " << count_valid << std::endl;
-    std::cout << "Not valid NGSs: " << count_not_valid << std::endl << std::endl;
+    std::cout << "Total asterisms: " << count_total << std::endl;
+    std::cout << "Valid asterisms: " << count_valid << std::endl;
+    std::cout << "Not valid asterisms: " << count_not_valid << std::endl << std::endl;
 
    for (auto asterism = not_valid.begin(); asterism != not_valid.end(); ++asterism) {
         std::cout << "{"
@@ -44,6 +42,8 @@ int main() {
                   << "}"
                   << std::endl;
     }
+
+    std::cout << "---------------------------------" << std::endl;
 
     Asterism a = Asterism {223.753,-221.749,120.923,-51.515,-102.595,-182.088};
     a.is_valid(board_1, board_2, board_3);

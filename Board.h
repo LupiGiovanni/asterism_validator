@@ -5,7 +5,7 @@
 #ifndef ASTERISM_VALIDATOR_BOARD_H
 #define ASTERISM_VALIDATOR_BOARD_H
 
-#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/Simple_cartesian.h>
 #include <CGAL/Boolean_set_operations_2.h>
 #include <CGAL/draw_polygon_set_2.h>
 
