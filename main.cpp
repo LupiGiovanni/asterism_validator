@@ -45,7 +45,7 @@ int main() {
                   << std::endl;
     }
 
-    Asterism a = Asterism {41.0575,-208.222,-130.117,252.363,-22.8068,-151.347};
+    Asterism a = Asterism {223.753,-221.749,120.923,-51.515,-102.595,-182.088};
     a.is_valid(board_1, board_2, board_3);
     draw(a, board_1, board_2, board_3);
 
