@@ -19,4 +19,5 @@ To draw a graphical result, use the high-level function
 draw (const Asterism& asterism, Board& board_1, Board& board_2, Board& board_3)
 ~~~
 
-Note that the ```draw``` function can cause problems if used in very long for loops.
+Note that the ```draw``` function can cause problems if used in very long for loops.<br>
+Use ```w``` key to disable area coloring of the drawn polygons.
