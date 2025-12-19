@@ -3,6 +3,7 @@
 //
 
 #include "Board.h"
+#include "global_functions.h"
 
 Board::Board (const Board_type type) {
     if (type == Board_type::type_1) {
@@ -44,6 +45,11 @@ Board::Board (const Board_type type) {
         pom_range.push_back(O1);
         pom_range.push_back(P1);
         pom_range.push_back(Q1);
+
+        rotate(profile, M_PI / 2.);
+        rotate(pom_centre, M_PI / 2.);
+        rotate(starting_pom_centre, M_PI / 2.);
+        rotate(pom_range, M_PI / 2.);
     }
     else if (type == Board_type::type_2) {
         Point A2(-250.701813, -495.771723);
@@ -84,6 +90,11 @@ Board::Board (const Board_type type) {
         pom_range.push_back(O2);
         pom_range.push_back(P2);
         pom_range.push_back(Q2);
+
+        rotate(profile, M_PI / 2.);
+        rotate(pom_centre, M_PI / 2.);
+        rotate(starting_pom_centre, M_PI / 2.);
+        rotate(pom_range, M_PI / 2.);
     }
     else if (type == Board_type::type_3) {
         Point A3(554.701813, 30.771723);
@@ -124,6 +135,11 @@ Board::Board (const Board_type type) {
         pom_range.push_back(O3);
         pom_range.push_back(P3);
         pom_range.push_back(Q3);
+
+        rotate(profile, M_PI / 2.);
+        rotate(pom_centre, M_PI / 2.);
+        rotate(starting_pom_centre, M_PI / 2.);
+        rotate(pom_range, M_PI / 2.);
     }
 }
 

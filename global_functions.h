@@ -8,6 +8,9 @@
 #include"Board.h"
 #include"Asterism.h"
 
+#include <CGAL/Aff_transformation_2.h>
+typedef CGAL::Aff_transformation_2<Kernel> Tranformation;
+
 inline bool detect_collision (const Board& board_1, const Board& board_2, const Board& board_3) {
     bool detected = true;
 
@@ -36,6 +39,17 @@ inline void draw (const Asterism& asterism, const Board& board_1, const Board& b
     polys.insert(board_3.pom_range);
 
     CGAL::draw(polys);
+}
+
+inline void rotate (Polygon& polygon, double angle_radians) {
+    Tranformation rotation (CGAL::ROTATION, std::sin(angle_radians), std::cos(angle_radians));
+    for (auto& vertex : polygon)
+        vertex = rotation.transform(vertex);
+}
+
+inline void rotate (Point& point, double angle_radians) {
+    Tranformation rotation (CGAL::ROTATION, std::sin(angle_radians), std::cos(angle_radians));
+    point = rotation.transform(point);
 }
 
 #endif //ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H
