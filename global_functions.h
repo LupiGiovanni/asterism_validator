@@ -5,10 +5,10 @@
 #ifndef ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H
 #define ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H
 
+#include <CGAL/Aff_transformation_2.h>
 #include"Board.h"
 #include"Asterism.h"
 
-#include <CGAL/Aff_transformation_2.h>
 typedef CGAL::Aff_transformation_2<Kernel> Tranformation;
 
 inline bool detect_collision (const Board& board_1, const Board& board_2, const Board& board_3) {
@@ -23,7 +23,9 @@ inline bool detect_collision (const Board& board_1, const Board& board_2, const 
     return detected;
 }
 
-inline void draw (const Asterism& asterism, const Board& board_1, const Board& board_2, const Board& board_3) {
+inline void draw (const Asterism& asterism, Board& board_1, Board& board_2, Board& board_3) {
+    asterism.is_valid(board_1, board_2, board_3);
+
     Polygon ngs_triangle;
     ngs_triangle.push_back(asterism.ngs1);
     ngs_triangle.push_back(asterism.ngs2);

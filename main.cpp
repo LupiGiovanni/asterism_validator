@@ -14,11 +14,13 @@ int main() {
     int count_not_valid = 0;
 
     std::vector<Asterism> not_valid;
+    std::vector<Asterism> valid;
 
     for (auto asterism = dataset.begin(); asterism != dataset.end(); ++asterism) {
         count_total++;
         if (asterism->is_valid(board_1, board_2, board_3)) {
             count_valid++;
+            valid.push_back(*asterism);
         }
         else {
             count_not_valid++;
@@ -26,10 +28,10 @@ int main() {
         }
     }
 
-    std::cout << "---------------------------------" << std::endl;
+    std::cout << "======================================" << std::endl;
     std::cout << "Total asterisms: " << count_total << std::endl;
     std::cout << "Valid asterisms: " << count_valid << std::endl;
-    std::cout << "Not valid asterisms: " << count_not_valid << std::endl << std::endl;
+    std::cout << "Not valid asterisms: " << count_not_valid << std::endl;
 
    for (auto asterism = not_valid.begin(); asterism != not_valid.end(); ++asterism) {
         std::cout << "{"
@@ -39,10 +41,11 @@ int main() {
                   << asterism->ngs1.y() << ","
                   << asterism->ngs2.y() << ","
                   << asterism->ngs3.y()
-                  << "}"
-                  << std::endl;
-    }
-    std::cout << "---------------------------------" << std::endl;
+                  << "}" << std::endl;
+   }
+    std::cout << "======================================" << std::endl;
+
+    draw(valid[0], board_1, board_2, board_3);
 
     return 0;
 }
