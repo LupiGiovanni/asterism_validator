@@ -13,6 +13,8 @@ Asterism::Asterism(double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, d
 
 bool Asterism::is_valid (Board &board_1, Board &board_2, Board &board_3) const {
 
+    //every possible combination NGS-board is tested (6 in total)
+    //if the combination is valid (no collisions detected and each NGS reachable by a board) the function returns true
     if (board_1.move_to_ngs(ngs1)
         && board_2.move_to_ngs(ngs2)
         && board_3.move_to_ngs(ngs3)

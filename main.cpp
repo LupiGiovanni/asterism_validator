@@ -5,6 +5,7 @@
 #include "Asterism.h"
 
 int main() {
+    //creates the boards
     Board board_1 (Board_type::type_1);
     Board board_2 (Board_type::type_2);
     Board board_3 (Board_type::type_3);
@@ -16,6 +17,7 @@ int main() {
     std::vector<Asterism> not_valid;
     std::vector<Asterism> valid;
 
+    //checks every asterism in the dataset
     for (auto asterism = dataset.begin(); asterism != dataset.end(); ++asterism) {
         count_total++;
         if (asterism->is_valid(board_1, board_2, board_3)) {
@@ -28,23 +30,26 @@ int main() {
         }
     }
 
+    //prints the results
     std::cout << "======================================" << std::endl;
     std::cout << "Total asterisms: " << count_total << std::endl;
     std::cout << "Valid asterisms: " << count_valid << std::endl;
     std::cout << "Not valid asterisms: " << count_not_valid << std::endl;
 
-   for (auto asterism = not_valid.begin(); asterism != not_valid.end(); ++asterism) {
-        std::cout << "{"
-                  << asterism->ngs1.x() << ","
-                  << asterism->ngs2.x() << ","
-                  << asterism->ngs3.x() << ","
-                  << asterism->ngs1.y() << ","
-                  << asterism->ngs2.y() << ","
-                  << asterism->ngs3.y()
-                  << "}" << std::endl;
-   }
+    //prints not valid asterisms
+    for (auto asterism = not_valid.begin(); asterism != not_valid.end(); ++asterism) {
+         std::cout << "{"
+            << asterism->ngs1.x() << ","
+            << asterism->ngs2.x() << ","
+            << asterism->ngs3.x() << ","
+            << asterism->ngs1.y() << ","
+            << asterism->ngs2.y() << ","
+            << asterism->ngs3.y()
+            << "}" << std::endl;
+    }
     std::cout << "======================================" << std::endl;
 
+    //example of drawing a graphical result
     draw(valid[0], board_1, board_2, board_3);
 
     return 0;
