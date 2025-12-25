@@ -9,7 +9,7 @@ sudo apt upgrade
 sudo apt install build-essential cmake g++ libboost-all-dev libcgal-dev qt6-base-dev qt6-tools-dev
 ~~~
 
-Then the program can be normally configured with ```cmake``` and built with ```make```.
+Then the program can be normally built with ```cmake``` and ```make```.
 
 ---
 
