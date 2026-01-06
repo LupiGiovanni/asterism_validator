@@ -2,50 +2,11 @@
 #include "dataset.h"
 #include "global_functions.h"
 #include "Board.h"
+#include "Board_set.h"
 #include "Asterism.h"
 
 int main() {
-    Board board_1 (Board_type::type_1);
-    Board board_2 (Board_type::type_2);
-    Board board_3 (Board_type::type_3);
-
-    int count_total = 0;
-    int count_valid = 0;
-    int count_not_valid = 0;
-
-    std::vector<Asterism> not_valid;
-    std::vector<Asterism> valid;
-
-    for (auto asterism = dataset.begin(); asterism != dataset.end(); ++asterism) {
-        count_total++;
-        if (asterism->is_valid(board_1, board_2, board_3)) {
-            count_valid++;
-            valid.push_back(*asterism);
-        }
-        else {
-            count_not_valid++;
-            not_valid.push_back(*asterism);
-        }
-    }
-
-    std::cout << "======================================" << std::endl;
-    std::cout << "Total asterisms: " << count_total << std::endl;
-    std::cout << "Valid asterisms: " << count_valid << std::endl;
-    std::cout << "Not valid asterisms: " << count_not_valid << std::endl;
-
-   for (auto asterism = not_valid.begin(); asterism != not_valid.end(); ++asterism) {
-        std::cout << "{"
-                  << asterism->ngs1.x() << ","
-                  << asterism->ngs2.x() << ","
-                  << asterism->ngs3.x() << ","
-                  << asterism->ngs1.y() << ","
-                  << asterism->ngs2.y() << ","
-                  << asterism->ngs3.y()
-                  << "}" << std::endl;
-   }
-    std::cout << "======================================" << std::endl;
-
-    draw(valid[0], board_1, board_2, board_3);
-
+    Board_set boards;
+    boards.draw(dataset[0]);
     return 0;
 }

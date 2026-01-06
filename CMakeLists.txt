@@ -12,6 +12,7 @@ add_executable (asterism_validator
                 main.cpp
                 Board.cpp Board.h
                 Asterism.cpp Asterism.h
+                Board_set.cpp Board_set.h
                 global_functions.h
                 dataset.h)
 

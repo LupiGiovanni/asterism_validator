@@ -13,7 +13,6 @@ struct Asterism {
     Point ngs3;
 
     Asterism (double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, double ngs2_y, double ngs3_y);
-    bool is_valid (Board& board_1, Board& board_2, Board& board_3) const;
 };
 
 
