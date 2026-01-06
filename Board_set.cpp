@@ -107,8 +107,6 @@ void Board_set::assign_ngs (const Asterism& asterism) {
 }
 
 bool Board_set::teleport (const Asterism& asterism) {
-    if (assignment == Board_assignment::none)
-        return false;
     if (assignment == Board_assignment::ngs_123) {
         board1.teleport(asterism.ngs1);
         board2.teleport(asterism.ngs2);
@@ -145,6 +143,7 @@ bool Board_set::teleport (const Asterism& asterism) {
         board3.teleport(asterism.ngs1);
         return true;
     }
+    return false;
 }
 
 void Board_set::draw (const Asterism& asterism) const {
