@@ -16,15 +16,17 @@ typedef CGAL::Vector_2<Kernel> Vector;
 typedef CGAL::Direction_2<Kernel> Direction;
 typedef CGAL::Polygon_set_2<Kernel> PolygonSet;
 
-enum class Board_type {type_1, type_2, type_3};
+enum class Board_type {type1, type2, type3};
 
-struct Board {
+class Board {
+public:
     Polygon profile;
+
     Point pom; // center of the pom
     Point pom_home;
     Polygon pom_range;
 
-    const double velocity = 4.; // mm/s
+    double velocity = 4.; // mm/s
 
     explicit Board (const Board_type type);
     bool is_in_range (const Point& point) const;

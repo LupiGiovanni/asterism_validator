@@ -6,7 +6,7 @@
 #include "global_functions.h"
 
 Board::Board (const Board_type type) {
-    if (type == Board_type::type_1)
+    if (type == Board_type::type1)
     {
         Point A1(-304.000000, 465.000000);
         Point B1(-304.000000, 354.085880);
@@ -52,7 +52,7 @@ Board::Board (const Board_type type) {
         rotate(pom_home, M_PI / 2.);
         rotate(pom_range, M_PI / 2.);
     }
-    else if (type == Board_type::type_2)
+    else if (type == Board_type::type2)
     {
         Point A2(-250.701813, -495.771723);
         Point B2(-154.647367, -440.314663);
@@ -98,7 +98,7 @@ Board::Board (const Board_type type) {
         rotate(pom_home, M_PI / 2.);
         rotate(pom_range, M_PI / 2.);
     }
-    else if (type == Board_type::type_3)
+    else if (type == Board_type::type3)
     {
         Point A3(554.701813, 30.771723);
         Point B3(458.647367, 86.228783);
@@ -176,11 +176,8 @@ void Board::move_step_linear (const Point& pom_destination, const double step_mm
     double length = std::sqrt(displacement.squared_length());
     Vector step_vector = (displacement / length) * step_mm;
 
-    for (auto it = profile.begin(); it != profile.end(); ++it)
-        *it = *it + step_vector;
+    teleport (pom + step_vector);
 
-    pom = pom + step_vector;
-
-    //TODO bool return type. Use move(...) ?
+    //TODO: implement control for when destination is reached
 }
 

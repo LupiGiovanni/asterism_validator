@@ -7,7 +7,8 @@
 
 #include "Board.h"
 
-struct Asterism {
+class Asterism {
+public:
     Point ngs1;
     Point ngs2;
     Point ngs3;

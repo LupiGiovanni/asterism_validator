@@ -7,6 +7,7 @@
 
 int main() {
     Board_set boards;
+    boards.teleport(dataset[0]);
     boards.draw(dataset[0]);
     return 0;
 }

@@ -4,7 +4,7 @@
 
 #include "Board_set.h"
 
-Board_set::Board_set(): board1(Board_type::type_1), board2(Board_type::type_2), board3(Board_type::type_3), assignment(Board_assignment::none) {
+Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2), board3(Board_type::type3), assignment(Board_assignment::none) {
     Point R(-87.847500, -87.847500);
     Point S(87.847500, -87.847500);
     Point T(87.847500, 87.847500);
@@ -60,89 +60,69 @@ void Board_set::assign_ngs (const Asterism& asterism) {
 
     if (board1.teleport(asterism.ngs1) && board2.teleport(asterism.ngs2) && board3.teleport(asterism.ngs3) && !detect_collision()) {
         assignment = Board_assignment::ngs_123;
-        board1.teleport(pom1_prev);
-        board2.teleport(pom2_prev);
-        board3.teleport(pom3_prev);
+        teleport (pom1_prev, pom2_prev, pom3_prev);
     }
 
-    if (board1.teleport(asterism.ngs1) && board2.teleport(asterism.ngs3) && board3.teleport(asterism.ngs2) && !detect_collision()) {
+    else if (board1.teleport(asterism.ngs1) && board2.teleport(asterism.ngs3) && board3.teleport(asterism.ngs2) && !detect_collision()) {
         assignment = Board_assignment::ngs_132;
-        board1.teleport(pom1_prev);
-        board2.teleport(pom2_prev);
-        board3.teleport(pom3_prev);
+        teleport (pom1_prev, pom2_prev, pom3_prev);
     }
 
-    if (board1.teleport(asterism.ngs2) && board2.teleport(asterism.ngs1) && board3.teleport(asterism.ngs3) && !detect_collision()) {
+    else if (board1.teleport(asterism.ngs2) && board2.teleport(asterism.ngs1) && board3.teleport(asterism.ngs3) && !detect_collision()) {
         assignment = Board_assignment::ngs_213;
-        board1.teleport(pom1_prev);
-        board2.teleport(pom2_prev);
-        board3.teleport(pom3_prev);
+        teleport (pom1_prev, pom2_prev, pom3_prev);
     }
 
-    if (board1.teleport(asterism.ngs2) && board2.teleport(asterism.ngs3) && board3.teleport(asterism.ngs1) && !detect_collision()) {
+    else if (board1.teleport(asterism.ngs2) && board2.teleport(asterism.ngs3) && board3.teleport(asterism.ngs1) && !detect_collision()) {
         assignment = Board_assignment::ngs_231;
-        board1.teleport(pom1_prev);
-        board2.teleport(pom2_prev);
-        board3.teleport(pom3_prev);
+        teleport (pom1_prev, pom2_prev, pom3_prev);
     }
 
-    if (board1.teleport(asterism.ngs3) && board2.teleport(asterism.ngs1) && board3.teleport(asterism.ngs2) && !detect_collision()) {
+    else if (board1.teleport(asterism.ngs3) && board2.teleport(asterism.ngs1) && board3.teleport(asterism.ngs2) && !detect_collision()) {
         assignment = Board_assignment::ngs_312;
-        board1.teleport(pom1_prev);
-        board2.teleport(pom2_prev);
-        board3.teleport(pom3_prev);
+        teleport (pom1_prev, pom2_prev, pom3_prev);
     }
 
-    if (board1.teleport(asterism.ngs3) && board2.teleport(asterism.ngs2) && board3.teleport(asterism.ngs1) && !detect_collision()) {
+    else if (board1.teleport(asterism.ngs3) && board2.teleport(asterism.ngs2) && board3.teleport(asterism.ngs1) && !detect_collision()) {
         assignment = Board_assignment::ngs_321;
-        board1.teleport(pom1_prev);
-        board2.teleport(pom2_prev);
-        board3.teleport(pom3_prev);
+        teleport (pom1_prev, pom2_prev, pom3_prev);
     }
 
-    assignment = Board_assignment::none;
-    board1.teleport(pom1_prev);
-    board2.teleport(pom2_prev);
-    board3.teleport(pom3_prev);
+    else {
+        assignment = Board_assignment::none;
+        teleport (pom1_prev, pom2_prev, pom3_prev);
+    }
 }
 
 bool Board_set::teleport (const Asterism& asterism) {
+
+    assign_ngs(asterism);
+
     if (assignment == Board_assignment::ngs_123) {
-        board1.teleport(asterism.ngs1);
-        board2.teleport(asterism.ngs2);
-        board3.teleport(asterism.ngs3);
+        teleport (asterism.ngs1, asterism.ngs2, asterism.ngs3);
         return true;
     }
     if (assignment == Board_assignment::ngs_132) {
-        board1.teleport(asterism.ngs1);
-        board2.teleport(asterism.ngs3);
-        board3.teleport(asterism.ngs2);
+        teleport (asterism.ngs1, asterism.ngs3, asterism.ngs2);
         return true;
     }
     if (assignment == Board_assignment::ngs_213) {
-        board1.teleport(asterism.ngs2);
-        board2.teleport(asterism.ngs1);
-        board3.teleport(asterism.ngs3);
+        teleport (asterism.ngs2, asterism.ngs1, asterism.ngs3);
         return true;
     }
     if (assignment == Board_assignment::ngs_231) {
-        board1.teleport(asterism.ngs2);
-        board2.teleport(asterism.ngs3);
-        board3.teleport(asterism.ngs1);
+        teleport (asterism.ngs2, asterism.ngs3, asterism.ngs1);
         return true;
     }
     if (assignment == Board_assignment::ngs_312) {
-        board1.teleport(asterism.ngs3);
-        board2.teleport(asterism.ngs1);
-        board3.teleport(asterism.ngs2);
+        teleport (asterism.ngs3, asterism.ngs1, asterism.ngs2);
         return true;
     }
     if (assignment == Board_assignment::ngs_321) {
-        board1.teleport(asterism.ngs3);
-        board2.teleport(asterism.ngs2);
-        board3.teleport(asterism.ngs1);
+        teleport (asterism.ngs3, asterism.ngs2, asterism.ngs1);
         return true;
     }
+
     return false;
 }
 
@@ -167,39 +147,52 @@ void Board_set::draw (const Asterism& asterism) const {
 }
 
 bool Board_set::move_step_linear (const Asterism& asterism, const double step_mm) {
-    if (assignment == Board_assignment::ngs_123) {
-        board1.move_step_linear(asterism.ngs1, step_mm);
-        board2.move_step_linear(asterism.ngs2, step_mm);
-        board3.move_step_linear(asterism.ngs3, step_mm);
-    }
-    else if (assignment == Board_assignment::ngs_132) {
-        board1.move_step_linear(asterism.ngs1, step_mm);
-        board2.move_step_linear(asterism.ngs3, step_mm);
-        board3.move_step_linear(asterism.ngs2, step_mm);
-    }
-    else if (assignment == Board_assignment::ngs_213) {
-        board1.move_step_linear(asterism.ngs2, step_mm);
-        board2.move_step_linear(asterism.ngs1, step_mm);
-        board3.move_step_linear(asterism.ngs3, step_mm);
-    }
-    else if (assignment == Board_assignment::ngs_231) {
-        board1.move_step_linear(asterism.ngs2, step_mm);
-        board2.move_step_linear(asterism.ngs3, step_mm);
-        board3.move_step_linear(asterism.ngs1, step_mm);
-    }
-    else if (assignment == Board_assignment::ngs_312) {
-        board1.move_step_linear(asterism.ngs3, step_mm);
-        board2.move_step_linear(asterism.ngs1, step_mm);
-        board3.move_step_linear(asterism.ngs2, step_mm);
-    }
-    else if (assignment == Board_assignment::ngs_321) {
-        board1.move_step_linear(asterism.ngs3, step_mm);
-        board2.move_step_linear(asterism.ngs2, step_mm);
-        board3.move_step_linear(asterism.ngs1, step_mm);
-    }
+    if (assignment == Board_assignment::ngs_123)
+        move_step_linear (asterism.ngs1, asterism.ngs2, asterism.ngs3, step_mm);
+
+    else if (assignment == Board_assignment::ngs_132)
+        move_step_linear (asterism.ngs1, asterism.ngs3, asterism.ngs2, step_mm);
+
+    else if (assignment == Board_assignment::ngs_213)
+        move_step_linear (asterism.ngs2, asterism.ngs1, asterism.ngs3, step_mm);
+
+    else if (assignment == Board_assignment::ngs_231)
+        move_step_linear (asterism.ngs2, asterism.ngs3, asterism.ngs1, step_mm);
+
+    else if (assignment == Board_assignment::ngs_312)
+        move_step_linear (asterism.ngs3, asterism.ngs1, asterism.ngs2, step_mm);
+
+    else if (assignment == Board_assignment::ngs_321)
+        move_step_linear (asterism.ngs3, asterism.ngs2, asterism.ngs1, step_mm);
 
     bool collision_detected = detect_collision();
 
     return collision_detected;
 }
 
+bool Board_set::are_in_range (const Point& point1, const Point& point2, const Point& point3) const {
+    if (board1.is_in_range(point1) && board2.is_in_range(point2) && board3.is_in_range(point3))
+        return true;
+    return false;
+}
+
+bool Board_set::teleport (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination) {
+    if (!are_in_range(pom1_destination, pom2_destination, pom3_destination))
+        return false;
+
+    board1.teleport(pom1_destination);
+    board2.teleport(pom2_destination);
+    board3.teleport(pom3_destination);
+
+    return true;
+}
+
+bool Board_set::move_step_linear (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination, const double step_mm) {
+    board1.move_step_linear(pom1_destination, step_mm);
+    board2.move_step_linear(pom2_destination, step_mm);
+    board3.move_step_linear(pom3_destination, step_mm);
+
+    bool collision_detected = detect_collision();
+
+    return collision_detected;
+}
