@@ -4,10 +4,13 @@
 #include "Board.h"
 #include "Board_set.h"
 #include "Asterism.h"
+#include "Simulation.h"
 
 int main() {
     Board_set boards;
-    boards.teleport(dataset[0]);
-    boards.draw(dataset[0]);
+    Simulation simulation;
+    simulation.linear_trajectory(boards, dataset[0], dataset[1]);
+    simulation.print_results();
+
     return 0;
 }

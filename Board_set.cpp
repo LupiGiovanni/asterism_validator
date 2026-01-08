@@ -187,12 +187,46 @@ bool Board_set::teleport (const Point& pom1_destination, const Point& pom2_desti
     return true;
 }
 
-bool Board_set::move_step_linear (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination, const double step_mm) {
-    board1.move_step_linear(pom1_destination, step_mm);
-    board2.move_step_linear(pom2_destination, step_mm);
-    board3.move_step_linear(pom3_destination, step_mm);
+bool Board_set::move_step_linear (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination, const double distance_step) {
+    board1.move_step_linear(pom1_destination, distance_step);
+    board2.move_step_linear(pom2_destination, distance_step);
+    board3.move_step_linear(pom3_destination, distance_step);
 
     bool collision_detected = detect_collision();
 
     return collision_detected;
+}
+
+bool Board_set::is_reached (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination) const {
+    if (board1.is_reached(pom1_destination) && board2.is_reached(pom2_destination) && board3.is_reached(pom3_destination))
+        return true;
+    return false;
+}
+
+bool Board_set::is_reached (const Asterism& asterism) const {
+    if (assignment == Board_assignment::ngs_123)
+        return is_reached (asterism.ngs1, asterism.ngs2, asterism.ngs3);
+
+    if (assignment == Board_assignment::ngs_132)
+        return is_reached (asterism.ngs1, asterism.ngs3, asterism.ngs2);
+
+    if (assignment == Board_assignment::ngs_213)
+        return is_reached (asterism.ngs2, asterism.ngs1, asterism.ngs3);
+
+    if (assignment == Board_assignment::ngs_231)
+        return is_reached (asterism.ngs2, asterism.ngs3, asterism.ngs1);
+
+    if (assignment == Board_assignment::ngs_312)
+        return is_reached (asterism.ngs3, asterism.ngs1, asterism.ngs2);
+
+    if (assignment == Board_assignment::ngs_321)
+        return is_reached (asterism.ngs3, asterism.ngs2, asterism.ngs1);
+
+    return false;
+}
+
+void Board_set::teleport_home () {
+    board1.teleport_home();
+    board2.teleport_home();
+    board3.teleport_home();
 }

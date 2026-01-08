@@ -14,6 +14,7 @@ public:
     Point ngs3;
 
     Asterism (double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, double ngs2_y, double ngs3_y);
+    void print() const;
 };
 
 

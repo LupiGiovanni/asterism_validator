@@ -33,8 +33,11 @@ public:
     void assign_ngs (const Asterism& asterism);
     bool teleport (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination);
     bool teleport (const Asterism& asterism);
-    bool move_step_linear (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination, const double step_mm);
-    bool move_step_linear (const Asterism& asterism, const double step_mm);
+    bool is_reached (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination) const;
+    bool is_reached (const Asterism& asterism) const;
+    bool move_step_linear (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination, const double distance_step);
+    bool move_step_linear (const Asterism& asterism, const double distance_step);
+    void teleport_home ();
 
     void draw (const Asterism& asterism) const;
 };

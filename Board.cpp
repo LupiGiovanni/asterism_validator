@@ -3,6 +3,8 @@
 //
 
 #include "Board.h"
+
+#include "Board_set.h"
 #include "global_functions.h"
 
 Board::Board (const Board_type type) {
@@ -171,13 +173,27 @@ bool Board::teleport (const Point& pom_destination) {
     return teleport (pom_destination.x() - pom.x(), pom_destination.y() - pom.y());
 }
 
-void Board::move_step_linear (const Point& pom_destination, const double step_mm) {
+bool Board::is_reached (const Point& pom_destination) const {
+    Vector displacement (pom_destination - pom);
+    double distance = std::sqrt(displacement.squared_length());
+    if (distance <= RAW_TOLERANCE)
+        return true;
+    return false;
+}
+
+bool Board::move_step_linear (const Point& pom_destination, const double distance_step) {
+    if (is_reached(pom_destination))
+        return false;
+
     Vector displacement (pom_destination - pom);
     double length = std::sqrt(displacement.squared_length());
-    Vector step_vector = (displacement / length) * step_mm;
-
+    Vector step_vector = (displacement / length) * distance_step;
     teleport (pom + step_vector);
 
-    //TODO: implement control for when destination is reached
+    return true;
+}
+
+void Board::teleport_home() {
+    teleport(pom_home);
 }
 
