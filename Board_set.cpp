@@ -4,7 +4,12 @@
 
 #include "Board_set.h"
 
-Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2), board3(Board_type::type3), assignment(Board_assignment::none) {
+// For a graphical reference of the coordinates below see attached documentation
+Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2),board3(Board_type::type3),
+                        current_asterism(Asterism(0.,0.,0.,0.,0.,0.)),
+                        valid_permutations({}) {
+
+    // Small fov coordinates
     Point R(-87.847500, -87.847500);
     Point S(87.847500, -87.847500);
     Point T(87.847500, 87.847500);
@@ -15,6 +20,7 @@ Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2), bo
     fov_small.push_back(T);
     fov_small.push_back(U);
 
+    // Large fov coordinates
     Point V(-33.150000, -33.150000);
     Point W(33.150000, -33.150000);
     Point X(33.150000, 33.150000);
@@ -24,6 +30,9 @@ Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2), bo
     fov_large.push_back(W);
     fov_large.push_back(X);
     fov_large.push_back(Y);
+
+    // Note that we do not need to rotate fov_small and fov_large because they are already aligned with our
+    // reference system
 }
 
 bool Board_set::detect_collision() const {
@@ -53,76 +62,56 @@ bool Board_set::detect_vignette_fov_large() const {
     return detected;
 }
 
-void Board_set::assign_ngs (const Asterism& asterism) {
-    Point pom1_prev = board1.pom;
-    Point pom2_prev = board2.pom;
-    Point pom3_prev = board3.pom;
-
-    if (board1.teleport(asterism.ngs1) && board2.teleport(asterism.ngs2) && board3.teleport(asterism.ngs3) && !detect_collision()) {
-        assignment = Board_assignment::ngs_123;
-        teleport (pom1_prev, pom2_prev, pom3_prev);
-    }
-
-    else if (board1.teleport(asterism.ngs1) && board2.teleport(asterism.ngs3) && board3.teleport(asterism.ngs2) && !detect_collision()) {
-        assignment = Board_assignment::ngs_132;
-        teleport (pom1_prev, pom2_prev, pom3_prev);
-    }
-
-    else if (board1.teleport(asterism.ngs2) && board2.teleport(asterism.ngs1) && board3.teleport(asterism.ngs3) && !detect_collision()) {
-        assignment = Board_assignment::ngs_213;
-        teleport (pom1_prev, pom2_prev, pom3_prev);
-    }
-
-    else if (board1.teleport(asterism.ngs2) && board2.teleport(asterism.ngs3) && board3.teleport(asterism.ngs1) && !detect_collision()) {
-        assignment = Board_assignment::ngs_231;
-        teleport (pom1_prev, pom2_prev, pom3_prev);
-    }
-
-    else if (board1.teleport(asterism.ngs3) && board2.teleport(asterism.ngs1) && board3.teleport(asterism.ngs2) && !detect_collision()) {
-        assignment = Board_assignment::ngs_312;
-        teleport (pom1_prev, pom2_prev, pom3_prev);
-    }
-
-    else if (board1.teleport(asterism.ngs3) && board2.teleport(asterism.ngs2) && board3.teleport(asterism.ngs1) && !detect_collision()) {
-        assignment = Board_assignment::ngs_321;
-        teleport (pom1_prev, pom2_prev, pom3_prev);
-    }
-
-    else {
-        assignment = Board_assignment::none;
-        teleport (pom1_prev, pom2_prev, pom3_prev);
-    }
+void Board_set::set_current_asterism (const Asterism& asterism) {
+    current_asterism = asterism;
 }
 
-bool Board_set::teleport (const Asterism& asterism) {
+std::vector<Asterism> Board_set::calculate_all_permutations (const Asterism& asterism) {
+    std::vector<Asterism> permutations;
 
-    assign_ngs(asterism);
+    permutations.push_back(Asterism(asterism.ngs1.x(), asterism.ngs2.x(), asterism.ngs3.x(), asterism.ngs1.y(), asterism.ngs2.y(), asterism.ngs3.y()));
+    permutations.push_back(Asterism(asterism.ngs1.x(), asterism.ngs3.x(), asterism.ngs2.x(), asterism.ngs1.y(), asterism.ngs3.y(), asterism.ngs2.y()));
+    permutations.push_back(Asterism(asterism.ngs2.x(), asterism.ngs1.x(), asterism.ngs3.x(), asterism.ngs2.y(), asterism.ngs1.y(), asterism.ngs3.y()));
+    permutations.push_back(Asterism(asterism.ngs2.x(), asterism.ngs3.x(), asterism.ngs1.x(), asterism.ngs2.y(), asterism.ngs3.y(), asterism.ngs1.y()));
+    permutations.push_back(Asterism(asterism.ngs3.x(), asterism.ngs1.x(), asterism.ngs2.x(), asterism.ngs3.y(), asterism.ngs1.y(), asterism.ngs2.y()));
+    permutations.push_back(Asterism(asterism.ngs3.x(), asterism.ngs2.x(), asterism.ngs1.x(), asterism.ngs3.y(), asterism.ngs2.y(), asterism.ngs1.y()));
 
-    if (assignment == Board_assignment::ngs_123) {
-        teleport (asterism.ngs1, asterism.ngs2, asterism.ngs3);
-        return true;
-    }
-    if (assignment == Board_assignment::ngs_132) {
-        teleport (asterism.ngs1, asterism.ngs3, asterism.ngs2);
-        return true;
-    }
-    if (assignment == Board_assignment::ngs_213) {
-        teleport (asterism.ngs2, asterism.ngs1, asterism.ngs3);
-        return true;
-    }
-    if (assignment == Board_assignment::ngs_231) {
-        teleport (asterism.ngs2, asterism.ngs3, asterism.ngs1);
-        return true;
-    }
-    if (assignment == Board_assignment::ngs_312) {
-        teleport (asterism.ngs3, asterism.ngs1, asterism.ngs2);
-        return true;
-    }
-    if (assignment == Board_assignment::ngs_321) {
-        teleport (asterism.ngs3, asterism.ngs2, asterism.ngs1);
-        return true;
+    return permutations;
+}
+
+void Board_set::calculate_valid_permutations () {
+    if (const Asterism zero_asterism; current_asterism == zero_asterism) {
+        std::cout << "Warning: current asterism is not set. Call Board_set::set_current_asterism before calculating assignments." << std::endl;
+        return;
     }
 
+    valid_permutations.clear();
+    std::vector<Asterism> permutations = calculate_all_permutations(current_asterism);
+    Board_set temporary = *this;
+
+    for (int i = 0; i < permutations.size(); ++i)
+        if (temporary.board1.teleport(permutations[i].ngs1) && temporary.board2.teleport(permutations[i].ngs2) && temporary.board3.teleport(permutations[i].ngs3) && !temporary.detect_collision())
+            valid_permutations.push_back(permutations[i]);
+}
+
+bool Board_set::is_valid_permutation (const Asterism& asterism) const {
+    for (const auto& it: valid_permutations)
+        if (asterism == it)
+            return true;
+
+    return false;
+}
+
+bool Board_set::teleport (const Asterism& destination_asterism) {
+
+    if (is_valid_permutation(destination_asterism)) {
+        board1.teleport(destination_asterism.ngs1);
+        board2.teleport(destination_asterism.ngs2);
+        board3.teleport(destination_asterism.ngs3);
+        return true;
+    }
+
+    std::cout << "Warning: attempted teleportation to an invalid permutation." << std::endl;
     return false;
 }
 
@@ -146,87 +135,41 @@ void Board_set::draw (const Asterism& asterism) const {
     CGAL::draw(polys);
 }
 
-bool Board_set::move_step_linear (const Asterism& asterism, const double step_mm) {
-    if (assignment == Board_assignment::ngs_123)
-        move_step_linear (asterism.ngs1, asterism.ngs2, asterism.ngs3, step_mm);
-
-    else if (assignment == Board_assignment::ngs_132)
-        move_step_linear (asterism.ngs1, asterism.ngs3, asterism.ngs2, step_mm);
-
-    else if (assignment == Board_assignment::ngs_213)
-        move_step_linear (asterism.ngs2, asterism.ngs1, asterism.ngs3, step_mm);
-
-    else if (assignment == Board_assignment::ngs_231)
-        move_step_linear (asterism.ngs2, asterism.ngs3, asterism.ngs1, step_mm);
-
-    else if (assignment == Board_assignment::ngs_312)
-        move_step_linear (asterism.ngs3, asterism.ngs1, asterism.ngs2, step_mm);
-
-    else if (assignment == Board_assignment::ngs_321)
-        move_step_linear (asterism.ngs3, asterism.ngs2, asterism.ngs1, step_mm);
-
-    bool collision_detected = detect_collision();
-
-    return collision_detected;
-}
-
-bool Board_set::are_in_range (const Point& point1, const Point& point2, const Point& point3) const {
-    if (board1.is_in_range(point1) && board2.is_in_range(point2) && board3.is_in_range(point3))
-        return true;
-    return false;
-}
-
-bool Board_set::teleport (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination) {
-    if (!are_in_range(pom1_destination, pom2_destination, pom3_destination))
+bool Board_set::move_step_linear (const Asterism& destination_asterism, const double distance_step) {
+    if (!is_valid_permutation(destination_asterism)) {
+        std::cout << "Warning: attempted to move towards an invalid permutation." << std::endl;
         return false;
+    }
 
-    board1.teleport(pom1_destination);
-    board2.teleport(pom2_destination);
-    board3.teleport(pom3_destination);
+    board1.move_step_linear(destination_asterism.ngs1, distance_step);
+    board2.move_step_linear(destination_asterism.ngs2, distance_step);
+    board3.move_step_linear(destination_asterism.ngs3, distance_step);
 
-    return true;
+   return detect_collision();
 }
 
-bool Board_set::move_step_linear (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination, const double distance_step) {
-    board1.move_step_linear(pom1_destination, distance_step);
-    board2.move_step_linear(pom2_destination, distance_step);
-    board3.move_step_linear(pom3_destination, distance_step);
+bool Board_set::is_destination_reached (const Asterism& destination_asterism) const {
+    if (!is_valid_permutation(destination_asterism)) {
+        std::cout << "Warning: attempted to check destination reached for an invalid permutation." << std::endl;
+        return false;
+    }
 
-    bool collision_detected = detect_collision();
-
-    return collision_detected;
-}
-
-bool Board_set::is_reached (const Point& pom1_destination, const Point& pom2_destination, const Point& pom3_destination) const {
-    if (board1.is_reached(pom1_destination) && board2.is_reached(pom2_destination) && board3.is_reached(pom3_destination))
+    if (board1.is_destination_reached(destination_asterism.ngs1) && board2.is_destination_reached(destination_asterism.ngs2) && board3.is_destination_reached(destination_asterism.ngs3))
         return true;
-    return false;
-}
-
-bool Board_set::is_reached (const Asterism& asterism) const {
-    if (assignment == Board_assignment::ngs_123)
-        return is_reached (asterism.ngs1, asterism.ngs2, asterism.ngs3);
-
-    if (assignment == Board_assignment::ngs_132)
-        return is_reached (asterism.ngs1, asterism.ngs3, asterism.ngs2);
-
-    if (assignment == Board_assignment::ngs_213)
-        return is_reached (asterism.ngs2, asterism.ngs1, asterism.ngs3);
-
-    if (assignment == Board_assignment::ngs_231)
-        return is_reached (asterism.ngs2, asterism.ngs3, asterism.ngs1);
-
-    if (assignment == Board_assignment::ngs_312)
-        return is_reached (asterism.ngs3, asterism.ngs1, asterism.ngs2);
-
-    if (assignment == Board_assignment::ngs_321)
-        return is_reached (asterism.ngs3, asterism.ngs2, asterism.ngs1);
 
     return false;
 }
 
-void Board_set::teleport_home () {
-    board1.teleport_home();
-    board2.teleport_home();
-    board3.teleport_home();
+void Board_set::draw () const {
+    PolygonSet polys;
+    polys.insert(board1.profile);
+    polys.insert(board2.profile);
+    polys.insert(board3.profile);
+    polys.insert(board1.pom_range);
+    polys.insert(board2.pom_range);
+    polys.insert(board3.pom_range);
+    //polys.insert(FoV_small);
+    //polys.insert(FoV_large);
+
+    CGAL::draw(polys);
 }

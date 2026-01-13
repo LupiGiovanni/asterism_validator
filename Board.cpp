@@ -3,10 +3,10 @@
 //
 
 #include "Board.h"
-
-#include "Board_set.h"
+#include "Simulation.h"
 #include "global_functions.h"
 
+// For a graphical reference of the coordinates below see attached documentation
 Board::Board (const Board_type type) {
     if (type == Board_type::type1)
     {
@@ -49,6 +49,7 @@ Board::Board (const Board_type type) {
         pom_range.push_back(P1);
         pom_range.push_back(Q1);
 
+        // Rotation is needed to align the CAD reference system with ours
         rotate(profile, M_PI / 2.);
         rotate(pom, M_PI / 2.);
         rotate(pom_home, M_PI / 2.);
@@ -95,6 +96,7 @@ Board::Board (const Board_type type) {
         pom_range.push_back(P2);
         pom_range.push_back(Q2);
 
+        // Rotation is needed to align the CAD reference system with ours
         rotate(profile, M_PI / 2.);
         rotate(pom, M_PI / 2.);
         rotate(pom_home, M_PI / 2.);
@@ -141,6 +143,7 @@ Board::Board (const Board_type type) {
         pom_range.push_back(P3);
         pom_range.push_back(Q3);
 
+        // Rotation is needed to align the CAD reference system with ours
         rotate(profile, M_PI / 2.);
         rotate(pom, M_PI / 2.);
         rotate(pom_home, M_PI / 2.);
@@ -173,16 +176,16 @@ bool Board::teleport (const Point& pom_destination) {
     return teleport (pom_destination.x() - pom.x(), pom_destination.y() - pom.y());
 }
 
-bool Board::is_reached (const Point& pom_destination) const {
+bool Board::is_destination_reached (const Point& pom_destination) const {
     Vector displacement (pom_destination - pom);
     double distance = std::sqrt(displacement.squared_length());
-    if (distance <= RAW_TOLERANCE)
+    if (distance <= SIMULATION_DISTANCE_STEP)
         return true;
     return false;
 }
 
 bool Board::move_step_linear (const Point& pom_destination, const double distance_step) {
-    if (is_reached(pom_destination))
+    if (is_destination_reached(pom_destination))
         return false;
 
     Vector displacement (pom_destination - pom);
