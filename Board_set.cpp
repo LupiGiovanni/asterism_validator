@@ -5,9 +5,7 @@
 #include "Board_set.h"
 
 // For a graphical reference of the coordinates below see attached documentation
-Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2),board3(Board_type::type3),
-                        current_asterism(Asterism(0.,0.,0.,0.,0.,0.)),
-                        valid_permutations({}) {
+Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2),board3(Board_type::type3), targets(Board_set_targets::none) {
 
     // Small fov coordinates
     Point R(-87.847500, -87.847500);
@@ -62,57 +60,65 @@ bool Board_set::detect_vignette_fov_large() const {
     return detected;
 }
 
-void Board_set::set_current_asterism (const Asterism& asterism) {
-    current_asterism = asterism;
-}
-
-std::vector<Asterism> Board_set::calculate_all_permutations (const Asterism& asterism) {
-    std::vector<Asterism> permutations;
-
-    permutations.push_back(Asterism(asterism.ngs1.x(), asterism.ngs2.x(), asterism.ngs3.x(), asterism.ngs1.y(), asterism.ngs2.y(), asterism.ngs3.y()));
-    permutations.push_back(Asterism(asterism.ngs1.x(), asterism.ngs3.x(), asterism.ngs2.x(), asterism.ngs1.y(), asterism.ngs3.y(), asterism.ngs2.y()));
-    permutations.push_back(Asterism(asterism.ngs2.x(), asterism.ngs1.x(), asterism.ngs3.x(), asterism.ngs2.y(), asterism.ngs1.y(), asterism.ngs3.y()));
-    permutations.push_back(Asterism(asterism.ngs2.x(), asterism.ngs3.x(), asterism.ngs1.x(), asterism.ngs2.y(), asterism.ngs3.y(), asterism.ngs1.y()));
-    permutations.push_back(Asterism(asterism.ngs3.x(), asterism.ngs1.x(), asterism.ngs2.x(), asterism.ngs3.y(), asterism.ngs1.y(), asterism.ngs2.y()));
-    permutations.push_back(Asterism(asterism.ngs3.x(), asterism.ngs2.x(), asterism.ngs1.x(), asterism.ngs3.y(), asterism.ngs2.y(), asterism.ngs1.y()));
-
-    return permutations;
-}
-
-void Board_set::calculate_valid_permutations () {
-    if (const Asterism zero_asterism; current_asterism == zero_asterism) {
-        std::cout << "Warning: current asterism is not set. Call Board_set::set_current_asterism before calculating assignments." << std::endl;
-        return;
-    }
-
-    valid_permutations.clear();
-    std::vector<Asterism> permutations = calculate_all_permutations(current_asterism);
+void Board_set::assign_targets (const Asterism& destination_asterism) {
     Board_set temporary = *this;
 
-    for (int i = 0; i < permutations.size(); ++i)
-        if (temporary.board1.teleport(permutations[i].ngs1) && temporary.board2.teleport(permutations[i].ngs2) && temporary.board3.teleport(permutations[i].ngs3) && !temporary.detect_collision())
-            valid_permutations.push_back(permutations[i]);
+    if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision())
+        targets = Board_set_targets::ngs_123;
+
+    else if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision())
+        targets = Board_set_targets::ngs_132;
+
+    else if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision())
+        targets = Board_set_targets::ngs_213;
+
+    else if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision())
+        targets = Board_set_targets::ngs_231;
+
+    else if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision())
+        targets = Board_set_targets::ngs_312;
+
+    else if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision())
+        targets = Board_set_targets::ngs_321;
+    else
+        targets = Board_set_targets::none;
 }
 
-bool Board_set::is_valid_permutation (const Asterism& asterism) const {
-    for (const auto& it: valid_permutations)
-        if (asterism == it)
-            return true;
+void Board_set::teleport (const Asterism& destination_asterism) {
+    assign_targets(destination_asterism);
 
-    return false;
-}
-
-bool Board_set::teleport (const Asterism& destination_asterism) {
-
-    if (is_valid_permutation(destination_asterism)) {
+    if (targets == Board_set_targets::ngs_123) {
         board1.teleport(destination_asterism.ngs1);
         board2.teleport(destination_asterism.ngs2);
         board3.teleport(destination_asterism.ngs3);
-        return true;
     }
-
-    std::cout << "Warning: attempted teleportation to an invalid permutation." << std::endl;
-    return false;
+    if (targets == Board_set_targets::ngs_132) {
+        board1.teleport(destination_asterism.ngs1);
+        board2.teleport(destination_asterism.ngs3);
+        board3.teleport(destination_asterism.ngs2);
+    }
+    if (targets == Board_set_targets::ngs_213) {
+        board1.teleport(destination_asterism.ngs2);
+        board2.teleport(destination_asterism.ngs1);
+        board3.teleport(destination_asterism.ngs3);
+    }
+    if (targets == Board_set_targets::ngs_231) {
+        board1.teleport(destination_asterism.ngs2);
+        board2.teleport(destination_asterism.ngs3);
+        board3.teleport(destination_asterism.ngs1);
+    }
+    if (targets == Board_set_targets::ngs_312) {
+        board1.teleport(destination_asterism.ngs3);
+        board2.teleport(destination_asterism.ngs1);
+        board3.teleport(destination_asterism.ngs2);
+    }
+    if (targets == Board_set_targets::ngs_321) {
+        board1.teleport(destination_asterism.ngs3);
+        board2.teleport(destination_asterism.ngs2);
+        board3.teleport(destination_asterism.ngs1);
+    }
+    if (targets == Board_set_targets::none)
+        std::cout << "Warning: attempted to teleport boards but 'targets' field is 'none'." << std::endl;
 }
 
 void Board_set::draw (const Asterism& asterism) const {
@@ -136,26 +142,67 @@ void Board_set::draw (const Asterism& asterism) const {
 }
 
 bool Board_set::move_step_linear (const Asterism& destination_asterism, const double distance_step) {
-    if (!is_valid_permutation(destination_asterism)) {
-        std::cout << "Warning: attempted to move towards an invalid permutation." << std::endl;
+    if (targets == Board_set_targets::ngs_123) {
+        board1.move_step_linear(destination_asterism.ngs1, distance_step);
+        board2.move_step_linear(destination_asterism.ngs2, distance_step);
+        board3.move_step_linear(destination_asterism.ngs3, distance_step);
+    }
+    else if (targets == Board_set_targets::ngs_132) {
+        board1.move_step_linear(destination_asterism.ngs1, distance_step);
+        board2.move_step_linear(destination_asterism.ngs3, distance_step);
+        board3.move_step_linear(destination_asterism.ngs2, distance_step);
+    }
+    else if (targets == Board_set_targets::ngs_213) {
+        board1.move_step_linear(destination_asterism.ngs2, distance_step);
+        board2.move_step_linear(destination_asterism.ngs1, distance_step);
+        board3.move_step_linear(destination_asterism.ngs3, distance_step);
+    }
+    else if (targets == Board_set_targets::ngs_231) {
+        board1.move_step_linear(destination_asterism.ngs2, distance_step);
+        board2.move_step_linear(destination_asterism.ngs3, distance_step);
+        board3.move_step_linear(destination_asterism.ngs1, distance_step);
+    }
+    else if (targets == Board_set_targets::ngs_312) {
+        board1.move_step_linear(destination_asterism.ngs3, distance_step);
+        board2.move_step_linear(destination_asterism.ngs1, distance_step);
+        board3.move_step_linear(destination_asterism.ngs2, distance_step);
+    }
+    else if (targets == Board_set_targets::ngs_321) {
+        board1.move_step_linear(destination_asterism.ngs3, distance_step);
+        board2.move_step_linear(destination_asterism.ngs2, distance_step);
+        board3.move_step_linear(destination_asterism.ngs1, distance_step);
+    }
+    else if (targets == Board_set_targets::none) {
+        std::cout << "Warning: attempted to move boards but 'targets' field is 'none'." << std::endl;
         return false;
     }
 
-    board1.move_step_linear(destination_asterism.ngs1, distance_step);
-    board2.move_step_linear(destination_asterism.ngs2, distance_step);
-    board3.move_step_linear(destination_asterism.ngs3, distance_step);
-
-   return detect_collision();
+    return detect_collision();
 }
 
 bool Board_set::is_destination_reached (const Asterism& destination_asterism) const {
-    if (!is_valid_permutation(destination_asterism)) {
-        std::cout << "Warning: attempted to check destination reached for an invalid permutation." << std::endl;
+    if (targets == Board_set_targets::ngs_123)
+        return (board1.is_destination_reached(destination_asterism.ngs1) && board2.is_destination_reached(destination_asterism.ngs2) && board3.is_destination_reached(destination_asterism.ngs3));
+
+    if (targets == Board_set_targets::ngs_132)
+        return (board1.is_destination_reached(destination_asterism.ngs1) && board2.is_destination_reached(destination_asterism.ngs3) && board3.is_destination_reached(destination_asterism.ngs2));
+
+    if (targets == Board_set_targets::ngs_213)
+        return (board1.is_destination_reached(destination_asterism.ngs2) && board2.is_destination_reached(destination_asterism.ngs1) && board3.is_destination_reached(destination_asterism.ngs3));
+
+    if (targets == Board_set_targets::ngs_231)
+        return (board1.is_destination_reached(destination_asterism.ngs2) && board2.is_destination_reached(destination_asterism.ngs3) && board3.is_destination_reached(destination_asterism.ngs1));
+
+    if (targets == Board_set_targets::ngs_312)
+        return (board1.is_destination_reached(destination_asterism.ngs3) && board2.is_destination_reached(destination_asterism.ngs1) && board3.is_destination_reached(destination_asterism.ngs2));
+
+    if (targets == Board_set_targets::ngs_321)
+        return (board1.is_destination_reached(destination_asterism.ngs3) && board2.is_destination_reached(destination_asterism.ngs2) && board3.is_destination_reached(destination_asterism.ngs1));
+
+    if (targets == Board_set_targets::none) {
+        std::cout << "Warning: attempted to move boards but 'targets' field is 'none'." << std::endl;
         return false;
     }
-
-    if (board1.is_destination_reached(destination_asterism.ngs1) && board2.is_destination_reached(destination_asterism.ngs2) && board3.is_destination_reached(destination_asterism.ngs3))
-        return true;
 
     return false;
 }
@@ -177,26 +224,39 @@ void Board_set::draw () const {
 double Board_set::calculate_distance (const Asterism& destination_asterism) const {
     double total_distance = 0.;
 
-    total_distance += board1.calculate_distance(destination_asterism.ngs1);
-    total_distance += board2.calculate_distance(destination_asterism.ngs2);
-    total_distance += board3.calculate_distance(destination_asterism.ngs3);
+    if (targets == Board_set_targets::ngs_123) {
+        total_distance += board1.calculate_distance(destination_asterism.ngs1);
+        total_distance += board2.calculate_distance(destination_asterism.ngs2);
+        total_distance += board3.calculate_distance(destination_asterism.ngs3);
+    }
+    else if (targets == Board_set_targets::ngs_132) {
+        total_distance += board1.calculate_distance(destination_asterism.ngs1);
+        total_distance += board2.calculate_distance(destination_asterism.ngs3);
+        total_distance += board3.calculate_distance(destination_asterism.ngs2);
+    }
+    else if (targets == Board_set_targets::ngs_213) {
+        total_distance += board1.calculate_distance(destination_asterism.ngs2);
+        total_distance += board2.calculate_distance(destination_asterism.ngs1);
+        total_distance += board3.calculate_distance(destination_asterism.ngs3);
+    }
+    else if (targets == Board_set_targets::ngs_231) {
+        total_distance += board1.calculate_distance(destination_asterism.ngs2);
+        total_distance += board2.calculate_distance(destination_asterism.ngs3);
+        total_distance += board3.calculate_distance(destination_asterism.ngs1);
+    }
+    else if (targets == Board_set_targets::ngs_312) {
+        total_distance += board1.calculate_distance(destination_asterism.ngs3);
+        total_distance += board2.calculate_distance(destination_asterism.ngs1);
+        total_distance += board3.calculate_distance(destination_asterism.ngs2);
+    }
+    else if (targets == Board_set_targets::ngs_321) {
+        total_distance += board1.calculate_distance(destination_asterism.ngs3);
+        total_distance += board2.calculate_distance(destination_asterism.ngs2);
+        total_distance += board3.calculate_distance(destination_asterism.ngs1);
+    }
+    else if (targets == Board_set_targets::none) {
+        std::cout << "Warning: attempted to calculate distance but 'targets' field is 'none'." << std::endl;
+    }
 
     return total_distance;
-}
-
-void Board_set::order_valid_permutations_by_distance() {
-    std::vector<std::pair<double, Asterism>> distance_permutations;
-
-    for (const auto& it : valid_permutations) {
-        double distance = calculate_distance(it);
-        distance_permutations.push_back({distance, it});
-    }
-
-    std::ranges::sort(distance_permutations, [] (const std::pair<double, Asterism>& a, const std::pair<double, Asterism>& b) { return a.first < b.first; });
-
-    valid_permutations.clear();
-
-    for (const auto& it : distance_permutations) {
-        valid_permutations.push_back(it.second);
-    }
 }

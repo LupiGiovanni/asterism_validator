@@ -17,8 +17,8 @@ enum class Trajectory_type {linear_trajectory, non_linear_trajectory, none};
 // The class represents a simulation of the trajectories of the 3 boards from a start position (represented by an
 // asterism) to a destination position (also represented by an asterism). The simulation is discrete in time and space
 // (see constants above). We move the boards by one SIMULATION_DISTANCE_STEP every SIMULATION_TIME_STEP. At each
-// iteration of the simulation we perform a check for boards collisions and for Field of view (FoV) vignetting. The
-// simulation is stopped if 1 of the following 3 condition is met:
+// iteration of the simulation we perform a check for boards collisions and for field of view (fov) vignetting. The
+// simulation is stopped if one of the following 3 conditions is met:
 //     1) a collision is detected
 //     2) the destination asterism is reached
 //     3) the number of maximum iterations (represented by MAX_ITERATION_INDEX) is exceeded
