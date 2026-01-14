@@ -200,3 +200,7 @@ void Board::teleport_home() {
     teleport(pom_home);
 }
 
+double Board::calculate_distance (const Point& pom_destination) const {
+    Vector displacement (pom_destination - pom);
+    return std::sqrt(displacement.squared_length());
+}

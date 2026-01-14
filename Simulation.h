@@ -8,7 +8,7 @@
 #include "Board_set.h"
 
 constexpr int MAX_ITERATION_INDEX = 10000;
-constexpr double SIMULATION_TIME_STEP = 5; // seconds
+constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
 constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STEP; // mm
 
 // Parameterize the trajectory type
@@ -41,8 +41,8 @@ public:
     void reset_result_fields ();
 
     // This method simulates linear trajectories for the 3 boards from trajectory_start to trajectory_destination.
-    // Returns TRUE if the boards reach their destinations. Returns FALSE if the boards collide or if the simulation
-    // exceeds a maximum number of iterations
+    // Returns TRUE if the boards reach their destinations and saves in the class fields the results of the simulation.
+    // Returns FALSE if a collision is detected or if the maximum number of iterations is exceeded.
     bool run_linear_trajectory (Board_set& boards, const Asterism& trajectory_start, const Asterism& trajectory_destination);
 
     // Strongly recommended to use after each simulation to better visualize results

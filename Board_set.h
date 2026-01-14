@@ -11,25 +11,17 @@
 
 // This class represents the 3 boards completed with the small and large field of view (fov).
 // A Board_set object also has a current_asterism (the asterism towards which the movements of the boards occur).
-// We also store a vector of valid_permutations of the current_asterism.
-// Given an Asterism A, a permutation P of A is still an Asterism object with the same natural guide stars as A,
-// but listed in a different order.
-// For example, if
-//
-//      A == { ngs1 == a,
-//             ngs2 == b,
-//             ngs3 == c }
-//
+// We also store a vector of valid_permutations of the current_asterism. Given an Asterism A, a permutation P of A is
+// still an Asterism object with the same natural guide stars as A, but listed in a different order. For example, if
+//      A == { ngs1 == a, ngs2 == b, ngs3 == c }
 // then one of its permutations P is
-//
-//      P == { ngs1 == b,
-//             ngs2 == c,
-//             ngs3 == a }
-//
-// Given a permutation (or equivalently an Asterism) P, board1 always moves towards P.ngs1, board2 towards P.ngs2 and
-// board3 towards P.ngs3.
+//      P == { ngs1 == b, ngs2 == c, ngs3 == a }
+// Given a permutation (or equivalently an Asterism) P, we assume that
+//      board1 always moves towards P.ngs1,
+//      board2 always moves towards P.ngs2,
+//      board3 always moves towards P.ngs3.
 // A permutation P is valid if the 3 boards can be placed in correspondence of their target ngs (i.e. the ngs falls
-// within the pom range of the respective board) and if no collision occur in these positions.
+// within the pom range of the respective board) and if no collision occur in these positions
 class Board_set {
 public:
     Board board1;
@@ -98,13 +90,24 @@ public:
     // If destination_asterism is not a valid permutation, no movement is performed and FALSE is returned
     bool move_step_linear (const Asterism& destination_asterism, const double distance_step);
 
+    // Calculates and returns the distance of the board set from the given asterism, defined as
+    //      distance = d1 + d2 + d3
+    // where
+    //      d1 = distance between board1.pom and asterism.ngs1
+    //      d2 = distance between board2.pom and asterism.ngs2
+    //      d3 = distance between board3.pom and asterism.ngs3
+    double calculate_distance (const Asterism& destination_asterism) const;
+
+    // Orders the valid_permutations vector by ascending distance as calculated by calculate_distance
+    void order_valid_permutations_by_distance ();
+
     // Draws the current positions of the 3 boards along with their pom ranges and the triangle formed by the 3 ngs of
     // the given asterism.
-    // Note CGAL documentation reports that CGAL::draw functions are subject to segmentation fault errors
+    // Note that CGAL documentation reports that CGAL::draw functions are subject to segmentation fault errors
     void draw (const Asterism& asterism) const;
 
     // Draws the current positions of the 3 boards along with their pom ranges.
-    // Note CGAL documentation reports that CGAL::draw functions are subject to segmentation fault errors
+    // Note that CGAL documentation reports that CGAL::draw functions are subject to segmentation fault errors
     void draw () const;
 };
 

@@ -173,3 +173,30 @@ void Board_set::draw () const {
 
     CGAL::draw(polys);
 }
+
+double Board_set::calculate_distance (const Asterism& destination_asterism) const {
+    double total_distance = 0.;
+
+    total_distance += board1.calculate_distance(destination_asterism.ngs1);
+    total_distance += board2.calculate_distance(destination_asterism.ngs2);
+    total_distance += board3.calculate_distance(destination_asterism.ngs3);
+
+    return total_distance;
+}
+
+void Board_set::order_valid_permutations_by_distance() {
+    std::vector<std::pair<double, Asterism>> distance_permutations;
+
+    for (const auto& it : valid_permutations) {
+        double distance = calculate_distance(it);
+        distance_permutations.push_back({distance, it});
+    }
+
+    std::ranges::sort(distance_permutations, [] (const std::pair<double, Asterism>& a, const std::pair<double, Asterism>& b) { return a.first < b.first; });
+
+    valid_permutations.clear();
+
+    for (const auto& it : distance_permutations) {
+        valid_permutations.push_back(it.second);
+    }
+}

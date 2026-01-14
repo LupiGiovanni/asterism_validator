@@ -57,6 +57,9 @@ public:
     // Moves the profile and the pom towards the pom_destination in a linear trajectory by a fixed distance_step.
     // Returns TRUE if pom has reached pom_destination, FALSE otherwise
     bool move_step_linear (const Point& pom_destination, const double distance_step);
+
+    // Calculates and returns the Euclidean distance between the current pom position and pom_destination
+    double calculate_distance (const Point& pom_destination) const;
 };
 
 
