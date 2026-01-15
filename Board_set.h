@@ -23,6 +23,9 @@ public:
     Board board3;
 
     Board_set_targets targets;
+    // Used to store an alternative assignment of targets, if there is an alternative valid one.
+    //TODO: what if a third valid assignment exists?
+    Board_set_targets secondary_targets;
 
     Polygon fov_small;
     Polygon fov_large;
@@ -42,26 +45,27 @@ public:
     // FALSE otherwise
     bool detect_vignette_fov_large() const;
 
-    // This method establishes which boards move towards which ngs of destination_asterism and correspondently sets the
-    // targets field.
+    // This method establishes which boards move towards which ngs of destination_asterism.
+    // If one valid assignment is found, the 'targets' field is set accordingly.
+    // If two valid assignments are found, also the 'secondary_targets' field is set accordingly.
+    // If two valid assignments are found, the one stored in 'targets' field has the minor distance from the current
+    // positions of the boards, as calculated by calculate_distance
     void assign_targets (const Asterism& destination_asterism);
 
     // Directly moves the 3 boards to their respective target ngs.
     // Call assign_targets before using this method
-    void teleport (const Asterism& destination_asterism);
+    void teleport (const Asterism& destination_asterism, const Board_set_targets specific_targets);
 
     // If all the 3 boards have reached their respective target ngs, returns TRUE. FALSE otherwise.
     // Returns FALSE if targets == Board_set_targets::none.
     // See Board::is_destination_reached for more details about how to determine if a single board has reached its
-    // target ngs.
-    // Call assign_targets before using this method
-    bool is_destination_reached (const Asterism& destination_asterism) const;
+    // target ngs
+    bool is_destination_reached (const Asterism& destination_asterism, const Board_set_targets specific_targets) const;
 
     // Moves the 3 boards towards their respective target ngs by a fixed distance_step. If a collision is detected
     // after the movement, TRUE is returned. FALSE is returned otherwise.
-    // If targets == Board_set_targets::none, no movement is performed and FALSE is returned.
-    // Call assign_targets before using this method
-    bool move_step_linear (const Asterism& destination_asterism, const double distance_step);
+    // If targets == Board_set_targets::none, no movement is performed and FALSE is returned
+    bool move_step_linear (const Asterism& destination_asterism, const Board_set_targets specific_targets, const double distance_step);
 
     // Calculates and returns the distance of the board set from destination_asterism, defined as
     //      distance = d1 + d2 + d3
@@ -69,8 +73,7 @@ public:
     //      d1 = distance between board1.pom and its target ngs
     //      d2 = distance between board2.pom and its target ngs
     //      d3 = distance between board3.pom and its target ngs
-    // Call assign_targets before using this method
-    double calculate_distance (const Asterism& destination_asterism) const;
+    double calculate_distance (const Asterism& destination_asterism, const Board_set_targets specific_targets) const;
 
     // Draws the current positions of the 3 boards along with their pom ranges and the triangle formed by the 3 ngs of
     // the given asterism.

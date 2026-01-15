@@ -5,7 +5,7 @@
 #include "Board_set.h"
 
 // For a graphical reference of the coordinates below see attached documentation
-Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2),board3(Board_type::type3), targets(Board_set_targets::none) {
+Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2),board3(Board_type::type3), targets(Board_set_targets::none), secondary_targets(Board_set_targets::none) {
 
     // Small fov coordinates
     Point R(-87.847500, -87.847500);
@@ -62,63 +62,109 @@ bool Board_set::detect_vignette_fov_large() const {
 
 void Board_set::assign_targets (const Asterism& destination_asterism) {
     Board_set temporary;
+    bool assigned = false;
+    Board_set_targets targets1 = Board_set_targets::none;
+    Board_set_targets targets2 = Board_set_targets::none;
 
-    if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision())
-        targets = Board_set_targets::ngs_123;
+    if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision()) {
+        targets1 = Board_set_targets::ngs_123;
+        assigned = true;
+    }
 
-    else if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision())
-        targets = Board_set_targets::ngs_132;
+    if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision()) {
+        if (assigned == false) {
+            targets1 = Board_set_targets::ngs_132;
+            assigned = true;
+        }
+        else
+            targets2 = Board_set_targets::ngs_132;
+    }
 
-    else if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision())
-        targets = Board_set_targets::ngs_213;
+    if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision()) {
+        if (assigned == false) {
+            targets1 = Board_set_targets::ngs_213;
+            assigned = true;
+        }
+        else
+            targets2 = Board_set_targets::ngs_213;
+    }
 
-    else if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision())
-        targets = Board_set_targets::ngs_231;
+    if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision()) {
+        if (assigned == false) {
+            targets1 = Board_set_targets::ngs_231;
+            assigned = true;
+        }
+        else
+            targets2 = Board_set_targets::ngs_231;
+    }
 
-    else if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision())
-        targets = Board_set_targets::ngs_312;
+    if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision()) {
+        if (assigned == false) {
+            targets1 = Board_set_targets::ngs_312;
+            assigned = true;
+        }
+        else
+            targets2 = Board_set_targets::ngs_312;
+    }
 
-    else if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision())
-        targets = Board_set_targets::ngs_321;
-    else
-        targets = Board_set_targets::none;
+    if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision()) {
+        if (assigned == false) {
+            targets1 = Board_set_targets::ngs_321;
+            assigned = true;
+        }
+        else
+            targets2 = Board_set_targets::ngs_321;
+    }
+
+    // This part ensures that if two valid assignments are found, the one with the minor distance is stored in 'targets'
+    double distance1 = calculate_distance(destination_asterism, targets1);
+    double distance2 = calculate_distance(destination_asterism, targets2);
+
+    if (distance1 > distance2) {
+        Board_set_targets temp = targets1;
+        targets1 = targets2;
+        targets2 = temp;
+    }
+
+    targets = targets1;
+    secondary_targets = targets2;
 }
 
-void Board_set::teleport (const Asterism& destination_asterism) {
+void Board_set::teleport (const Asterism& destination_asterism, const Board_set_targets specific_targets) {
     // assign_targets(destination_asterism);
 
-    if (targets == Board_set_targets::ngs_123) {
+    if (specific_targets == Board_set_targets::ngs_123) {
         board1.teleport(destination_asterism.ngs1);
         board2.teleport(destination_asterism.ngs2);
         board3.teleport(destination_asterism.ngs3);
     }
-    if (targets == Board_set_targets::ngs_132) {
+    else if (specific_targets == Board_set_targets::ngs_132) {
         board1.teleport(destination_asterism.ngs1);
         board2.teleport(destination_asterism.ngs3);
         board3.teleport(destination_asterism.ngs2);
     }
-    if (targets == Board_set_targets::ngs_213) {
+    else if (specific_targets == Board_set_targets::ngs_213) {
         board1.teleport(destination_asterism.ngs2);
         board2.teleport(destination_asterism.ngs1);
         board3.teleport(destination_asterism.ngs3);
     }
-    if (targets == Board_set_targets::ngs_231) {
+    else if (specific_targets == Board_set_targets::ngs_231) {
         board1.teleport(destination_asterism.ngs2);
         board2.teleport(destination_asterism.ngs3);
         board3.teleport(destination_asterism.ngs1);
     }
-    if (targets == Board_set_targets::ngs_312) {
+    else if (specific_targets == Board_set_targets::ngs_312) {
         board1.teleport(destination_asterism.ngs3);
         board2.teleport(destination_asterism.ngs1);
         board3.teleport(destination_asterism.ngs2);
     }
-    if (targets == Board_set_targets::ngs_321) {
+    else if (specific_targets == Board_set_targets::ngs_321) {
         board1.teleport(destination_asterism.ngs3);
         board2.teleport(destination_asterism.ngs2);
         board3.teleport(destination_asterism.ngs1);
     }
-    if (targets == Board_set_targets::none)
-        std::cout << "Warning: attempted to teleport boards but 'targets' field is 'none'." << std::endl;
+    else if (specific_targets == Board_set_targets::none)
+        std::cout << "Warning: no valid specific targets given." << std::endl;
 }
 
 void Board_set::draw (const Asterism& asterism) const {
@@ -141,38 +187,38 @@ void Board_set::draw (const Asterism& asterism) const {
     CGAL::draw(polys);
 }
 
-bool Board_set::move_step_linear (const Asterism& destination_asterism, const double distance_step) {
-    if (targets == Board_set_targets::ngs_123) {
+bool Board_set::move_step_linear (const Asterism& destination_asterism, const Board_set_targets specific_targets, const double distance_step) {
+    if (specific_targets == Board_set_targets::ngs_123) {
         board1.move_step_linear(destination_asterism.ngs1, distance_step);
         board2.move_step_linear(destination_asterism.ngs2, distance_step);
         board3.move_step_linear(destination_asterism.ngs3, distance_step);
     }
-    else if (targets == Board_set_targets::ngs_132) {
+    else if (specific_targets == Board_set_targets::ngs_132) {
         board1.move_step_linear(destination_asterism.ngs1, distance_step);
         board2.move_step_linear(destination_asterism.ngs3, distance_step);
         board3.move_step_linear(destination_asterism.ngs2, distance_step);
     }
-    else if (targets == Board_set_targets::ngs_213) {
+    else if (specific_targets == Board_set_targets::ngs_213) {
         board1.move_step_linear(destination_asterism.ngs2, distance_step);
         board2.move_step_linear(destination_asterism.ngs1, distance_step);
         board3.move_step_linear(destination_asterism.ngs3, distance_step);
     }
-    else if (targets == Board_set_targets::ngs_231) {
+    else if (specific_targets == Board_set_targets::ngs_231) {
         board1.move_step_linear(destination_asterism.ngs2, distance_step);
         board2.move_step_linear(destination_asterism.ngs3, distance_step);
         board3.move_step_linear(destination_asterism.ngs1, distance_step);
     }
-    else if (targets == Board_set_targets::ngs_312) {
+    else if (specific_targets == Board_set_targets::ngs_312) {
         board1.move_step_linear(destination_asterism.ngs3, distance_step);
         board2.move_step_linear(destination_asterism.ngs1, distance_step);
         board3.move_step_linear(destination_asterism.ngs2, distance_step);
     }
-    else if (targets == Board_set_targets::ngs_321) {
+    else if (specific_targets == Board_set_targets::ngs_321) {
         board1.move_step_linear(destination_asterism.ngs3, distance_step);
         board2.move_step_linear(destination_asterism.ngs2, distance_step);
         board3.move_step_linear(destination_asterism.ngs1, distance_step);
     }
-    else if (targets == Board_set_targets::none) {
+    else if (specific_targets == Board_set_targets::none) {
         std::cout << "Warning: attempted to move boards but 'targets' field is 'none'." << std::endl;
         return false;
     }
@@ -180,26 +226,26 @@ bool Board_set::move_step_linear (const Asterism& destination_asterism, const do
     return detect_collision();
 }
 
-bool Board_set::is_destination_reached (const Asterism& destination_asterism) const {
-    if (targets == Board_set_targets::ngs_123)
+bool Board_set::is_destination_reached (const Asterism& destination_asterism, const Board_set_targets specific_targets) const {
+    if (specific_targets == Board_set_targets::ngs_123)
         return (board1.is_destination_reached(destination_asterism.ngs1) && board2.is_destination_reached(destination_asterism.ngs2) && board3.is_destination_reached(destination_asterism.ngs3));
 
-    if (targets == Board_set_targets::ngs_132)
+    if (specific_targets == Board_set_targets::ngs_132)
         return (board1.is_destination_reached(destination_asterism.ngs1) && board2.is_destination_reached(destination_asterism.ngs3) && board3.is_destination_reached(destination_asterism.ngs2));
 
-    if (targets == Board_set_targets::ngs_213)
+    if (specific_targets == Board_set_targets::ngs_213)
         return (board1.is_destination_reached(destination_asterism.ngs2) && board2.is_destination_reached(destination_asterism.ngs1) && board3.is_destination_reached(destination_asterism.ngs3));
 
-    if (targets == Board_set_targets::ngs_231)
+    if (specific_targets == Board_set_targets::ngs_231)
         return (board1.is_destination_reached(destination_asterism.ngs2) && board2.is_destination_reached(destination_asterism.ngs3) && board3.is_destination_reached(destination_asterism.ngs1));
 
-    if (targets == Board_set_targets::ngs_312)
+    if (specific_targets == Board_set_targets::ngs_312)
         return (board1.is_destination_reached(destination_asterism.ngs3) && board2.is_destination_reached(destination_asterism.ngs1) && board3.is_destination_reached(destination_asterism.ngs2));
 
-    if (targets == Board_set_targets::ngs_321)
+    if (specific_targets == Board_set_targets::ngs_321)
         return (board1.is_destination_reached(destination_asterism.ngs3) && board2.is_destination_reached(destination_asterism.ngs2) && board3.is_destination_reached(destination_asterism.ngs1));
 
-    if (targets == Board_set_targets::none) {
+    if (specific_targets == Board_set_targets::none) {
         std::cout << "Warning: attempted to move boards but 'targets' field is 'none'." << std::endl;
         return false;
     }
@@ -221,42 +267,41 @@ void Board_set::draw () const {
     CGAL::draw(polys);
 }
 
-double Board_set::calculate_distance (const Asterism& destination_asterism) const {
+double Board_set::calculate_distance (const Asterism& destination_asterism, const Board_set_targets specific_targets) const {
     double total_distance = 0.;
 
-    if (targets == Board_set_targets::ngs_123) {
+    if (specific_targets == Board_set_targets::ngs_123) {
         total_distance += board1.calculate_distance(destination_asterism.ngs1);
         total_distance += board2.calculate_distance(destination_asterism.ngs2);
         total_distance += board3.calculate_distance(destination_asterism.ngs3);
     }
-    else if (targets == Board_set_targets::ngs_132) {
+    else if (specific_targets == Board_set_targets::ngs_132) {
         total_distance += board1.calculate_distance(destination_asterism.ngs1);
         total_distance += board2.calculate_distance(destination_asterism.ngs3);
         total_distance += board3.calculate_distance(destination_asterism.ngs2);
     }
-    else if (targets == Board_set_targets::ngs_213) {
+    else if (specific_targets == Board_set_targets::ngs_213) {
         total_distance += board1.calculate_distance(destination_asterism.ngs2);
         total_distance += board2.calculate_distance(destination_asterism.ngs1);
         total_distance += board3.calculate_distance(destination_asterism.ngs3);
     }
-    else if (targets == Board_set_targets::ngs_231) {
+    else if (specific_targets == Board_set_targets::ngs_231) {
         total_distance += board1.calculate_distance(destination_asterism.ngs2);
         total_distance += board2.calculate_distance(destination_asterism.ngs3);
         total_distance += board3.calculate_distance(destination_asterism.ngs1);
     }
-    else if (targets == Board_set_targets::ngs_312) {
+    else if (specific_targets == Board_set_targets::ngs_312) {
         total_distance += board1.calculate_distance(destination_asterism.ngs3);
         total_distance += board2.calculate_distance(destination_asterism.ngs1);
         total_distance += board3.calculate_distance(destination_asterism.ngs2);
     }
-    else if (targets == Board_set_targets::ngs_321) {
+    else if (specific_targets == Board_set_targets::ngs_321) {
         total_distance += board1.calculate_distance(destination_asterism.ngs3);
         total_distance += board2.calculate_distance(destination_asterism.ngs2);
         total_distance += board3.calculate_distance(destination_asterism.ngs1);
     }
-    else if (targets == Board_set_targets::none) {
-        std::cout << "Warning: attempted to calculate distance but 'targets' field is 'none'." << std::endl;
-    }
+    else if (specific_targets == Board_set_targets::none)
+        total_distance = std::numeric_limits<double>::infinity();
 
     return total_distance;
 }

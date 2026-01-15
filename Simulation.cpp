@@ -31,11 +31,13 @@ bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& traje
     start = trajectory_start;
     destination = trajectory_destination;
 
-    boards.teleport(start);
+    boards.assign_targets (start);
+    boards.teleport(start, boards.targets);
     boards.assign_targets(destination);
 
-    while (!boards.is_destination_reached(destination) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        boards.move_step_linear(destination, SIMULATION_DISTANCE_STEP);
+    while (!boards.is_destination_reached(destination, boards.targets) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
+        // boards.draw(destination);
+        boards.move_step_linear(destination, boards.targets, SIMULATION_DISTANCE_STEP);
         collision_detected = boards.detect_collision();
         if (boards.detect_vignette_fov_small())
             fov_small_vignette_detected = true;
@@ -46,7 +48,7 @@ bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& traje
 
     duration = SIMULATION_TIME_STEP * iterations;
 
-    if (boards.is_destination_reached(destination)) {
+    if (boards.is_destination_reached(destination, boards.targets)) {
         destination_reached = true;
         return true;
     }

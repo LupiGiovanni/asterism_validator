@@ -29,6 +29,17 @@
 //     return count;
 // }
 
+// Board_set boards;
+// Simulation simulation;
+//
+// boards.assign_targets(dataset[1]);
+// boards.teleport(dataset[1], boards.targets);
+// boards.draw(dataset[1]);
+// boards.draw(dataset[2]);
+//
+// simulation.run_linear_trajectory(boards, dataset[1], dataset[2]);
+// simulation.print_results();
+
 int main() {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
 
@@ -37,13 +48,15 @@ int main() {
 
     int total_simulations = 0;
     int successful_simulations = 0;
+    double sum_duration = 0.;
 
     for (int i = 1; i < dataset.size(); ++i) {
         simulation.run_linear_trajectory(boards, dataset[i-1], dataset[i]);
         total_simulations++;
         if (simulation.destination_reached && !simulation.collision_detected) {
             successful_simulations++;
-            std::cout << simulation.duration << std::endl;
+            std::cout << "Simulation from point " << i-1 << " to point " << i << " succeeded: " << simulation.duration << " seconds." << std::endl;
+            sum_duration += simulation.duration;
         }
         else {
             std::cout << "Simulation from point " << i-1 << " to point " << i << " failed." << std::endl;
@@ -53,6 +66,7 @@ int main() {
 
     std::cout << "Total simulations: " << total_simulations << std::endl;
     std::cout << "Successful simulations: " << successful_simulations << std::endl;
+    std::cout << "Average duration of successful simulations: " << (sum_duration / successful_simulations) << " seconds." << std::endl;
 
     return 0;
 }
