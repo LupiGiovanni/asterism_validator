@@ -5,7 +5,6 @@
 #ifndef ASTERISM_VALIDATOR_BOARD_SET_H
 #define ASTERISM_VALIDATOR_BOARD_SET_H
 
-#include "global_functions.h"
 #include "Board.h"
 #include "Asterism.h"
 
@@ -47,18 +46,21 @@ public:
     // targets field.
     void assign_targets (const Asterism& destination_asterism);
 
-    // Directly moves the 3 boards to their respective target ngs
+    // Directly moves the 3 boards to their respective target ngs.
+    // Call assign_targets before using this method
     void teleport (const Asterism& destination_asterism);
 
     // If all the 3 boards have reached their respective target ngs, returns TRUE. FALSE otherwise.
     // Returns FALSE if targets == Board_set_targets::none.
     // See Board::is_destination_reached for more details about how to determine if a single board has reached its
-    // target ngs
+    // target ngs.
+    // Call assign_targets before using this method
     bool is_destination_reached (const Asterism& destination_asterism) const;
 
     // Moves the 3 boards towards their respective target ngs by a fixed distance_step. If a collision is detected
     // after the movement, TRUE is returned. FALSE is returned otherwise.
-    // If targets == Board_set_targets::none, no movement is performed and FALSE is returned
+    // If targets == Board_set_targets::none, no movement is performed and FALSE is returned.
+    // Call assign_targets before using this method
     bool move_step_linear (const Asterism& destination_asterism, const double distance_step);
 
     // Calculates and returns the distance of the board set from destination_asterism, defined as
@@ -67,6 +69,7 @@ public:
     //      d1 = distance between board1.pom and its target ngs
     //      d2 = distance between board2.pom and its target ngs
     //      d3 = distance between board3.pom and its target ngs
+    // Call assign_targets before using this method
     double calculate_distance (const Asterism& destination_asterism) const;
 
     // Draws the current positions of the 3 boards along with their pom ranges and the triangle formed by the 3 ngs of

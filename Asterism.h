@@ -6,9 +6,7 @@
 #define ASTERISM_VALIDATOR_ASTERISM_H
 
 #include "Board.h"
-
-// Number of decimal places used to print coordinates in Asterism::print
-constexpr int DECIMAL_PLACES_PRINTED = 6;
+#include "helper.h"
 
 // Represents a set of 3 natural guide stars (ngs)
 class Asterism {

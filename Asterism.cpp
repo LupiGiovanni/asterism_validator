@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include "global_functions.h"
+#include "helper.h"
 #include "Asterism.h"
 
 Asterism::Asterism(): ngs1(Point(0.,0.)), ngs2(Point(0.,0.)), ngs3(Point(0.,0.)) {}

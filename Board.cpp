@@ -4,7 +4,7 @@
 
 #include "Board.h"
 #include "Simulation.h"
-#include "global_functions.h"
+#include "helper.h"
 
 // For a graphical reference of the coordinates below see attached documentation
 Board::Board (const Board_type type) {

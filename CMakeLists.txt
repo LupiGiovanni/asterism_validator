@@ -14,7 +14,7 @@ add_executable (asterism_validator
                 Asterism.cpp Asterism.h
                 Board_set.cpp Board_set.h
                 Simulation.cpp Simulation.h
-                global_functions.h
+                helper.h
                 dataset.h)
 
 target_link_libraries(asterism_validator CGAL::CGAL_Basic_viewer)

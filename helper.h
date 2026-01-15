@@ -2,14 +2,18 @@
 // Created by gionimbus on 12/16/25.
 //
 
-#ifndef ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H
-#define ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H
+#ifndef ASTERISM_VALIDATOR_HELPER_H
+#define ASTERISM_VALIDATOR_HELPER_H
 
 #include <CGAL/Aff_transformation_2.h>
 #include"Board.h"
 #include"Asterism.h"
 
 typedef CGAL::Aff_transformation_2<Kernel> Transformation;
+
+// Number of decimal places used to print double values
+constexpr int DECIMAL_PLACES_PRINTED = 6;
+
 
 // Rotates polygon in anti-clockwise direction by angle_radians. The center of rotation is the origin of the
 // coordinates system
@@ -25,4 +29,4 @@ inline void rotate (Point& point, double angle_radians) {
     point = rotation.transform(point);
 }
 
-#endif //ASTERISM_VALIDATOR_GLOBAL_FUNCTIONS_H
+#endif //ASTERISM_VALIDATOR_HELPER_H

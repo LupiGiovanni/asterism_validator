@@ -61,7 +61,7 @@ bool Board_set::detect_vignette_fov_large() const {
 }
 
 void Board_set::assign_targets (const Asterism& destination_asterism) {
-    Board_set temporary = *this;
+    Board_set temporary;
 
     if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision())
         targets = Board_set_targets::ngs_123;
@@ -85,7 +85,7 @@ void Board_set::assign_targets (const Asterism& destination_asterism) {
 }
 
 void Board_set::teleport (const Asterism& destination_asterism) {
-    assign_targets(destination_asterism);
+    // assign_targets(destination_asterism);
 
     if (targets == Board_set_targets::ngs_123) {
         board1.teleport(destination_asterism.ngs1);
