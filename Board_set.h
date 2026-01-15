@@ -27,8 +27,7 @@ public:
     Polygon fov_small;
     Polygon fov_large;
 
-    // The constructor initializes 3 boards, each one of different type (Board_type::type1, Board_type::type2 and
-    // Board_type::type3)
+    // Initializes 3 boards, each one of different type (Board_type::type1, Board_type::type2 and Board_type::type3)
     Board_set();
 
     // If a collision between boards in current positions is detected, returns TRUE. FALSE otherwise
@@ -43,7 +42,7 @@ public:
     bool detect_vignette_fov_large() const;
 
     // This method establishes which boards move towards which ngs of destination_asterism and correspondently sets the
-    // targets field.
+    // 'targets' field
     void assign_targets (const Asterism& destination_asterism);
 
     // Directly moves the 3 boards to their respective target ngs.

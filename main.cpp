@@ -38,12 +38,17 @@ int main() {
     int total_simulations = 0;
     int successful_simulations = 0;
 
+    int count_over_100_seconds = 0;
+    double durations_sum = 0.;
+
     for (int i = 1; i < dataset.size(); ++i) {
         simulation.run_linear_trajectory(boards, dataset[i-1], dataset[i]);
         total_simulations++;
         if (simulation.destination_reached && !simulation.collision_detected) {
             successful_simulations++;
-            std::cout << simulation.duration << std::endl;
+            durations_sum += simulation.duration;
+            if (simulation.duration > 100.)
+                count_over_100_seconds++;
         }
         else {
             std::cout << "Simulation from point " << i-1 << " to point " << i << " failed." << std::endl;
@@ -53,6 +58,25 @@ int main() {
 
     std::cout << "Total simulations: " << total_simulations << std::endl;
     std::cout << "Successful simulations: " << successful_simulations << std::endl;
+    std::cout << "Average duration of successful simulations: " << (durations_sum / successful_simulations) << " seconds" << std::endl;
+    std::cout << "Number of successful simulations over 100 seconds: " << count_over_100_seconds << std::endl;
 
     return 0;
+
+    // boards.assign_targets(dataset[73]);
+    // boards.teleport(dataset[73]);
+    // boards.draw(dataset[73]);
+    // boards.draw(dataset[74]);
+    //
+    // simulation.run_linear_trajectory(boards, dataset[73], dataset[74]);
+    // simulation.print_results();
+    //
+    // boards.assign_targets(dataset[170]);
+    // boards.teleport(dataset[170]);
+    // boards.draw(dataset[170]);
+    // boards.draw(dataset[171]);
+    //
+    // simulation.run_linear_trajectory(boards, dataset[170], dataset[171]);
+    // simulation.print_results();
+
 }

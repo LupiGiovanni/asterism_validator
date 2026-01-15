@@ -29,8 +29,7 @@ enum class Board_type {type1, type2, type3};
 class Board {
 public:
     Polygon profile;
-    // Center of the pom
-    Point pom;
+    Point pom; // Center of the pom
     Point pom_home;
     Polygon pom_range;
 
