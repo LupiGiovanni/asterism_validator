@@ -29,16 +29,16 @@ public:
     Asterism start;
     Asterism destination;
     bool destination_reached;
+
     bool collision_detected;
     bool fov_small_vignette_detected;
     bool fov_large_vignette_detected;
+
     double duration;  // seconds
     int iterations;
     bool max_iterations_exceeded;
 
-    Simulation ();
-
-    void reset_result_fields ();
+    Simulation();
 
     // This method simulates linear trajectories for the 3 boards from trajectory_start to trajectory_destination.
     // Returns TRUE if the boards reach their destinations and saves in the class fields the results of the simulation.
@@ -47,6 +47,9 @@ public:
 
     // Strongly recommended to use after each simulation to better visualize results
     void print_results() const;
+
+private:
+    void reset_result_fields();
 };
 
 

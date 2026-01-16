@@ -36,13 +36,6 @@ public:
     // The constructor is parametrized to build only 3 possible types of boards
     explicit Board (const Board_type type);
 
-    // Returns TRUE if the point is inside the pom range (or on its boundary), FALSE otherwise
-    bool is_in_range (const Point& point) const;
-
-    // Directly moves the profile and the pom by delta_x and delta_y only if the new position of the pom is in its range.
-    // Returns TRUE if the teleportation is successful, FALSE otherwise
-    bool teleport (double delta_x, double delta_y);
-
     // Same behavior as the previous method, but takes a Point reference as argument
     bool teleport (const Point& pom_destination);
 
@@ -59,6 +52,14 @@ public:
 
     // Calculates and returns the Euclidean distance between the current pom position and pom_destination
     double calculate_distance (const Point& pom_destination) const;
+
+private:
+    // Directly moves the profile and the pom by delta_x and delta_y only if the new position of the pom is in its range.
+    // Returns TRUE if the teleportation is successful, FALSE otherwise
+    bool teleport (double delta_x, double delta_y);
+
+    // Returns TRUE if the point is inside the pom range (or on its boundary), FALSE otherwise
+    bool is_in_range (const Point& point) const;
 };
 
 
