@@ -2,6 +2,8 @@
 
 Given XY coordinates of 3 Natural Guide Stars the program establishes if they are reachable by the LOR boards (without collisions).
 
+The program also can simulate the movement of the LOR boards to reach the NGSs.
+
 The program uses CGAL (Computational Geometry Algorithms Library) and Qt6 for graphic rendering.
 
 ~~~bash
