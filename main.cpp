@@ -37,10 +37,6 @@ int main() {
 
     int total_simulations = 0;
     int successful_simulations = 0;
-
-    int count_over_80_seconds = 0;
-    int count_over_100_seconds = 0;
-    int count_over_120_seconds = 0;
     double durations_sum = 0.;
 
     for (int i = 1; i < dataset.size(); ++i) {
@@ -49,14 +45,6 @@ int main() {
         if (simulation.destination_reached && !simulation.collision_detected) {
             successful_simulations++;
             durations_sum += simulation.duration;
-            if (simulation.duration > 80.) {
-                count_over_80_seconds++;
-                if (simulation.duration > 100.) {
-                    count_over_100_seconds++;
-                    if (simulation.duration > 120.)
-                        count_over_120_seconds++;
-                }
-            }
         }
         else {
             std::cout << "Simulation from point " << i-1 << " to point " << i << " failed." << std::endl;
@@ -67,9 +55,6 @@ int main() {
     std::cout << "Total simulations: " << total_simulations << std::endl;
     std::cout << "Successful simulations: " << successful_simulations << std::endl;
     std::cout << "Average duration of successful simulations: " << (durations_sum / successful_simulations) << " seconds" << std::endl;
-    std::cout << "Number of successful simulations over 80 seconds: " << count_over_80_seconds << std::endl;
-    std::cout << "Number of successful simulations over 100 seconds: " << count_over_100_seconds << std::endl;
-    std::cout << "Number of successful simulations over 120 seconds: " << count_over_120_seconds << std::endl;
 
     return 0;
 

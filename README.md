@@ -1,8 +1,8 @@
-# Asterism validator
+# Asterism validator (and simulator)
 
-Given XY coordinates of 3 Natural Guide Stars the program establishes if they are reachable by the LOR boards (without collisions).
+Given XY coordinates of 3 Natural Guide Stars the program can establish if they are reachable by the LOR boards.
 
-The program also can simulate the movement of the LOR boards to reach the NGSs.
+The program also simulates the movement of the LOR boards to reach the NGSs.
 
 The program uses CGAL (Computational Geometry Algorithms Library) and Qt6 for graphic rendering.
 
