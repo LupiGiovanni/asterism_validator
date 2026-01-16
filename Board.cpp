@@ -3,10 +3,13 @@
 //
 
 #include "Board.h"
-#include "global_functions.h"
+#include "Simulation.h"
+#include "helper.h"
 
+// For a graphical reference of the coordinates below see attached documentation
 Board::Board (const Board_type type) {
-    if (type == Board_type::type_1) {
+    if (type == Board_type::type1)
+    {
         Point A1(-304.000000, 465.000000);
         Point B1(-304.000000, 354.085880);
         Point C1(-186.071797, 286.000000);
@@ -20,10 +23,10 @@ Board::Board (const Board_type type) {
         Point K1(219.000000, 305.199830);
         Point L1(219.000000, 465.000000);
         Point M1(0.000000, 134.573504);
-        Point N1(-305.000000, 287.073504);
-        Point O1(-305.000000, -17.926496);
-        Point P1(305.000000, -17.926496);
-        Point Q1(305.000000, 287.073504);
+        Point N1(-300.000000, 284.573504);
+        Point O1(-300.000000, -15.426496);
+        Point P1(300.000000, -15.426496);
+        Point Q1(300.000000, 284.573504);
 
         profile.push_back(A1);
         profile.push_back(B1);
@@ -38,20 +41,22 @@ Board::Board (const Board_type type) {
         profile.push_back(K1);
         profile.push_back(L1);
 
-        pom_centre = M1;
-        starting_pom_centre = M1;
+        pom = M1;
+        pom_home = M1;
 
         pom_range.push_back(N1);
         pom_range.push_back(O1);
         pom_range.push_back(P1);
         pom_range.push_back(Q1);
 
+        // Rotation is needed to align the CAD reference system with ours
         rotate(profile, M_PI / 2.);
-        rotate(pom_centre, M_PI / 2.);
-        rotate(starting_pom_centre, M_PI / 2.);
+        rotate(pom, M_PI / 2.);
+        rotate(pom_home, M_PI / 2.);
         rotate(pom_range, M_PI / 2.);
     }
-    else if (type == Board_type::type_2) {
+    else if (type == Board_type::type2)
+    {
         Point A2(-250.701813, -495.771723);
         Point B2(-154.647367, -440.314663);
         Point C2(-154.647367, -304.142903);
@@ -65,10 +70,10 @@ Board::Board (const Board_type type) {
         Point K2(-373.810806, 37.059649);
         Point L2(-512.201813, -42.840437);
         Point M2(-116.544073, -67.286752);
-        Point N2(-96.112947, -407.674500);
-        Point O2(168.024801, -255.174500);
-        Point P2(-136.975199, 273.100996);
-        Point Q2(-401.112947, 120.600996);
+        Point N2(-96.447884, -402.094373);
+        Point O2(163.359737, -252.094373);
+        Point P2(-136.640263, 267.520869);
+        Point Q2(-396.447884, 117.520869);
 
         profile.push_back(A2);
         profile.push_back(B2);
@@ -83,20 +88,22 @@ Board::Board (const Board_type type) {
         profile.push_back(K2);
         profile.push_back(L2);
 
-        pom_centre = M2;
-        starting_pom_centre = M2;
+        pom = M2;
+        pom_home = M2;
 
         pom_range.push_back(N2);
         pom_range.push_back(O2);
         pom_range.push_back(P2);
         pom_range.push_back(Q2);
 
+        // Rotation is needed to align the CAD reference system with ours
         rotate(profile, M_PI / 2.);
-        rotate(pom_centre, M_PI / 2.);
-        rotate(starting_pom_centre, M_PI / 2.);
+        rotate(pom, M_PI / 2.);
+        rotate(pom_home, M_PI / 2.);
         rotate(pom_range, M_PI / 2.);
     }
-    else if (type == Board_type::type_3) {
+    else if (type == Board_type::type3)
+    {
         Point A3(554.701813, 30.771723);
         Point B3(458.647367, 86.228783);
         Point C3(340.719164, 18.142903);
@@ -110,10 +117,10 @@ Board::Board (const Board_type type) {
         Point K3(154.810806, -342.259478);
         Point L3(293.201813, -422.159563);
         Point M3(116.544073, -67.286752);
-        Point N3(401.112947, 120.600996);
-        Point O3(136.975199, 273.100996);
-        Point P3(-168.024801, -255.174500);
-        Point Q3(96.112947, -407.674500);
+        Point N3(396.447884, 117.520869);
+        Point O3(136.640263, 267.520869);
+        Point P3(-163.359737, -252.094373);
+        Point Q3(96.447884, -402.094373);
 
         profile.push_back(A3);
         profile.push_back(B3);
@@ -128,31 +135,31 @@ Board::Board (const Board_type type) {
         profile.push_back(K3);
         profile.push_back(L3);
 
-        pom_centre = M3;
-        starting_pom_centre = M3;
+        pom = M3;
+        pom_home = M3;
 
         pom_range.push_back(N3);
         pom_range.push_back(O3);
         pom_range.push_back(P3);
         pom_range.push_back(Q3);
 
+        // Rotation is needed to align the CAD reference system with ours
         rotate(profile, M_PI / 2.);
-        rotate(pom_centre, M_PI / 2.);
-        rotate(starting_pom_centre, M_PI / 2.);
+        rotate(pom, M_PI / 2.);
+        rotate(pom_home, M_PI / 2.);
         rotate(pom_range, M_PI / 2.);
     }
 }
 
 bool Board::is_in_range (const Point& point) const {
-    if (pom_range.bounded_side(point) == CGAL::ON_BOUNDED_SIDE
-        || pom_range.bounded_side(point) == CGAL::ON_BOUNDARY)
+    if (pom_range.bounded_side(point) == CGAL::ON_BOUNDED_SIDE || pom_range.bounded_side(point) == CGAL::ON_BOUNDARY)
         return true;
     return false;
 }
 
-bool Board::move (double delta_x, double delta_y) {
+bool Board::teleport (double delta_x, double delta_y) {
     Vector displacement (delta_x, delta_y);
-    Point destination = pom_centre + displacement;
+    Point destination = pom + displacement;
 
     if (!is_in_range(destination))
         return false;
@@ -160,11 +167,40 @@ bool Board::move (double delta_x, double delta_y) {
     for (auto it = profile.begin(); it != profile.end(); ++it)
         *it = *it + displacement;
 
-    pom_centre = destination;
+    pom = destination;
 
     return true;
 }
 
-bool Board::move_to_ngs (const Point& ngs) {
-    return move(ngs.x() - pom_centre.x(), ngs.y() - pom_centre.y());
+bool Board::teleport (const Point& pom_destination) {
+    return teleport (pom_destination.x() - pom.x(), pom_destination.y() - pom.y());
+}
+
+bool Board::is_destination_reached (const Point& pom_destination) const {
+    Vector displacement (pom_destination - pom);
+    double distance = std::sqrt(displacement.squared_length());
+    if (distance <= SIMULATION_DISTANCE_STEP)
+        return true;
+    return false;
+}
+
+bool Board::move_step_linear (const Point& pom_destination, const double distance_step) {
+    if (is_destination_reached(pom_destination))
+        return false;
+
+    Vector displacement (pom_destination - pom);
+    double length = std::sqrt(displacement.squared_length());
+    Vector step_vector = (displacement / length) * distance_step;
+    teleport (pom + step_vector);
+
+    return true;
+}
+
+void Board::teleport_home() {
+    teleport(pom_home);
+}
+
+double Board::calculate_distance (const Point& pom_destination) const {
+    Vector displacement (pom_destination - pom);
+    return std::sqrt(displacement.squared_length());
 }

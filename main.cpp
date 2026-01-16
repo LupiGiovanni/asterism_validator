@@ -1,56 +1,82 @@
 #include <iostream>
 #include "dataset.h"
-#include "global_functions.h"
 #include "Board.h"
-#include "Asterism.h"
+#include "Board_set.h"
+#include "Simulation.h"
+
+// int count_targets_detected (const Asterism& destination_asterism) {
+//     Board_set temporary;
+//     int count = 0;
+//
+//     if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision())
+//         count++;
+//
+//     if (temporary.board1.teleport(destination_asterism.ngs1) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision())
+//         count++;
+//
+//     if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs3) && !temporary.detect_collision())
+//         count++;
+//
+//     if (temporary.board1.teleport(destination_asterism.ngs2) && temporary.board2.teleport(destination_asterism.ngs3) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision())
+//         count++;
+//
+//     if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs1) && temporary.board3.teleport(destination_asterism.ngs2) && !temporary.detect_collision())
+//         count++;
+//
+//     if (temporary.board1.teleport(destination_asterism.ngs3) && temporary.board2.teleport(destination_asterism.ngs2) && temporary.board3.teleport(destination_asterism.ngs1) && !temporary.detect_collision())
+//         count++;
+//
+//     return count;
+// }
 
 int main() {
-    //creates the boards
-    Board board_1 (Board_type::type_1);
-    Board board_2 (Board_type::type_2);
-    Board board_3 (Board_type::type_3);
+    std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
 
-    int count_total = 0;
-    int count_valid = 0;
-    int count_not_valid = 0;
+    Board_set boards;
+    Simulation simulation;
 
-    std::vector<Asterism> not_valid;
-    std::vector<Asterism> valid;
+    int total_simulations = 0;
+    int successful_simulations = 0;
 
-    //checks every asterism in the dataset
-    for (auto asterism = dataset.begin(); asterism != dataset.end(); ++asterism) {
-        count_total++;
-        if (asterism->is_valid(board_1, board_2, board_3)) {
-            count_valid++;
-            valid.push_back(*asterism);
+    int count_over_100_seconds = 0;
+    double durations_sum = 0.;
+
+    for (int i = 1; i < dataset.size(); ++i) {
+        simulation.run_linear_trajectory(boards, dataset[i-1], dataset[i]);
+        total_simulations++;
+        if (simulation.destination_reached && !simulation.collision_detected) {
+            successful_simulations++;
+            durations_sum += simulation.duration;
+            if (simulation.duration > 100.)
+                count_over_100_seconds++;
         }
         else {
-            count_not_valid++;
-            not_valid.push_back(*asterism);
+            std::cout << "Simulation from point " << i-1 << " to point " << i << " failed." << std::endl;
+            simulation.print_results();
         }
     }
 
-    //prints the results
-    std::cout << "======================================" << std::endl;
-    std::cout << "Total asterisms: " << count_total << std::endl;
-    std::cout << "Valid asterisms: " << count_valid << std::endl;
-    std::cout << "Not valid asterisms: " << count_not_valid << std::endl;
-
-    //prints not valid asterisms
-    for (auto asterism = not_valid.begin(); asterism != not_valid.end(); ++asterism) {
-         std::cout << "{"
-            << asterism->ngs1.x() << ","
-            << asterism->ngs2.x() << ","
-            << asterism->ngs3.x() << ","
-            << asterism->ngs1.y() << ","
-            << asterism->ngs2.y() << ","
-            << asterism->ngs3.y()
-            << "}" << std::endl;
-    }
-    std::cout << "======================================" << std::endl;
-
-    //example of drawing a graphical result
-    draw(valid[0], board_1, board_2, board_3);
+    std::cout << "Total simulations: " << total_simulations << std::endl;
+    std::cout << "Successful simulations: " << successful_simulations << std::endl;
+    std::cout << "Average duration of successful simulations: " << (durations_sum / successful_simulations) << " seconds" << std::endl;
+    std::cout << "Number of successful simulations over 100 seconds: " << count_over_100_seconds << std::endl;
 
     return 0;
+
+    // boards.assign_targets(dataset[73]);
+    // boards.teleport(dataset[73]);
+    // boards.draw(dataset[73]);
+    // boards.draw(dataset[74]);
+    //
+    // simulation.run_linear_trajectory(boards, dataset[73], dataset[74]);
+    // simulation.print_results();
+    //
+    // boards.assign_targets(dataset[170]);
+    // boards.teleport(dataset[170]);
+    // boards.draw(dataset[170]);
+    // boards.draw(dataset[171]);
+    //
+    // simulation.run_linear_trajectory(boards, dataset[170], dataset[171]);
+    // simulation.print_results();
+
 }

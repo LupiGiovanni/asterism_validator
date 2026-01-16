@@ -6,14 +6,23 @@
 #define ASTERISM_VALIDATOR_ASTERISM_H
 
 #include "Board.h"
+#include "helper.h"
 
-struct Asterism {
+// Represents a set of 3 natural guide stars (ngs)
+class Asterism {
+public:
     Point ngs1;
     Point ngs2;
     Point ngs3;
 
+    // The default constructor creates an asterism with all ngs coordinates set to zero.
+    Asterism ();
     Asterism (double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, double ngs2_y, double ngs3_y);
-    bool is_valid (Board& board_1, Board& board_2, Board& board_3) const;
+
+    bool operator == (const Asterism& asterism) const;
+
+    //Prints ngs coordinates
+    void print() const;
 };
 
 

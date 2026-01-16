@@ -12,7 +12,9 @@ add_executable (asterism_validator
                 main.cpp
                 Board.cpp Board.h
                 Asterism.cpp Asterism.h
-                global_functions.h
+                Board_set.cpp Board_set.h
+                Simulation.cpp Simulation.h
+                helper.h
                 dataset.h)
 
 target_link_libraries(asterism_validator CGAL::CGAL_Basic_viewer)
