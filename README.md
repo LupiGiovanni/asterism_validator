@@ -10,14 +10,3 @@ sudo apt install build-essential cmake g++ libboost-all-dev libcgal-dev qt6-base
 ~~~
 
 Then the program can be normally built with ```cmake``` and ```make```.
-
----
-
-To draw a graphical result, use the high-level function 
-
-~~~cpp
-draw (const Asterism& asterism, Board& board_1, Board& board_2, Board& board_3)
-~~~
-
-Note that the ```draw``` function can cause problems if used in very long loops.<br>
-Use ```w``` key to disable area coloring of the drawn polygons.
