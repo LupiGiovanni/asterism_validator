@@ -29,6 +29,11 @@ Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2),boa
     fov_large.push_back(X);
     fov_large.push_back(Y);
 
+    // Technical field definition
+    constexpr double technical_field_radius = 265.2; // mm
+    constexpr double technical_field_radius_squared = technical_field_radius * technical_field_radius;
+    technical_field = Circle(Point(0., 0.), technical_field_radius_squared);
+
     // Note that we do not need to rotate fov_small and fov_large because they are already aligned with our
     // reference system
 }
@@ -157,36 +162,36 @@ void Board_set::draw (const Asterism& asterism) const {
     CGAL::draw(polys);
 }
 
-bool Board_set::move_step_linear (const Asterism& destination_asterism, const double distance_step) {
+bool Board_set::move_step_linear_trajectory (const Asterism& destination_asterism, const double distance_step) {
     if (targets == Board_set_targets::ngs_123) {
-        board1.move_step_linear(destination_asterism.ngs1, distance_step);
-        board2.move_step_linear(destination_asterism.ngs2, distance_step);
-        board3.move_step_linear(destination_asterism.ngs3, distance_step);
+        board1.move_step_linear_trajectory(destination_asterism.ngs1, distance_step);
+        board2.move_step_linear_trajectory(destination_asterism.ngs2, distance_step);
+        board3.move_step_linear_trajectory(destination_asterism.ngs3, distance_step);
     }
     else if (targets == Board_set_targets::ngs_132) {
-        board1.move_step_linear(destination_asterism.ngs1, distance_step);
-        board2.move_step_linear(destination_asterism.ngs3, distance_step);
-        board3.move_step_linear(destination_asterism.ngs2, distance_step);
+        board1.move_step_linear_trajectory(destination_asterism.ngs1, distance_step);
+        board2.move_step_linear_trajectory(destination_asterism.ngs3, distance_step);
+        board3.move_step_linear_trajectory(destination_asterism.ngs2, distance_step);
     }
     else if (targets == Board_set_targets::ngs_213) {
-        board1.move_step_linear(destination_asterism.ngs2, distance_step);
-        board2.move_step_linear(destination_asterism.ngs1, distance_step);
-        board3.move_step_linear(destination_asterism.ngs3, distance_step);
+        board1.move_step_linear_trajectory(destination_asterism.ngs2, distance_step);
+        board2.move_step_linear_trajectory(destination_asterism.ngs1, distance_step);
+        board3.move_step_linear_trajectory(destination_asterism.ngs3, distance_step);
     }
     else if (targets == Board_set_targets::ngs_231) {
-        board1.move_step_linear(destination_asterism.ngs2, distance_step);
-        board2.move_step_linear(destination_asterism.ngs3, distance_step);
-        board3.move_step_linear(destination_asterism.ngs1, distance_step);
+        board1.move_step_linear_trajectory(destination_asterism.ngs2, distance_step);
+        board2.move_step_linear_trajectory(destination_asterism.ngs3, distance_step);
+        board3.move_step_linear_trajectory(destination_asterism.ngs1, distance_step);
     }
     else if (targets == Board_set_targets::ngs_312) {
-        board1.move_step_linear(destination_asterism.ngs3, distance_step);
-        board2.move_step_linear(destination_asterism.ngs1, distance_step);
-        board3.move_step_linear(destination_asterism.ngs2, distance_step);
+        board1.move_step_linear_trajectory(destination_asterism.ngs3, distance_step);
+        board2.move_step_linear_trajectory(destination_asterism.ngs1, distance_step);
+        board3.move_step_linear_trajectory(destination_asterism.ngs2, distance_step);
     }
     else if (targets == Board_set_targets::ngs_321) {
-        board1.move_step_linear(destination_asterism.ngs3, distance_step);
-        board2.move_step_linear(destination_asterism.ngs2, distance_step);
-        board3.move_step_linear(destination_asterism.ngs1, distance_step);
+        board1.move_step_linear_trajectory(destination_asterism.ngs3, distance_step);
+        board2.move_step_linear_trajectory(destination_asterism.ngs2, distance_step);
+        board3.move_step_linear_trajectory(destination_asterism.ngs1, distance_step);
     }
     else if (targets == Board_set_targets::none) {
         std::cout << "Warning: attempted to move boards but 'targets' field is 'none'" << std::endl;
@@ -276,4 +281,17 @@ double Board_set::calculate_distance (const Asterism& destination_asterism) cons
     }
 
     return total_distance;
+}
+
+void Board_set::move_step_out_of_technical_field (double distance_step) {
+        board1.move_step_out_of_technical_field(technical_field, distance_step);
+        board2.move_step_out_of_technical_field(technical_field, distance_step);
+        board3.move_step_out_of_technical_field(technical_field, distance_step);
+}
+
+bool Board_set::is_in_technical_field () const {
+    if (board1.is_in_technical_field(technical_field) && board2.is_in_technical_field(technical_field) && board3.is_in_technical_field(technical_field))
+        return true;
+
+    return false;
 }

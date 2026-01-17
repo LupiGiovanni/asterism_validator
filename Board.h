@@ -17,6 +17,7 @@ typedef CGAL::Polygon_2<Kernel> Polygon;
 typedef CGAL::Vector_2<Kernel> Vector;
 typedef CGAL::Direction_2<Kernel> Direction;
 typedef CGAL::Polygon_set_2<Kernel> PolygonSet;
+typedef CGAL::Circle_2<Kernel> Circle;
 
 // Represents the board velocity (in mm/s) used in Board::move_step_linear
 constexpr double BOARD_VELOCITY = 4.;
@@ -46,9 +47,18 @@ public:
     // interval radius is the constant Simulation::SIMULATION_DISTANCE_STEP
     bool is_destination_reached (const Point& pom_destination) const;
 
+    // Returns TRUE if any portion of the board profile is inside the technical field (or on its boundary). Returns
+    // FALSE otherwise
+    bool is_in_technical_field (const Circle& technical_field) const;
+
     // Moves the profile and the pom towards the pom_destination in a linear trajectory by a fixed distance_step.
     // Returns TRUE if pom has reached pom_destination, FALSE otherwise
-    bool move_step_linear (const Point& pom_destination, const double distance_step);
+    bool move_step_linear_trajectory (const Point& pom_destination, const double distance_step);
+
+    // If any portion of the board profile is inside the technical field, moves the profile and the pom away from it by
+    // a fixed distance_step.
+    // Returns TRUE if a movement is performed, false otherwise
+    bool move_step_out_of_technical_field (const Circle& technical_field, const double distance_step);
 
     // Calculates and returns the Euclidean distance between the current pom position and pom_destination
     double calculate_distance (const Point& pom_destination) const;

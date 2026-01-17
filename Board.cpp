@@ -184,7 +184,7 @@ bool Board::is_destination_reached (const Point& pom_destination) const {
     return false;
 }
 
-bool Board::move_step_linear (const Point& pom_destination, const double distance_step) {
+bool Board::move_step_linear_trajectory (const Point& pom_destination, const double distance_step) {
     if (is_destination_reached(pom_destination))
         return false;
 
@@ -203,4 +203,29 @@ void Board::teleport_home() {
 double Board::calculate_distance (const Point& pom_destination) const {
     Vector displacement (pom_destination - pom);
     return std::sqrt(displacement.squared_length());
+}
+
+bool Board::move_step_out_of_technical_field (const Circle& technical_field, const double distance_step) {
+    if (!is_in_technical_field(technical_field))
+        return false;
+
+    Vector direction (pom_home - CGAL::ORIGIN);
+    double length = std::sqrt(direction.squared_length());
+    Vector step_vector = (direction / length) * distance_step;
+    teleport (pom + step_vector);
+
+    return true;
+}
+
+bool Board::is_in_technical_field (const Circle& technical_field) const {
+    bool detected = false;
+
+    for (auto it = profile.begin(); it != profile.end(); ++it) {
+        if ((technical_field.bounded_side(*it) == CGAL::ON_BOUNDED_SIDE) || (technical_field.bounded_side(*it) == CGAL::ON_BOUNDARY)) {
+            detected = true;
+            break;
+        }
+    }
+
+    return detected;
 }

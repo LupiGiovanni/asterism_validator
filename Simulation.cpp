@@ -12,7 +12,7 @@ Simulation::Simulation () {
 }
 
 void Simulation::reset_result_fields () {
-    type = Trajectory_type::none;
+    type = Movement_type::none;
     Asterism zero_asterism;
     start = zero_asterism;
     destination = zero_asterism;
@@ -27,7 +27,7 @@ void Simulation::reset_result_fields () {
 
 bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& trajectory_start, const Asterism& trajectory_destination) {
     reset_result_fields();
-    type = Trajectory_type::linear_trajectory;
+    type = Movement_type::linear_trajectory;
     start = trajectory_start;
     destination = trajectory_destination;
 
@@ -37,7 +37,7 @@ bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& traje
 
     while (!boards.is_destination_reached(destination) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
         // boards.draw(destination);
-        boards.move_step_linear(destination, SIMULATION_DISTANCE_STEP);
+        boards.move_step_linear_trajectory(destination, SIMULATION_DISTANCE_STEP);
         collision_detected = boards.detect_collision();
         if (boards.detect_vignette_fov_small())
             fov_small_vignette_detected = true;
@@ -60,6 +60,39 @@ bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& traje
     return false;
 }
 
+bool Simulation::run_out_of_technical_field_movement (Board_set& boards, const Asterism& movement_start) {
+    reset_result_fields();
+    type = Movement_type::out_of_technical_field_movement;
+    start = movement_start;
+
+    boards.assign_targets(start);
+    boards.teleport(start);
+
+    while (boards.is_in_technical_field() && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
+        // boards.draw(start);
+        boards.move_step_out_of_technical_field(SIMULATION_DISTANCE_STEP);
+        collision_detected = boards.detect_collision();
+        if (boards.detect_vignette_fov_small())
+            fov_small_vignette_detected = true;
+        if (boards.detect_vignette_fov_large())
+            fov_large_vignette_detected = true;
+        iterations += 1;
+    }
+
+    duration = SIMULATION_TIME_STEP * iterations;
+
+    if (!boards.is_in_technical_field()) {
+        destination_reached = true;
+        return true;
+    }
+
+    if (iterations > MAX_ITERATION_INDEX) {
+        max_iterations_exceeded = true;
+    }
+
+    return false;
+}
+
 void Simulation::print_results() const {
     std::cout << std::endl;
     std::cout << "======================================================================================" << std::endl;
@@ -67,14 +100,17 @@ void Simulation::print_results() const {
     std::cout << std::endl;
 
     switch (type){
-        case Trajectory_type::linear_trajectory:
-            std::cout << "> Trajectory type\t\t\tlinear trajectory" << std::endl;
+        case Movement_type::linear_trajectory:
+            std::cout << "> Movement type\t\t\t\tlinear trajectory" << std::endl;
             break;
-        case Trajectory_type::non_linear_trajectory:
-            std::cout << "> Trajectory type\t\t\tnon-linear trajectory" << std::endl;
+        case Movement_type::non_linear_trajectory:
+            std::cout << "> Movement type\t\t\t\tnon-linear trajectory" << std::endl;
             break;
-        case Trajectory_type::none:
-            std::cout << "> Trajectory type\t\t\tnone" << std::endl;
+        case Movement_type::out_of_technical_field_movement:
+            std::cout << "> Movement type\t\t\t\tout of technical field movement" << std::endl;
+            break;
+        case Movement_type::none:
+            std::cout << "> Movement type\t\t\t\tnone" << std::endl;
             break;
     }
 

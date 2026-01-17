@@ -24,6 +24,7 @@ public:
 
     Board_set_targets targets;
 
+    Circle technical_field;
     Polygon fov_small;
     Polygon fov_large;
 
@@ -56,11 +57,19 @@ public:
     // Call assign_targets before using this method
     bool is_destination_reached (const Asterism& destination_asterism) const;
 
+    // If any portion of any board profile is inside (or on the border of) the technical_field, returns TRUE. Returns
+    // FALSE otherwise
+    bool is_in_technical_field () const;
+
     // Moves the 3 boards towards their respective target ngs by a fixed distance_step. If a collision is detected
     // after the movement, TRUE is returned. FALSE is returned otherwise.
     // If targets == Board_set_targets::none, no movement is performed and FALSE is returned.
     // Call assign_targets before using this method
-    bool move_step_linear (const Asterism& destination_asterism, const double distance_step);
+    bool move_step_linear_trajectory (const Asterism& destination_asterism, const double distance_step);
+
+    // Moves the boards away from the technical_field by a fixed distance_step. If a board exits the technical_field,
+    // then it's not moved any further
+    void move_step_out_of_technical_field (double distance_step);
 
     // Calculates and returns the distance of the board set from destination_asterism, defined as
     //      distance = d1 + d2 + d3
