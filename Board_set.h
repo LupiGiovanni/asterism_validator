@@ -69,7 +69,9 @@ public:
 
     // Moves the boards away from the technical_field by a fixed distance_step. If a board exits the technical_field,
     // then it's not moved any further
-    void move_step_out_of_technical_field (double distance_step);
+    void move_step_out_of_technical_field_y_neg (double distance_step);
+
+    void move_step_out_of_technical_field_angle (double distance_neg);
 
     // Calculates and returns the distance of the board set from destination_asterism, defined as
     //      distance = d1 + d2 + d3

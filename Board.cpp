@@ -205,13 +205,36 @@ double Board::calculate_distance (const Point& pom_destination) const {
     return std::sqrt(displacement.squared_length());
 }
 
-bool Board::move_step_out_of_technical_field (const Circle& technical_field, const double distance_step) {
+bool Board::move_step_out_of_technical_field_y_neg (const Circle& technical_field, const double distance_step) {
     if (!is_in_technical_field(technical_field))
         return false;
 
     Vector direction (pom_home - CGAL::ORIGIN);
     double length = std::sqrt(direction.squared_length());
     Vector step_vector = (direction / length) * distance_step;
+    teleport (pom + step_vector);
+
+    return true;
+}
+
+bool Board::move_step_out_of_technical_field_angle(const Circle &technical_field, const double distance_step) {
+    if (!is_in_technical_field(technical_field))
+        return false;
+
+    Point bottom_left_corner = *pom_range.begin();
+    Point bottom_right_corner = *(pom_range.end() - 1);
+
+    double distance_to_bottom_left_corner = calculate_distance(bottom_left_corner);
+    double distance_to_bottom_right_corner = calculate_distance(bottom_right_corner);
+
+    Vector displacement;
+    if (distance_to_bottom_left_corner < distance_to_bottom_right_corner)
+        displacement = bottom_left_corner - pom;
+    else
+        displacement = bottom_right_corner - pom;
+
+    double length = std::sqrt(displacement.squared_length());
+    Vector step_vector = (displacement / length) * distance_step;
     teleport (pom + step_vector);
 
     return true;

@@ -58,7 +58,9 @@ public:
     // If any portion of the board profile is inside the technical field, moves the profile and the pom away from it by
     // a fixed distance_step.
     // Returns TRUE if a movement is performed, false otherwise
-    bool move_step_out_of_technical_field (const Circle& technical_field, const double distance_step);
+    bool move_step_out_of_technical_field_y_neg (const Circle& technical_field, const double distance_step);
+
+    bool move_step_out_of_technical_field_angle (const Circle& technical_field, const double distance_step);
 
     // Calculates and returns the Euclidean distance between the current pom position and pom_destination
     double calculate_distance (const Point& pom_destination) const;

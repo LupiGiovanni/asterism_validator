@@ -283,10 +283,10 @@ double Board_set::calculate_distance (const Asterism& destination_asterism) cons
     return total_distance;
 }
 
-void Board_set::move_step_out_of_technical_field (double distance_step) {
-        board1.move_step_out_of_technical_field(technical_field, distance_step);
-        board2.move_step_out_of_technical_field(technical_field, distance_step);
-        board3.move_step_out_of_technical_field(technical_field, distance_step);
+void Board_set::move_step_out_of_technical_field_y_neg (double distance_step) {
+        board1.move_step_out_of_technical_field_y_neg(technical_field, distance_step);
+        board2.move_step_out_of_technical_field_y_neg(technical_field, distance_step);
+        board3.move_step_out_of_technical_field_y_neg(technical_field, distance_step);
 }
 
 bool Board_set::is_in_technical_field () const {
@@ -294,4 +294,10 @@ bool Board_set::is_in_technical_field () const {
         return true;
 
     return false;
+}
+
+void Board_set::move_step_out_of_technical_field_angle(double distance_neg) {
+    board1.move_step_out_of_technical_field_angle(technical_field, distance_neg);
+    board2.move_step_out_of_technical_field_angle(technical_field, distance_neg);
+    board3.move_step_out_of_technical_field_angle(technical_field, distance_neg);
 }
