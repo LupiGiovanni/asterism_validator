@@ -12,7 +12,7 @@ constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
 constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STEP; // mm
 
 // Parameterize the movement type
-enum class Movement_type {linear_trajectory, non_linear_trajectory, out_of_technical_field_y_neg_movement, out_of_technical_field_angle, none};
+enum class Movement_type {linear_trajectory, non_linear_trajectory, out_of_technical_field_y_neg, out_of_technical_field_corner, none};
 
 // The class represents a simulation of the trajectories of the 3 boards from a start position (represented by an
 // asterism) to a destination position (also represented by an asterism). The simulation is discrete in time and space
@@ -29,6 +29,7 @@ public:
     Asterism start;
     Asterism destination;
     bool destination_reached;
+    double distance_from_destination;
 
     bool collision_detected;
     bool fov_small_vignette_detected;
@@ -51,15 +52,16 @@ public:
     // Returns FALSE if a collision is detected or if the maximum number of iterations is exceeded.
     // Note that with this type of movement the 'destination' asterism is not relevant and has all coordinates set to
     // zero
-    bool run_out_of_technical_field_movement_y_neg (Board_set& boards, const Asterism& movement_start);
+    bool run_out_of_technical_field_y_neg (Board_set& boards, const Asterism& movement_start);
 
-    bool run_out_of_technical_field_movement_angle (Board_set& boards, const Asterism& movement_start);
+    bool run_out_of_technical_field_corner (Board_set& boards, const Asterism& movement_start);
 
     // Strongly recommended to use after each simulation to better visualize results
     void print_results() const;
 
 private:
     void reset_result_fields();
+    bool run_out_of_technical_field_helper (Board_set& boards, const Asterism& movement_start, const Movement_type movement_type);
 };
 
 

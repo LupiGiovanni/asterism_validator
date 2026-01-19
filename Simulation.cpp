@@ -17,6 +17,7 @@ void Simulation::reset_result_fields () {
     start = zero_asterism;
     destination = zero_asterism;
     destination_reached = false;
+    distance_from_destination = std::numeric_limits<double>::infinity();
     collision_detected = false;
     fov_small_vignette_detected = false;
     fov_large_vignette_detected = false;
@@ -50,6 +51,7 @@ bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& traje
 
     if (boards.is_destination_reached(destination)) {
         destination_reached = true;
+        distance_from_destination = boards.calculate_distance(destination);
         return true;
     }
 
@@ -60,70 +62,12 @@ bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& traje
     return false;
 }
 
-bool Simulation::run_out_of_technical_field_movement_y_neg (Board_set& boards, const Asterism& movement_start) {
-    reset_result_fields();
-    type = Movement_type::out_of_technical_field_y_neg_movement;
-    start = movement_start;
-
-    boards.assign_targets(start);
-    boards.teleport(start);
-
-    while (boards.is_in_technical_field() && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        // boards.draw(start);
-        boards.move_step_out_of_technical_field_y_neg(SIMULATION_DISTANCE_STEP);
-        collision_detected = boards.detect_collision();
-        if (boards.detect_vignette_fov_small())
-            fov_small_vignette_detected = true;
-        if (boards.detect_vignette_fov_large())
-            fov_large_vignette_detected = true;
-        iterations += 1;
-    }
-
-    duration = SIMULATION_TIME_STEP * iterations;
-
-    if (!boards.is_in_technical_field()) {
-        destination_reached = true;
-        return true;
-    }
-
-    if (iterations > MAX_ITERATION_INDEX) {
-        max_iterations_exceeded = true;
-    }
-
-    return false;
+bool Simulation::run_out_of_technical_field_y_neg (Board_set& boards, const Asterism& movement_start) {
+    return run_out_of_technical_field_helper(boards, movement_start, Movement_type::out_of_technical_field_y_neg);
 }
 
-bool Simulation::run_out_of_technical_field_movement_angle (Board_set& boards, const Asterism& movement_start) {
-    reset_result_fields();
-    type = Movement_type::out_of_technical_field_angle;
-    start = movement_start;
-
-    boards.assign_targets(start);
-    boards.teleport(start);
-
-    while (boards.is_in_technical_field() && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        // boards.draw(start);
-        boards.move_step_out_of_technical_field_angle(SIMULATION_DISTANCE_STEP);
-        collision_detected = boards.detect_collision();
-        if (boards.detect_vignette_fov_small())
-            fov_small_vignette_detected = true;
-        if (boards.detect_vignette_fov_large())
-            fov_large_vignette_detected = true;
-        iterations += 1;
-    }
-
-    duration = SIMULATION_TIME_STEP * iterations;
-
-    if (!boards.is_in_technical_field()) {
-        destination_reached = true;
-        return true;
-    }
-
-    if (iterations > MAX_ITERATION_INDEX) {
-        max_iterations_exceeded = true;
-    }
-
-    return false;
+bool Simulation::run_out_of_technical_field_corner (Board_set& boards, const Asterism& movement_start) {
+    return run_out_of_technical_field_helper(boards, movement_start, Movement_type::out_of_technical_field_corner);
 }
 
 void Simulation::print_results() const {
@@ -139,11 +83,11 @@ void Simulation::print_results() const {
         case Movement_type::non_linear_trajectory:
             std::cout << "> Movement type\t\t\t\tnon-linear trajectory" << std::endl;
             break;
-        case Movement_type::out_of_technical_field_y_neg_movement:
-            std::cout << "> Movement type\t\t\t\tout of technical field y negative movement" << std::endl;
+        case Movement_type::out_of_technical_field_y_neg:
+            std::cout << "> Movement type\t\t\t\tout of technical field y negative" << std::endl;
             break;
-        case Movement_type::out_of_technical_field_angle:
-            std::cout << "> Movement type\t\t\t\tout of technical field angle movement" << std::endl;
+        case Movement_type::out_of_technical_field_corner:
+            std::cout << "> Movement type\t\t\t\tout of technical field corner" << std::endl;
             break;
         case Movement_type::none:
             std::cout << "> Movement type\t\t\t\tnone" << std::endl;
@@ -164,10 +108,51 @@ void Simulation::print_results() const {
     std::cout << "> Iteration time step\t\t" << SIMULATION_TIME_STEP << " seconds" << std::endl;
     std::cout << "> Iteration distance step\t" << SIMULATION_DISTANCE_STEP << " mm" << std::endl;
     std::cout << "> Destination reached\t\t" << ((destination_reached)? ("true"):("false")) << std::endl;
+    std::cout << "> Distance from dest\t\t" << distance_from_destination << std::endl;
     std::cout << "> Collision detected\t\t" << ((collision_detected)? ("true"):("false")) << std::endl;
     std::cout << "> FoV small vignetting\t\t" << ((fov_small_vignette_detected)? ("true"):("false")) << std::endl;
     std::cout << "> FoV large vignetting\t\t" << ((fov_large_vignette_detected)? ("true"):("false")) << std::endl;
     std::cout << "======================================================================================" << std::endl;
     std::cout << std::endl;
+}
+
+bool Simulation::run_out_of_technical_field_helper(Board_set& boards, const Asterism& movement_start, const Movement_type movement_type) {
+    reset_result_fields();
+    type = movement_type;
+    start = movement_start;
+
+    boards.assign_targets(start);
+    boards.teleport(start);
+
+    while (boards.is_in_technical_field() && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
+        // boards.draw(start);
+
+        if (movement_type == Movement_type::out_of_technical_field_y_neg)
+            boards.move_step_out_of_technical_field_y_neg(SIMULATION_DISTANCE_STEP);
+        else if (movement_type == Movement_type::out_of_technical_field_corner)
+            boards.move_step_out_of_technical_field_corner(SIMULATION_DISTANCE_STEP);
+
+        collision_detected = boards.detect_collision();
+        if (boards.detect_vignette_fov_small())
+            fov_small_vignette_detected = true;
+        if (boards.detect_vignette_fov_large())
+            fov_large_vignette_detected = true;
+
+        iterations += 1;
+    }
+
+    duration = SIMULATION_TIME_STEP * iterations;
+
+    if (!boards.is_in_technical_field()) {
+        destination_reached = true;
+        distance_from_destination = 0.;
+        return true;
+    }
+
+    if (iterations > MAX_ITERATION_INDEX) {
+        max_iterations_exceeded = true;
+    }
+
+    return false;
 }
 

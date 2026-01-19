@@ -217,7 +217,7 @@ bool Board::move_step_out_of_technical_field_y_neg (const Circle& technical_fiel
     return true;
 }
 
-bool Board::move_step_out_of_technical_field_angle(const Circle &technical_field, const double distance_step) {
+bool Board::move_step_out_of_technical_field_corner(const Circle &technical_field, const double distance_step) {
     if (!is_in_technical_field(technical_field))
         return false;
 

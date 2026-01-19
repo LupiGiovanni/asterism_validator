@@ -296,8 +296,8 @@ bool Board_set::is_in_technical_field () const {
     return false;
 }
 
-void Board_set::move_step_out_of_technical_field_angle(double distance_neg) {
-    board1.move_step_out_of_technical_field_angle(technical_field, distance_neg);
-    board2.move_step_out_of_technical_field_angle(technical_field, distance_neg);
-    board3.move_step_out_of_technical_field_angle(technical_field, distance_neg);
+void Board_set::move_step_out_of_technical_field_corner(double distance_neg) {
+    board1.move_step_out_of_technical_field_corner(technical_field, distance_neg);
+    board2.move_step_out_of_technical_field_corner(technical_field, distance_neg);
+    board3.move_step_out_of_technical_field_corner(technical_field, distance_neg);
 }
