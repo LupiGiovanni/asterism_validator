@@ -14,6 +14,19 @@ Asterism::Asterism(double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, d
     ngs2(Point(ngs2_x, ngs2_y)),
     ngs3(Point(ngs3_x, ngs3_y)) {}
 
+Asterism::Asterism(const std::vector<Point>& ngs_vector) {
+    if (ngs_vector.size() == 3) {
+        ngs1 = ngs_vector[0];
+        ngs2 = ngs_vector[1];
+        ngs3 = ngs_vector[2];
+    } else {
+        std::cout << "Warning: tried to call Asterism constructor with a vector of dimension != 3" << std::endl;
+        ngs1 = Point(0.,0.);
+        ngs2 = Point(0.,0.);
+        ngs3 = Point(0.,0.);
+    }
+}
+
 bool Asterism::operator == (const Asterism& asterism) const {
     if (ngs1 == asterism.ngs1 && ngs2 == asterism.ngs2 && ngs3 == asterism.ngs3)
         return true;

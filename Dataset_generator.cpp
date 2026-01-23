@@ -1,0 +1,50 @@
+//
+// Created by gionimbus on 1/20/26.
+//
+
+#include <ctime>
+#include <random>
+#include "Dataset_generator.h"
+
+#include "Board_set.h"
+
+Asterism Dataset_generator::generate_random_asterism() {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+
+    double radius = TECHNICAL_FIELD_RADIUS;
+    double radius_squared = radius * radius;
+    std::uniform_real_distribution<> dis(-radius, radius);
+
+    int num_ngs = 3;
+    std::vector<Point> ngs;
+
+    while (ngs.size() < num_ngs) {
+        double x = dis(gen);
+        double y = dis(gen);
+
+        if (x*x + y*y <= radius_squared)
+            ngs.push_back({x, y});
+    }
+
+    return Asterism(ngs);
+}
+
+Asterism Dataset_generator::generate_random_valid_asterism() {
+    Board_set temporary;
+    Asterism new_asterism;
+    do {
+        new_asterism = generate_random_asterism();
+        temporary.assign_targets(new_asterism);
+    } while (temporary.targets == Board_set_targets::none);
+
+    return new_asterism;
+}
+
+void Dataset_generator::generate_random_valid_dataset() {
+    dataset.clear();
+    while (dataset.size() < DATASET_SIZE) {
+        Asterism new_asterism = generate_random_valid_asterism();
+        dataset.push_back(new_asterism);
+    }
+}

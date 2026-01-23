@@ -8,6 +8,8 @@
 #include "Board.h"
 #include "Asterism.h"
 
+constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
+
 // Used to represent which board moves towards which ngs of an asterism.
 // For example, given an Asterism A,  Board_set_targets::ngs_231 means that
 //      board1 moves towards A.ngs2
@@ -15,7 +17,8 @@
 //      board3 moves towards A.ngs1
 enum class Board_set_targets {none, ngs_123, ngs_132, ngs_213, ngs_231, ngs_312, ngs_321};
 
-// Represents a set of 3 boards along with their assigned targets (ngs) and the small and large fields of view (fov)
+// Represents a set of 3 boards along with their assigned targets (ngs), the small and large fields of view (fov) and
+// the technical field
 class Board_set {
 public:
     Board board1;

@@ -30,8 +30,7 @@ Board_set::Board_set(): board1(Board_type::type1), board2(Board_type::type2),boa
     fov_large.push_back(Y);
 
     // Technical field definition
-    constexpr double technical_field_radius = 265.2; // mm
-    constexpr double technical_field_radius_squared = technical_field_radius * technical_field_radius;
+    constexpr double technical_field_radius_squared = TECHNICAL_FIELD_RADIUS * TECHNICAL_FIELD_RADIUS;
     technical_field = Circle(Point(0., 0.), technical_field_radius_squared);
 
     // Note that we do not need to rotate fov_small and fov_large because they are already aligned with our
