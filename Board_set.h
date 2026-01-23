@@ -21,18 +21,10 @@ enum class Board_set_targets {none, ngs_123, ngs_132, ngs_213, ngs_231, ngs_312,
 // the technical field
 class Board_set {
 public:
-    Board board1;
-    Board board2;
-    Board board3;
-
-    Board_set_targets targets;
-
-    Circle technical_field;
-    Polygon fov_small;
-    Polygon fov_large;
-
     // Initializes 3 boards, each one of different type (Board_type::type1, Board_type::type2 and Board_type::type3)
     Board_set();
+
+    Board_set_targets get_targets() const;
 
     // If a collision between boards in current positions is detected, returns TRUE. FALSE otherwise
     bool detect_collision() const;
@@ -93,6 +85,17 @@ public:
     // Draws the current positions of the 3 boards along with their pom ranges.
     // Note that CGAL documentation reports that CGAL::draw functions are subject to segmentation fault errors
     void draw () const;
+
+private:
+    Board board1;
+    Board board2;
+    Board board3;
+
+    Board_set_targets targets;
+
+    Circle technical_field;
+    Polygon fov_small;
+    Polygon fov_large;
 };
 
 #endif //ASTERISM_VALIDATOR_BOARD_SET_H

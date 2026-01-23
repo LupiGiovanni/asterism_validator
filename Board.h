@@ -28,7 +28,8 @@ enum class Board_type {type1, type2, type3};
 // Represents the board with its profile (a polygonal approximation), its pick off mirror (pom) center, the home
 // position of the pom and the pom range (a rectangular field of 300 * 600 mm)
 class Board {
-public:
+    friend class Board_set;
+private:
     Polygon profile;
     Point pom; // Center of the pom
     Point pom_home;
@@ -68,7 +69,6 @@ public:
     // Calculates and returns the Euclidean distance between the current pom position and pom_destination
     double calculate_distance (const Point& pom_destination) const;
 
-private:
     // Directly moves the profile and the pom by delta_x and delta_y only if the new position of the pom is in its range.
     // Returns TRUE if the teleportation is successful, FALSE otherwise
     bool teleport (double delta_x, double delta_y);

@@ -300,3 +300,7 @@ void Board_set::move_step_out_of_technical_field_corner(double distance_neg) {
     board2.move_step_out_of_technical_field_corner(technical_field, distance_neg);
     board3.move_step_out_of_technical_field_corner(technical_field, distance_neg);
 }
+
+Board_set_targets Board_set::get_targets() const {
+    return targets;
+}

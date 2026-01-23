@@ -36,7 +36,7 @@ Asterism Dataset_generator::generate_random_valid_asterism() {
     do {
         new_asterism = generate_random_asterism();
         temporary.assign_targets(new_asterism);
-    } while (temporary.targets == Board_set_targets::none);
+    } while (temporary.get_targets() == Board_set_targets::none);
 
     return new_asterism;
 }
@@ -47,4 +47,8 @@ void Dataset_generator::generate_random_valid_dataset() {
         Asterism new_asterism = generate_random_valid_asterism();
         dataset.push_back(new_asterism);
     }
+}
+
+const std::vector<Asterism>& Dataset_generator::get_dataset () const {
+    return dataset;
 }

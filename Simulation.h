@@ -25,25 +25,13 @@ enum class Movement_type {linear_trajectory, non_linear_trajectory, out_of_techn
 // The simulated trajectories can be of different types (linear, non-linear, ...)
 class Simulation {
 public:
-    Movement_type type;
-
-    Asterism start;
-    bool start_valid;
-
-    Asterism destination;
-    bool destination_valid;
-    bool destination_reached;
-    double distance_from_destination;
-
-    bool collision_detected;
-    bool fov_small_vignette_detected;
-    bool fov_large_vignette_detected;
-
-    double duration;  // seconds
-    int iterations;
-    bool max_iterations_exceeded;
-
     Simulation();
+
+    bool is_destination_reached () const;
+    double get_duration () const;
+    bool is_start_valid () const;
+    bool is_destination_valid () const;
+    bool is_collision_detected () const;
 
     // This method simulates linear trajectories for the 3 boards from trajectory_start to trajectory_destination.
     // Returns TRUE if the boards reach their destinations and saves in the class fields the results of the simulation.
@@ -62,6 +50,24 @@ public:
     void print_results() const;
 
 private:
+    Movement_type type;
+
+    Asterism start;
+    bool start_valid;
+
+    Asterism destination;
+    bool destination_valid;
+    bool destination_reached;
+    double distance_from_destination;
+
+    bool collision_detected;
+    bool fov_small_vignette_detected;
+    bool fov_large_vignette_detected;
+
+    double duration;  // seconds
+    int iterations;
+    bool max_iterations_exceeded;
+
     void reset_result_fields();
 };
 

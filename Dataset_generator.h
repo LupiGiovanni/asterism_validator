@@ -11,11 +11,12 @@ constexpr int DATASET_SIZE = 1000;
 
 class Dataset_generator {
 public:
-    std::vector<Asterism> dataset = {};
-
+    const std::vector<Asterism>& get_dataset () const;
     void generate_random_valid_dataset ();
 
 private:
+    std::vector<Asterism> dataset = {};
+
     Asterism generate_random_asterism ();
     Asterism generate_random_valid_asterism ();
 };

@@ -35,13 +35,13 @@ bool Simulation::run_linear_trajectory (Board_set& boards, const Asterism& traje
     destination = trajectory_destination;
 
     boards.assign_targets(start);
-    if (boards.targets != Board_set_targets::none) {
+    if (boards.get_targets() != Board_set_targets::none) {
         start_valid = true;
         boards.teleport(start);
     }
 
     boards.assign_targets(destination);
-    if (boards.targets != Board_set_targets::none)
+    if (boards.get_targets() != Board_set_targets::none)
         destination_valid = true;
 
     if (start_valid && destination_valid) {
@@ -79,7 +79,7 @@ bool Simulation::run_out_of_technical_field (Board_set& boards, const Asterism& 
     start = movement_start;
 
     boards.assign_targets(start);
-    if (boards.targets != Board_set_targets::none) {
+    if (boards.get_targets() != Board_set_targets::none) {
         start_valid = true;
         boards.teleport(start);
     }
@@ -162,4 +162,23 @@ void Simulation::print_results() const {
     std::cout << std::endl;
 }
 
+bool Simulation::is_destination_reached () const {
+    return destination_reached;
+}
+
+double Simulation::get_duration () const {
+    return duration;
+}
+
+bool Simulation::is_start_valid () const {
+    return start_valid;
+}
+
+bool Simulation::is_destination_valid () const {
+    return destination_valid;
+}
+
+bool Simulation::is_collision_detected () const {
+    return collision_detected;
+}
 
