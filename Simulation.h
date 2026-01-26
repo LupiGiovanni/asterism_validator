@@ -16,9 +16,13 @@ public:
     Simulation();
 
     bool is_start_valid () const;
+
     bool is_destination_valid () const;
+
     bool is_destination_reached () const;
+
     bool is_collision_detected () const;
+
     double get_duration () const;
 
     void run (Movement movement_type, Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination = Asterism());
