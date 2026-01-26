@@ -101,6 +101,7 @@ inline void dataset_run_simulation_out_of_technical_field(const std::vector<Aste
         if (simulation.is_destination_reached() && !simulation.is_collision_detected()) {
             successful_simulations++;
             durations_sum += simulation.get_duration();
+            simulation.print_results();
         }
         else if (simulation.is_start_valid()) {
             std::cout << "Simulation from point " << i << " failed." << std::endl;

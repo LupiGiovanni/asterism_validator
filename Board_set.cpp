@@ -289,7 +289,7 @@ void Board_set::move_step_out_of_technical_field_y_neg (double distance_step) {
 }
 
 bool Board_set::is_in_technical_field () const {
-    if (board1.is_in_technical_field(technical_field) && board2.is_in_technical_field(technical_field) && board3.is_in_technical_field(technical_field))
+    if (board1.is_in_technical_field(technical_field) || board2.is_in_technical_field(technical_field) || board3.is_in_technical_field(technical_field))
         return true;
 
     return false;

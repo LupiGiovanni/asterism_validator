@@ -8,12 +8,12 @@
 #include "helper.h"
 
 int main() {
-    Dataset_generator generator;
-    generator.generate_random_valid_dataset();
-    const std::vector<Asterism>& dataset = generator.get_dataset();
+    // Dataset_generator generator;
+    // generator.generate_random_valid_dataset();
+    // const std::vector<Asterism>& dataset = generator.get_dataset();
 
-    // dataset_run_simulation_linear_trajectory(dataset);
-    dataset_run_simulation_out_of_technical_field(dataset);
+    //dataset_run_simulation_linear_trajectory(cedric_dataset);
+    dataset_run_simulation_out_of_technical_field(cedric_dataset);
 
     return 0;
 }

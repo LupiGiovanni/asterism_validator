@@ -148,7 +148,7 @@ void Simulation::print_results() const {
     std::cout << "> Destination valid\t\t\t" << ((destination_valid)? ("true"):("false")) << std::endl;
 
     std::cout << std::endl;
-    std::cout << "> Trajectory duration\t\t" << duration << " seconds" << std::endl;
+    std::cout << "> Movement duration\t\t\t" << duration << " seconds" << std::endl;
     std::cout << "> Simulation iterations\t\t" << iterations << std::endl;
     std::cout << "> Max iterations exceeded\t" << ((max_iterations_exceeded)? ("true"):("false")) << std::endl;
     std::cout << "> Iteration time step\t\t" << SIMULATION_TIME_STEP << " seconds" << std::endl;
