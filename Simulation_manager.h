@@ -11,13 +11,13 @@
 
 class Simulation_manager {
 public:
-    void simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset);
+    static void simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset);
 
-    void simulate_random_dataset (Movement movement_type);
+    static void simulate_random_dataset (Movement movement_type);
 
 private:
-    void simulate_dataset_linear_trajectory (const std::vector<Asterism>& dataset);
-    void simulate_dataset_outside_tech_field (const std::vector<Asterism>& dataset);
+    static void simulate_dataset_linear_trajectory (const std::vector<Asterism>& dataset);
+    static void simulate_dataset_outside_tech_field (const std::vector<Asterism>& dataset);
 };
 
 
