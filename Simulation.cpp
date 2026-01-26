@@ -147,7 +147,7 @@ void Simulation::print_results() const {
     std::cout << "                                Simulation results                                    " << std::endl;
     std::cout << std::endl;
 
-    switch ( type ){
+    switch ( type ) {
         case Movement::linear_trajectory:
             std::cout << "> Movement type\t\t\t\tlinear trajectory" << std::endl;
             break;
@@ -162,25 +162,25 @@ void Simulation::print_results() const {
     std::cout << "> Start asterism\t\t\t";
     start.print();
     std::cout << std::endl;
-    std::cout << "> Start valid\t\t\t\t" << ((start_valid)? ("true"):("false")) << std::endl;
+    std::cout << "> Start valid\t\t\t\t" << (start_valid? "true":"false") << std::endl;
 
     std::cout << "> Destination asterism\t\t";
     destination.print();
     std::cout << std::endl;
-    std::cout << "> Destination valid\t\t\t" << ((destination_valid)? ("true"):("false")) << std::endl;
+    std::cout << "> Destination valid\t\t\t" << (destination_valid? "true":"false") << std::endl;
 
     std::cout << std::endl;
     std::cout << "> Boards cruise velocity\t" << BOARD_VELOCITY << " mm/s" << std::endl;
     std::cout << "> Movement duration\t\t\t" << duration << " seconds" << std::endl;
     std::cout << "> Simulation iterations\t\t" << iterations << std::endl;
-    std::cout << "> Max iterations exceeded\t" << ((max_iterations_exceeded)? ("true"):("false")) << std::endl;
+    std::cout << "> Max iterations exceeded\t" << (max_iterations_exceeded? "true":"false") << std::endl;
     std::cout << "> Iteration time step\t\t" << SIMULATION_TIME_STEP << " seconds" << std::endl;
     std::cout << "> Iteration distance step\t" << SIMULATION_DISTANCE_STEP << " mm" << std::endl;
-    std::cout << "> Destination reached\t\t" << ((destination_reached)? ("true"):("false")) << std::endl;
+    std::cout << "> Destination reached\t\t" << (destination_reached? "true":"false") << std::endl;
     std::cout << "> Distance from dest\t\t" << distance_from_destination << std::endl;
-    std::cout << "> Collision detected\t\t" << ((collision_detected)? ("true"):("false")) << std::endl;
-    std::cout << "> FoV small vignetting\t\t" << ((fov_small_vignette_detected)? ("true"):("false")) << std::endl;
-    std::cout << "> FoV large vignetting\t\t" << ((fov_large_vignette_detected)? ("true"):("false")) << std::endl;
+    std::cout << "> Collision detected\t\t" << (collision_detected? "true":"false") << std::endl;
+    std::cout << "> FoV small vignetting\t\t" << (fov_small_vignette_detected? "true":"false") << std::endl;
+    std::cout << "> FoV large vignetting\t\t" << (fov_large_vignette_detected? "true":"false") << std::endl;
     std::cout << "======================================================================================" << std::endl;
     std::cout << std::endl;
 }
