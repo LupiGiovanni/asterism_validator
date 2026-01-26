@@ -22,6 +22,8 @@ add_executable (    asterism_validator
                     Dataset_generator.h
                     Simulation_manager.cpp
                     Simulation_manager.h
+                    Graphic_viewer.cpp
+                    Graphic_viewer.h
                     helper.h
                     dataset.h   )
 
