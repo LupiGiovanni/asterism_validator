@@ -3,12 +3,9 @@
 //
 
 #include "Board.h"
-#include "Simulation.h"
-#include "helper.h"
 
-// For a graphical reference of the coordinates below see attached documentation
-Board::Board (const Board_type type) {
-    if (type == Board_type::type1)
+Board::Board (Board_type type) {
+    if (type == Board_type::type0)
     {
         Point A1(-304.000000, 465.000000);
         Point B1(-304.000000, 354.085880);
@@ -55,7 +52,7 @@ Board::Board (const Board_type type) {
         rotate(pom_home, M_PI / 2.);
         rotate(pom_range, M_PI / 2.);
     }
-    else if (type == Board_type::type2)
+    else if (type == Board_type::type1)
     {
         Point A2(-250.701813, -495.771723);
         Point B2(-154.647367, -440.314663);
@@ -102,7 +99,7 @@ Board::Board (const Board_type type) {
         rotate(pom_home, M_PI / 2.);
         rotate(pom_range, M_PI / 2.);
     }
-    else if (type == Board_type::type3)
+    else if (type == Board_type::type2)
     {
         Point A3(554.701813, 30.771723);
         Point B3(458.647367, 86.228783);
@@ -176,15 +173,37 @@ bool Board::teleport (const Point& pom_destination) {
     return teleport (pom_destination.x() - pom.x(), pom_destination.y() - pom.y());
 }
 
+void Board::teleport_home() {
+    teleport(pom_home);
+}
+
 bool Board::is_destination_reached (const Point& pom_destination) const {
     Vector displacement (pom_destination - pom);
     double distance = std::sqrt(displacement.squared_length());
-    if (distance <= SIMULATION_DISTANCE_STEP)
+    if (distance <= TOLERANCE)
         return true;
     return false;
 }
 
-bool Board::move_step_linear_trajectory (const Point& pom_destination, const double distance_step) {
+bool Board::is_in_technical_field (const Circle& technical_field) const {
+    bool detected = false;
+
+    for (auto it = profile.begin(); it != profile.end(); ++it) {
+        if ((technical_field.bounded_side(*it) == CGAL::ON_BOUNDED_SIDE) || (technical_field.bounded_side(*it) == CGAL::ON_BOUNDARY)) {
+            detected = true;
+            break;
+        }
+    }
+
+    return detected;
+}
+
+double Board::calculate_distance (const Point& pom_destination) const {
+    Vector displacement (pom_destination - pom);
+    return std::sqrt(displacement.squared_length());
+}
+
+bool Board::move (const Point& pom_destination, double distance_step) {
     if (is_destination_reached(pom_destination))
         return false;
 
@@ -196,29 +215,8 @@ bool Board::move_step_linear_trajectory (const Point& pom_destination, const dou
     return true;
 }
 
-void Board::teleport_home() {
-    teleport(pom_home);
-}
-
-double Board::calculate_distance (const Point& pom_destination) const {
-    Vector displacement (pom_destination - pom);
-    return std::sqrt(displacement.squared_length());
-}
-
-bool Board::move_step_out_of_technical_field_y_neg (const Circle& technical_field, const double distance_step) {
-    if (!is_in_technical_field(technical_field))
-        return false;
-
-    Vector direction (pom_home - CGAL::ORIGIN);
-    double length = std::sqrt(direction.squared_length());
-    Vector step_vector = (direction / length) * distance_step;
-    teleport (pom + step_vector);
-
-    return true;
-}
-
-bool Board::move_step_out_of_technical_field_corner(const Circle &technical_field, const double distance_step) {
-    if (!is_in_technical_field(technical_field))
+bool Board::move_outside_tech_field (const Circle& tech_field, double distance_step) {
+    if (!is_in_technical_field(tech_field))
         return false;
 
     Point bottom_left_corner = *pom_range.begin();
@@ -238,17 +236,4 @@ bool Board::move_step_out_of_technical_field_corner(const Circle &technical_fiel
     teleport (pom + step_vector);
 
     return true;
-}
-
-bool Board::is_in_technical_field (const Circle& technical_field) const {
-    bool detected = false;
-
-    for (auto it = profile.begin(); it != profile.end(); ++it) {
-        if ((technical_field.bounded_side(*it) == CGAL::ON_BOUNDED_SIDE) || (technical_field.bounded_side(*it) == CGAL::ON_BOUNDARY)) {
-            detected = true;
-            break;
-        }
-    }
-
-    return detected;
 }

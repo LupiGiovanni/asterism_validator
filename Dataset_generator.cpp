@@ -2,11 +2,11 @@
 // Created by gionimbus on 1/20/26.
 //
 
-#include <ctime>
-#include <random>
 #include "Dataset_generator.h"
 
-#include "Board_set.h"
+const std::vector<Asterism>& Dataset_generator::get_dataset() const {
+    return dataset;
+}
 
 Asterism Dataset_generator::generate_random_asterism() {
     static std::random_device rd;
@@ -30,25 +30,21 @@ Asterism Dataset_generator::generate_random_asterism() {
     return Asterism(ngs);
 }
 
-Asterism Dataset_generator::generate_random_valid_asterism() {
+Asterism Dataset_generator::generate_random_valid_asterism () {
     Board_set temporary;
     Asterism new_asterism;
     do {
         new_asterism = generate_random_asterism();
         temporary.assign_targets(new_asterism);
-    } while (temporary.get_targets() == Board_set_targets::none);
+    } while ( temporary.get_targets().empty() );
 
     return new_asterism;
 }
 
 void Dataset_generator::generate_random_valid_dataset() {
     dataset.clear();
-    while (dataset.size() < DATASET_SIZE) {
+    while (dataset.size() < GENERATED_DATASET_SIZE) {
         Asterism new_asterism = generate_random_valid_asterism();
         dataset.push_back(new_asterism);
     }
-}
-
-const std::vector<Asterism>& Dataset_generator::get_dataset () const {
-    return dataset;
 }

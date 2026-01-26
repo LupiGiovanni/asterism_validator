@@ -7,22 +7,22 @@
 
 #include "Board.h"
 
-// Represents a set of 3 natural guide stars (ngs)
 class Asterism {
 public:
-    Point ngs1;
-    Point ngs2;
-    Point ngs3;
+    Asterism();
 
-    // The default constructor creates an asterism with all ngs coordinates set to zero
-    Asterism ();
-    Asterism (double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, double ngs2_y, double ngs3_y);
+    Asterism (double ngs0_x, double ngs1_x, double ngs2_x, double ngs0_y, double ngs1_y, double ngs2_y);
+
     explicit Asterism (const std::vector<Point>& ngs_vector);
 
-    bool operator == (const Asterism& asterism) const;
+    std::vector<Point> get_ngs_vector() const;
 
-    //Prints ngs coordinates
+    Point get_ngs(int index) const;
+
     void print() const;
+
+private:
+    std::vector<Point> ngs;
 };
 
 

@@ -2,39 +2,30 @@
 // Created by gionimbus on 12/16/25.
 //
 
-#include <iostream>
-#include <iomanip>
-#include "helper.h"
 #include "Asterism.h"
 
-Asterism::Asterism(): ngs1(Point(0.,0.)), ngs2(Point(0.,0.)), ngs3(Point(0.,0.)) {}
+Asterism::Asterism(): ngs({Point(0.,0.), Point(0.,0.), Point(0.,0.)}) {}
 
-Asterism::Asterism(double ngs1_x, double ngs2_x, double ngs3_x, double ngs1_y, double ngs2_y, double ngs3_y):
-    ngs1(Point(ngs1_x, ngs1_y)),
-    ngs2(Point(ngs2_x, ngs2_y)),
-    ngs3(Point(ngs3_x, ngs3_y)) {}
+Asterism::Asterism(double ngs0_x, double ngs1_x, double ngs2_x, double ngs0_y, double ngs1_y, double ngs2_y):
+    ngs{Point(ngs0_x, ngs0_y), Point(ngs1_x, ngs1_y), Point(ngs2_x, ngs2_y)} {}
 
-Asterism::Asterism(const std::vector<Point>& ngs_vector) {
-    if (ngs_vector.size() == 3) {
-        ngs1 = ngs_vector[0];
-        ngs2 = ngs_vector[1];
-        ngs3 = ngs_vector[2];
-    } else {
-        std::cout << "Warning: tried to call Asterism constructor with a vector of dimension != 3" << std::endl;
-        ngs1 = Point(0.,0.);
-        ngs2 = Point(0.,0.);
-        ngs3 = Point(0.,0.);
-    }
+Asterism::Asterism(const std::vector<Point>& ngs_vector): ngs (ngs_vector) {}
+
+std::vector<Point> Asterism::get_ngs_vector() const {
+    return ngs;
 }
 
-bool Asterism::operator == (const Asterism& asterism) const {
-    if (ngs1 == asterism.ngs1 && ngs2 == asterism.ngs2 && ngs3 == asterism.ngs3)
-        return true;
-    return false;
+Point Asterism::get_ngs(int index) const {
+    if (index > 2 || index < 0) {
+        std::cout << "Warning: invalid index. Returning ngs with coordinates set to zero" << std::endl;
+        return Point(0., 0.);
+    }
+    return ngs[index];
 }
 
 void Asterism::print () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
-    std::cout << "{" << ngs1.x() << ", " << ngs2.x() << ", " << ngs3.x() << ", " << ngs1.y() << ", " << ngs2.y() << ", " << ngs3.y() << "}";
+    std::cout << "{" << ngs[0].x() << ", " << ngs[1].x() << ", " << ngs[2].x() << ", "
+                     << ngs[0].y() << ", " << ngs[1].y() << ", " << ngs[2].y() << "}";
 }
 
