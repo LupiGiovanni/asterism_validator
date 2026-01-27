@@ -15,6 +15,7 @@ constexpr int WINDOW_WIDTH = 1000;
 
 constexpr int BOARD_VERTICES_COUNT = 12;
 constexpr int POM_RANGE_VERTICES_COUNT = 4;
+constexpr double ASTERISM_CIRCLE_RADIUS = 4.;
 
 class Graphic_viewer {
 public:
@@ -22,7 +23,7 @@ public:
 
     void draw(const Board_set& board_set);
     void draw(const Board_set& board_set, const Asterism& asterism);
-    void draw(const Board_set& board_set, const Asterism& start_asterism, const Asterism& destination_asterism);
+    void draw(const Board_set& board_set, const Asterism& start, const Asterism& destination);
 
 private:
     sf::RenderWindow window;
@@ -31,8 +32,8 @@ private:
     sf::ConvexShape fov_small;
     sf::ConvexShape fov_large;
     sf::CircleShape technical_field;
-    sf::VertexArray start_asterism;
-    sf::VertexArray destination_asterism;
+    std::vector<sf::CircleShape> start_asterism;
+    std::vector<sf::CircleShape> destination_asterism;
 
     double window_coordinate_x (double x) const;
     double window_coordinate_y (double y) const;
@@ -41,17 +42,10 @@ private:
     void setup_fov_large();
     void setup_fov_small();
     void setup_technical_field();
+    void setup_boards(const Board_set& board_set);
+    void setup_start_asterism(const Asterism& asterism);
+    void setup_destination_asterism(const Asterism& asterism);
     void rotate_clockwise_around_center(sf::ConvexShape& shape, float angle_degrees);
-    void rotate_clockwise_around_center(sf::VertexArray& shape, float angle_degrees);
-
-    // void draw_boards();
-    // void draw_pom_ranges();
-    // void draw_tech_field();
-    // void draw_fov_small();
-    // void draw_fov_large();
-    // void draw_start_asterism();
-    // void draw_destination_asterism();
-    // void draw_trajectories();
 };
 
 

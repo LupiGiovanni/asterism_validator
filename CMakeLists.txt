@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_BUILD_TYPE Release)
 
-find_package(CGAL REQUIRED)
+find_package(CGAL REQUIRED OPTIONAL_COMPONENTS Qt6)
 
 find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
 
@@ -36,3 +36,5 @@ target_link_libraries(  asterism_validator
                         sfml-system  )
 
 target_include_directories(asterism_validator PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+target_link_libraries(asterism_validator CGAL::CGAL_Basic_viewer)

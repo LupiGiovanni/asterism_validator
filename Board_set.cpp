@@ -23,6 +23,10 @@ Board_set::Board_set(): boards{Board(Board_type::type0), Board(Board_type::type1
     // with our reference system
 }
 
+const std::vector<Board>& Board_set::get_boards() const {
+    return boards;
+}
+
 std::vector<int> Board_set::get_targets() const {
     return targets;
 }

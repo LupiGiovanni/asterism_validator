@@ -17,6 +17,8 @@ public:
 
     std::vector<int> get_targets() const;
 
+    const std::vector<Board>& get_boards() const;
+
     bool detect_collision() const;
 
     bool detect_vignette_fov_small() const;
