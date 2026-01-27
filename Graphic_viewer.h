@@ -5,10 +5,43 @@
 #ifndef ASTERISM_VALIDATOR_GRAPHIC_VIEWER_H
 #define ASTERISM_VALIDATOR_GRAPHIC_VIEWER_H
 
+#include <SFML/Graphics.hpp>
+#include "Board_set.h"
+#include "Asterism.h"
+
+constexpr int WINDOW_HEIGHT = 1000;
+constexpr int WINDOW_WIDTH = 1000;
 
 class Graphic_viewer {
 public:
+    Graphic_viewer();
 
+    void draw(const Board_set& board_set);
+    void draw(const Board_set& board_set, const Asterism& asterism);
+    void draw(const Board_set& board_set, const Asterism& start_asterism, const Asterism& destination_asterism);
+
+private:
+    sf::RenderWindow window;
+    std::vector<sf::VertexArray> boards;
+    std::vector<sf::ConvexShape> pom_ranges;
+    sf::ConvexShape fov_small;
+    sf::ConvexShape fov_large;
+    sf::CircleShape technical_field;
+    sf::VertexArray start_asterism;
+    sf::VertexArray destination_asterism;
+
+    double transform_to_window_coordinates_x (double x) const;
+    double transform_to_window_coordinates_y (double y) const;
+
+    void draw_boards();
+    void draw_pom_ranges();
+    void draw_tech_field();
+    void draw_fov_small();
+    void draw_fov_large();
+    void draw_start_asterism();
+    void draw_destination_asterism();
+
+    // void draw_trajectories();
 };
 
 
