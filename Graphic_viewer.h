@@ -6,11 +6,15 @@
 #define ASTERISM_VALIDATOR_GRAPHIC_VIEWER_H
 
 #include <SFML/Graphics.hpp>
+#include "helper.h"
 #include "Board_set.h"
 #include "Asterism.h"
 
 constexpr int WINDOW_HEIGHT = 1000;
 constexpr int WINDOW_WIDTH = 1000;
+
+constexpr int BOARD_VERTICES_COUNT = 12;
+constexpr int POM_RANGE_VERTICES_COUNT = 4;
 
 class Graphic_viewer {
 public:
@@ -30,17 +34,23 @@ private:
     sf::VertexArray start_asterism;
     sf::VertexArray destination_asterism;
 
-    double transform_to_window_coordinates_x (double x) const;
-    double transform_to_window_coordinates_y (double y) const;
+    double window_coordinate_x (double x) const;
+    double window_coordinate_y (double y) const;
 
-    void draw_boards();
-    void draw_pom_ranges();
-    void draw_tech_field();
-    void draw_fov_small();
-    void draw_fov_large();
-    void draw_start_asterism();
-    void draw_destination_asterism();
+    void setup_pom_ranges();
+    void setup_fov_large();
+    void setup_fov_small();
+    void setup_technical_field();
+    void rotate_clockwise_around_center(sf::ConvexShape& shape, float angle_degrees);
+    void rotate_clockwise_around_center(sf::VertexArray& shape, float angle_degrees);
 
+    // void draw_boards();
+    // void draw_pom_ranges();
+    // void draw_tech_field();
+    // void draw_fov_small();
+    // void draw_fov_large();
+    // void draw_start_asterism();
+    // void draw_destination_asterism();
     // void draw_trajectories();
 };
 

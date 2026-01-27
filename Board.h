@@ -6,6 +6,7 @@
 #define ASTERISM_VALIDATOR_BOARD_H
 
 #include "helper.h"
+#include "coordinates.h"
 
 enum class Board_type {type0, type1, type2};
 
@@ -36,6 +37,9 @@ private:
     bool move (const Point& pom_destination, double distance_step);
 
     bool move_outside_tech_field (const Circle& tech_field, double distance_step);
+
+public:
+    const Polygon& get_profile () const;
 };
 
 

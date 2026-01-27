@@ -9,6 +9,7 @@
 #include "helper.h"
 #include "Board.h"
 #include "Asterism.h"
+#include "coordinates.h"
 
 class Board_set {
 public:

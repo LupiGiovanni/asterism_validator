@@ -27,7 +27,8 @@ add_executable (    asterism_validator
                     Graphic_viewer.cpp
                     Graphic_viewer.h
                     helper.h
-                    dataset.h   )
+                    dataset.h
+                    coordinates.h   )
 
 target_link_libraries(  asterism_validator
                         sfml-graphics
