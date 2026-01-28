@@ -38,3 +38,5 @@ target_link_libraries(  asterism_validator
 target_include_directories(asterism_validator PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(asterism_validator CGAL::CGAL_Basic_viewer)
+
+# TODO: remove Qt6 dependency if not needed

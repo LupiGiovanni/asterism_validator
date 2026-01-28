@@ -9,13 +9,15 @@
 #include "helper.h"
 #include "Board_set.h"
 #include "Asterism.h"
+#include "Simulation.h"
 
 constexpr int WINDOW_HEIGHT = 1000;
 constexpr int WINDOW_WIDTH = 1000;
 
 constexpr int BOARD_VERTICES_COUNT = 12;
 constexpr int POM_RANGE_VERTICES_COUNT = 4;
-constexpr double ASTERISM_CIRCLE_RADIUS = 4.;
+constexpr double ASTERISM_CIRCLE_RADIUS = 5.;
+constexpr int CONVEX_SHAPES_TRANSPARENCY = 60;
 
 class Graphic_viewer {
 public:
@@ -24,6 +26,8 @@ public:
     void draw(const Board_set& board_set);
     void draw(const Board_set& board_set, const Asterism& asterism);
     void draw(const Board_set& board_set, const Asterism& start, const Asterism& destination);
+
+    void animate(Movement movement_type, Board_set& board_set, const Asterism& start, const Asterism& destination = Asterism());
 
 private:
     sf::RenderWindow window;
@@ -46,6 +50,8 @@ private:
     void setup_start_asterism(const Asterism& asterism);
     void setup_destination_asterism(const Asterism& asterism);
     void rotate_clockwise_around_center(sf::ConvexShape& shape, float angle_degrees);
+    void animate_outside_tech_field(Board_set& board_set, const Asterism& start);
+    void animate_linear_trajectory(Board_set& board_set, const Asterism& start, const Asterism& destination);
 };
 
 

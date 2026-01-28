@@ -32,21 +32,21 @@ void Graphic_viewer::setup_pom_ranges() {
     pom_ranges[0].setPoint(2, sf::Vector2f(window_coordinate_x(coordinates::P1.x()), window_coordinate_y(coordinates::P1.y())));
     pom_ranges[0].setPoint(3, sf::Vector2f(window_coordinate_x(coordinates::Q1.x()), window_coordinate_y(coordinates::Q1.y())));
     pom_ranges[0].setOutlineThickness(0.);
-    pom_ranges[0].setFillColor(sf::Color(255, 0, 0, 50));
+    pom_ranges[0].setFillColor(sf::Color(255, 0, 0, CONVEX_SHAPES_TRANSPARENCY));
 
     pom_ranges[1].setPoint(0, sf::Vector2f(window_coordinate_x(coordinates::N2.x()), window_coordinate_y(coordinates::N2.y())));
     pom_ranges[1].setPoint(1, sf::Vector2f(window_coordinate_x(coordinates::O2.x()), window_coordinate_y(coordinates::O2.y())));
     pom_ranges[1].setPoint(2, sf::Vector2f(window_coordinate_x(coordinates::P2.x()), window_coordinate_y(coordinates::P2.y())));
     pom_ranges[1].setPoint(3, sf::Vector2f(window_coordinate_x(coordinates::Q2.x()), window_coordinate_y(coordinates::Q2.y())));
     pom_ranges[1].setOutlineThickness(0.);
-    pom_ranges[1].setFillColor(sf::Color(0, 255, 0, 50));
+    pom_ranges[1].setFillColor(sf::Color(0, 255, 0, CONVEX_SHAPES_TRANSPARENCY));
 
     pom_ranges[2].setPoint(0, sf::Vector2f(window_coordinate_x(coordinates::N3.x()), window_coordinate_y(coordinates::N3.y())));
     pom_ranges[2].setPoint(1, sf::Vector2f(window_coordinate_x(coordinates::O3.x()), window_coordinate_y(coordinates::O3.y())));
     pom_ranges[2].setPoint(2, sf::Vector2f(window_coordinate_x(coordinates::P3.x()), window_coordinate_y(coordinates::P3.y())));
     pom_ranges[2].setPoint(3, sf::Vector2f(window_coordinate_x(coordinates::Q3.x()), window_coordinate_y(coordinates::Q3.y())));
     pom_ranges[2].setOutlineThickness(0.);
-    pom_ranges[2].setFillColor(sf::Color(0, 0, 255, 50));
+    pom_ranges[2].setFillColor(sf::Color(0, 0, 255, CONVEX_SHAPES_TRANSPARENCY));
 
     for (auto& it : pom_ranges)
         rotate_clockwise_around_center(it, -90.f);
@@ -74,7 +74,7 @@ void Graphic_viewer::setup_technical_field() {
     technical_field.setOrigin(TECHNICAL_FIELD_RADIUS, TECHNICAL_FIELD_RADIUS);
     technical_field.setPosition(window_coordinate_x(0.), window_coordinate_y(0.));
     technical_field.setOutlineThickness(0.);
-    technical_field.setFillColor(sf::Color(255, 255, 255, 50));
+    technical_field.setFillColor(sf::Color(255, 255, 255, CONVEX_SHAPES_TRANSPARENCY));
 }
 
 void Graphic_viewer::setup_boards(const Board_set& board_set) {
@@ -97,7 +97,8 @@ void Graphic_viewer::setup_start_asterism(const Asterism& asterism) {
         start_asterism[j].setPointCount(100);
         start_asterism[j].setOrigin(ASTERISM_CIRCLE_RADIUS, ASTERISM_CIRCLE_RADIUS);
         start_asterism[j].setPosition(window_coordinate_x(asterism.get_ngs(j).x()), window_coordinate_y(asterism.get_ngs(j).y()));
-        start_asterism[j].setOutlineThickness(0.);
+        start_asterism[j].setOutlineThickness(1.2);
+        start_asterism[j].setOutlineColor(sf::Color::White);
         start_asterism[j].setFillColor(sf::Color::Green);
     }
 }
@@ -107,7 +108,8 @@ void Graphic_viewer::setup_destination_asterism(const Asterism& asterism) {
         destination_asterism[j].setPointCount(100);
         destination_asterism[j].setOrigin(ASTERISM_CIRCLE_RADIUS, ASTERISM_CIRCLE_RADIUS);
         destination_asterism[j].setPosition(window_coordinate_x(asterism.get_ngs(j).x()), window_coordinate_y(asterism.get_ngs(j).y()));
-        destination_asterism[j].setOutlineThickness(0.);
+        destination_asterism[j].setOutlineThickness(1.2);
+        destination_asterism[j].setOutlineColor(sf::Color::White);
         destination_asterism[j].setFillColor(sf::Color::Red);
     }
 }
