@@ -16,6 +16,9 @@ Graphic_viewer::Graphic_viewer() {
     setup_fov_large();
     setup_fov_small();
     setup_technical_field();
+
+    movement_delay = sf::milliseconds(MOVEMENT_DELAY);
+    animation_start_delay = sf::milliseconds(ANIMATION_START_DELAY);
 }
 
 double Graphic_viewer::window_coordinate_x(double x) const {
@@ -127,6 +130,7 @@ void Graphic_viewer::rotate_clockwise_around_center(sf::ConvexShape& shape, floa
 }
 
 void Graphic_viewer::draw(const Board_set& board_set) {
+    sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
     setup_boards(board_set);
 
@@ -150,6 +154,7 @@ void Graphic_viewer::draw(const Board_set& board_set) {
 }
 
 void Graphic_viewer::draw(const Board_set& board_set, const Asterism& asterism) {
+    sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
     setup_start_asterism(asterism);
     setup_boards(board_set);
@@ -175,6 +180,7 @@ void Graphic_viewer::draw(const Board_set& board_set, const Asterism& asterism) 
 }
 
 void Graphic_viewer::draw(const Board_set& board_set, const Asterism& start, const Asterism& destination) {
+    sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
     setup_start_asterism(start);
     setup_destination_asterism(destination);
@@ -201,3 +207,121 @@ void Graphic_viewer::draw(const Board_set& board_set, const Asterism& start, con
     }
 }
 
+void Graphic_viewer::animate(Movement movement_type, const Asterism& start, const Asterism& destination) {
+    switch (movement_type) {
+        case Movement::linear_trajectory:
+            animate_linear_trajectory(start, destination);
+            break;
+        case Movement::outside_technical_field:
+            animate_outside_tech_field(start);
+            break;
+        case Movement::none:
+            std::cout << "Warning: movement type is 'none'" << std::endl;
+            break;
+    }
+}
+
+void Graphic_viewer::animate_outside_tech_field(const Asterism &start) {
+    sf::RenderWindow window;
+    window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
+
+    while (window.isOpen()) {
+        if (animation_start_clock.getElapsedTime() >= animation_start_delay) {
+            sf::Event event;
+            setup_start_asterism(start);
+            Board_set temporary;
+            temporary.assign_targets(start);
+
+            if ( ! temporary.get_targets().empty() ) {
+                int iterations = 0;
+                bool collision_detected = false;
+                temporary.teleport(start);
+
+                while ( temporary.is_in_technical_field() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+
+                    while (window.pollEvent(event)) {
+                        if (event.type == sf::Event::Closed)
+                            window.close();
+                    }
+
+                    if (movement_clock.getElapsedTime() >= movement_delay) {
+                        setup_boards(temporary);
+                        window.clear(sf::Color::Black);
+                        window.draw(technical_field);
+                        for (int j = 0; j < BOARDS_COUNT; j++) {
+                            window.draw(pom_ranges[j]);
+                            window.draw(boards[j]);
+                            window.draw(start_asterism[j]);
+                        }
+                        window.display();
+
+                        temporary.move_outside_tech_field(SIMULATION_DISTANCE_STEP);
+                        collision_detected = temporary.detect_collision();
+                        iterations += 1;
+
+                        movement_clock.restart();
+                    }
+                }
+            }
+            animation_start_clock.restart();
+        }
+    }
+}
+
+void Graphic_viewer::animate_linear_trajectory(const Asterism &start, const Asterism &destination) {
+    sf::RenderWindow window;
+    window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
+
+    while (window.isOpen()) {
+        if (animation_start_clock.getElapsedTime() >= animation_start_delay) {
+            sf::Event event;
+            bool start_valid = false;
+            bool destination_valid = false;
+            setup_start_asterism(start);
+            setup_destination_asterism(destination);
+
+            Board_set temporary;
+            temporary.assign_targets(start);
+            if ( ! temporary.get_targets().empty() )
+                start_valid = true;
+
+            temporary.assign_targets(destination);
+            if ( ! temporary.get_targets().empty() )
+                destination_valid = true;
+
+            if ( start_valid && destination_valid ) {
+                int iterations = 0;
+                bool collision_detected = false;
+                temporary.teleport(start);
+
+                while ( ! temporary.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+
+                    while (window.pollEvent(event)) {
+                        if (event.type == sf::Event::Closed)
+                            window.close();
+                    }
+
+                    if (movement_clock.getElapsedTime() >= movement_delay) {
+                        setup_boards(temporary);
+                        window.clear(sf::Color::Black);
+                        window.draw(technical_field);
+                        for (int j = 0; j < BOARDS_COUNT; j++) {
+                            window.draw(pom_ranges[j]);
+                            window.draw(boards[j]);
+                            window.draw(start_asterism[j]);
+                            window.draw(destination_asterism[j]);
+                        }
+                        window.display();
+
+                        temporary.move(destination, SIMULATION_DISTANCE_STEP);
+                        collision_detected = temporary.detect_collision();
+                        iterations += 1;
+
+                        movement_clock.restart();
+                    }
+                }
+            }
+            animation_start_clock.restart();
+        }
+    }
+}
