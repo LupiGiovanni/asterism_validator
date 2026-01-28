@@ -13,4 +13,4 @@ sudo apt install build-essential cmake g++ libboost-all-dev libcgal-dev qt6-base
 
 Then the program can be normally built with ```cmake``` and ```make```.
 
-![Example of graphical output](include/boards.png)
+![Example of graphical output](include/boards_gif.gif)

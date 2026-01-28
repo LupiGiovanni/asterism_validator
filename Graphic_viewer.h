@@ -16,7 +16,7 @@ constexpr int WINDOW_WIDTH = 1000;
 
 constexpr int BOARD_VERTICES_COUNT = 12;
 constexpr int POM_RANGE_VERTICES_COUNT = 4;
-constexpr double ASTERISM_CIRCLE_RADIUS = 5.;
+constexpr double ASTERISM_CIRCLE_RADIUS = 8.;
 constexpr int CONVEX_SHAPES_TRANSPARENCY = 60;
 constexpr int MOVEMENT_DELAY = 15; // milliseconds
 constexpr int ANIMATION_START_DELAY = 1000; // milliseconds

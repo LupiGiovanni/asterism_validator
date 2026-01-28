@@ -49,6 +49,14 @@ void Simulation_manager::simulate_dataset_linear_trajectory(const std::vector<As
         else if (simulation.is_start_valid() && simulation.is_destination_valid()) {
             std::cout << "Simulation from point " << i-1 << " to point " << i << " failed." << std::endl;
             simulation.print_results();
+            //============================================================================================
+            //============================================================================================
+            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
+            Graphic_viewer gv;
+            gv.animate(Movement::linear_trajectory, dataset[i-1], dataset[i]);
+            //============================================================================================
+            //============================================================================================
+
         }
     }
 
@@ -83,6 +91,13 @@ void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<A
         else if (simulation.is_start_valid()) {
             std::cout << "Simulation from point " << i << " failed." << std::endl;
             simulation.print_results();
+            //============================================================================================
+            //============================================================================================
+            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
+            Graphic_viewer gv;
+            gv.animate(Movement::outside_technical_field, dataset[i]);
+            //============================================================================================
+            //============================================================================================
         }
     }
 

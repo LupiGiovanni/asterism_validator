@@ -8,6 +8,8 @@
 #include "Asterism.h"
 #include "Simulation.h"
 #include "Dataset_generator.h"
+#include "Graphic_viewer.h" // for debugging visualization
+                            // TODO: remove later
 
 class Simulation_manager {
 public:

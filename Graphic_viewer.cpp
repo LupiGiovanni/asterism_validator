@@ -100,8 +100,8 @@ void Graphic_viewer::setup_start_asterism(const Asterism& asterism) {
         start_asterism[j].setPointCount(100);
         start_asterism[j].setOrigin(ASTERISM_CIRCLE_RADIUS, ASTERISM_CIRCLE_RADIUS);
         start_asterism[j].setPosition(window_coordinate_x(asterism.get_ngs(j).x()), window_coordinate_y(asterism.get_ngs(j).y()));
-        start_asterism[j].setOutlineThickness(1.2);
-        start_asterism[j].setOutlineColor(sf::Color::White);
+        start_asterism[j].setOutlineThickness(2);
+        start_asterism[j].setOutlineColor(sf::Color::Black);
         start_asterism[j].setFillColor(sf::Color::Green);
     }
 }
@@ -111,8 +111,8 @@ void Graphic_viewer::setup_destination_asterism(const Asterism& asterism) {
         destination_asterism[j].setPointCount(100);
         destination_asterism[j].setOrigin(ASTERISM_CIRCLE_RADIUS, ASTERISM_CIRCLE_RADIUS);
         destination_asterism[j].setPosition(window_coordinate_x(asterism.get_ngs(j).x()), window_coordinate_y(asterism.get_ngs(j).y()));
-        destination_asterism[j].setOutlineThickness(1.2);
-        destination_asterism[j].setOutlineColor(sf::Color::White);
+        destination_asterism[j].setOutlineThickness(2);
+        destination_asterism[j].setOutlineColor(sf::Color::Black);
         destination_asterism[j].setFillColor(sf::Color::Red);
     }
 }
@@ -276,7 +276,7 @@ void Graphic_viewer::animate_outside_tech_field(const Asterism &start) {
     }
 }
 
-void Graphic_viewer::animate_linear_trajectory(const Asterism &start, const Asterism &destination) {
+void Graphic_viewer::animate_linear_trajectory(const Asterism& start, const Asterism& destination) {
     sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
@@ -290,8 +290,10 @@ void Graphic_viewer::animate_linear_trajectory(const Asterism &start, const Aste
 
             Board_set temporary;
             temporary.assign_targets(start);
-            if ( ! temporary.get_targets().empty() )
+            if ( ! temporary.get_targets().empty() ) {
                 start_valid = true;
+                temporary.teleport(start);
+            }
 
             temporary.assign_targets(destination);
             if ( ! temporary.get_targets().empty() )
@@ -300,7 +302,6 @@ void Graphic_viewer::animate_linear_trajectory(const Asterism &start, const Aste
             if ( start_valid && destination_valid ) {
                 int iterations = 0;
                 bool collision_detected = false;
-                temporary.teleport(start);
 
                 while ( ! temporary.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 
