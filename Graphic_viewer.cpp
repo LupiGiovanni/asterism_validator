@@ -137,8 +137,10 @@ void Graphic_viewer::draw(const Board_set& board_set) {
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+                return;
+            }
         }
 
         window.clear(sf::Color::Black);
@@ -162,8 +164,10 @@ void Graphic_viewer::draw(const Board_set& board_set, const Asterism& asterism) 
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+                return;
+            }
         }
 
         window.clear(sf::Color::Black);
@@ -189,8 +193,10 @@ void Graphic_viewer::draw(const Board_set& board_set, const Asterism& start, con
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+                return;
+            }
         }
 
         window.clear(sf::Color::Black);
@@ -240,8 +246,10 @@ void Graphic_viewer::animate_outside_tech_field(const Asterism &start) {
                 while ( temporary.is_in_technical_field() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 
                     while (window.pollEvent(event)) {
-                        if (event.type == sf::Event::Closed)
+                        if (event.type == sf::Event::Closed) {
                             window.close();
+                            return;
+                        }
                     }
 
                     if (movement_clock.getElapsedTime() >= movement_delay) {
@@ -297,8 +305,10 @@ void Graphic_viewer::animate_linear_trajectory(const Asterism &start, const Aste
                 while ( ! temporary.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 
                     while (window.pollEvent(event)) {
-                        if (event.type == sf::Event::Closed)
+                        if (event.type == sf::Event::Closed) {
                             window.close();
+                            return;
+                        }
                     }
 
                     if (movement_clock.getElapsedTime() >= movement_delay) {
