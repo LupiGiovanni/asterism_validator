@@ -4,7 +4,7 @@ Given XY coordinates of 3 Natural Guide Stars the program can establish if they 
 
 The program also simulates the movement of the LOR boards to reach the NGSs.
 
-The program uses CGAL (Computational Geometry Algorithms Library) and Qt6 for graphic rendering.
+The program uses CGAL (Computational Geometry Algorithms Library) and SFML for graphic rendering.
 
 ~~~bash
 sudo apt upgrade
@@ -12,3 +12,5 @@ sudo apt install build-essential cmake g++ libboost-all-dev libcgal-dev qt6-base
 ~~~
 
 Then the program can be normally built with ```cmake``` and ```make```.
+
+![Example of graphical output](include/boards.png)

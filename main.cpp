@@ -5,9 +5,17 @@
 #include "helper.h"
 #include "dataset.h"
 #include "Simulation_manager.h"
+#include "Graphic_viewer.h"
 
 int main () {
-    Simulation_manager sm;
-    sm.simulate_dataset(Movement::linear_trajectory, cedric_dataset);
-    sm.simulate_dataset(Movement::outside_technical_field, cedric_dataset);
+    Board_set bs;
+    Graphic_viewer gv;
+    gv.draw(bs);
+    gv.draw(bs, cedric_dataset[0]);
+    gv.draw(bs, cedric_dataset[0], cedric_dataset[1]);
+    bs.assign_targets(cedric_dataset[0]);
+    bs.teleport(cedric_dataset[0]);
+    gv.draw(bs, cedric_dataset[0]);
+    gv.animate(Movement::outside_technical_field, cedric_dataset[0]);
+    gv.animate(Movement::linear_trajectory, cedric_dataset[3], cedric_dataset[5]);
 }

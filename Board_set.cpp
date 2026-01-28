@@ -5,28 +5,15 @@
 #include "Board_set.h"
 
 Board_set::Board_set(): boards{Board(Board_type::type0), Board(Board_type::type1), Board(Board_type::type2)}, targets{} {
+    fov_large.push_back(coordinates::R);
+    fov_large.push_back(coordinates::S);
+    fov_large.push_back(coordinates::T);
+    fov_large.push_back(coordinates::U);
 
-    // Large fov coordinates
-    Point R(-87.847500, -87.847500);
-    Point S(87.847500, -87.847500);
-    Point T(87.847500, 87.847500);
-    Point U(-87.847500, 87.847500);
-
-    fov_large.push_back(R);
-    fov_large.push_back(S);
-    fov_large.push_back(T);
-    fov_large.push_back(U);
-
-    // Small fov coordinates
-    Point V(-33.150000, -33.150000);
-    Point W(33.150000, -33.150000);
-    Point X(33.150000, 33.150000);
-    Point Y(-33.150000, 33.150000);
-
-    fov_small.push_back(V);
-    fov_small.push_back(W);
-    fov_small.push_back(X);
-    fov_small.push_back(Y);
+    fov_small.push_back(coordinates::V);
+    fov_small.push_back(coordinates::W);
+    fov_small.push_back(coordinates::X);
+    fov_small.push_back(coordinates::Y);
 
     // Technical field definition
     constexpr double technical_field_radius_squared = TECHNICAL_FIELD_RADIUS * TECHNICAL_FIELD_RADIUS;
@@ -34,6 +21,10 @@ Board_set::Board_set(): boards{Board(Board_type::type0), Board(Board_type::type1
 
     // Note that we do not need to rotate fov_small, fov_large and technical field because they are already aligned
     // with our reference system
+}
+
+const std::vector<Board>& Board_set::get_boards() const {
+    return boards;
 }
 
 std::vector<int> Board_set::get_targets() const {

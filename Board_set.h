@@ -9,12 +9,15 @@
 #include "helper.h"
 #include "Board.h"
 #include "Asterism.h"
+#include "coordinates.h"
 
 class Board_set {
 public:
     Board_set();
 
     std::vector<int> get_targets() const;
+
+    const std::vector<Board>& get_boards() const;
 
     bool detect_collision() const;
 
