@@ -15,11 +15,8 @@ std::vector<Point> Asterism::get_ngs_vector() const {
     return ngs;
 }
 
+//TODO: implement exception handling
 Point Asterism::get_ngs(int index) const {
-    if (index > 2 || index < 0) {
-        std::cout << "Warning: invalid index. Returning ngs with coordinates set to zero" << std::endl;
-        return Point(0., 0.);
-    }
     return ngs[index];
 }
 
