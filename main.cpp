@@ -8,8 +8,6 @@
 #include "Graphic_viewer.h"
 
 int main () {
-    Board_set bs;
-    Graphic_viewer gv;
-    gv.animate(Movement::linear_trajectory, cedric_dataset[0], cedric_dataset[4]);
+
     return 0;
 }

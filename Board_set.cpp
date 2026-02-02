@@ -27,6 +27,11 @@ const std::vector<Board>& Board_set::get_boards() const {
     return boards;
 }
 
+//TODO: implement exception handling
+const Board& Board_set::get_board (int index) const {
+    return boards[index];
+}
+
 std::vector<int> Board_set::get_targets() const {
     return targets;
 }
@@ -55,6 +60,7 @@ bool Board_set::detect_vignette_fov_large() const {
     return false;
 }
 
+// TODO: maybe optimize also by minimization of maximum span (i.e. the maximum time any board needs to reach its target)
 double Board_set::calculate_distance(const Asterism& destination_asterism) const {
     double distance = 0.;
 
@@ -74,6 +80,7 @@ double Board_set::calculate_distance(const Asterism& destination_asterism) const
     return distance;
 }
 
+// TODO: also assign secondary targets (in case of collisions during movement), maybe switch_to_secondary_targets() method
 void Board_set::assign_targets (const Asterism& destination_asterism) {
     Board_set temporary;
     targets.clear();
@@ -148,6 +155,7 @@ bool Board_set::move (const Asterism& destination_asterism, double distance_step
     return detect_collision();
 }
 
+// TODO: modify the movement so that all boards continue moving to corner position until the last one exits the technical field
 bool Board_set::move_outside_tech_field (double distance_step) {
     for (int j = 0; j < BOARDS_COUNT; j++)
         boards[j].move_outside_tech_field(technical_field, distance_step);

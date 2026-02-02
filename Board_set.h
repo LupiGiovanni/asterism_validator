@@ -19,6 +19,8 @@ public:
 
     const std::vector<Board>& get_boards() const;
 
+    const Board& get_board (int index) const;
+
     bool detect_collision() const;
 
     bool detect_vignette_fov_small() const;
