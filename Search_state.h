@@ -15,8 +15,9 @@ class Search_state {
 private:
     Search_state();
     Search_state (long x, long y);
+    void set_board_set (Board_set* board_set_ptr);
     void print_state_info () const;
-    void set_board_set (Board_set* ptr);
+    void set_board_index(int index);
 
 
     float GoalDistanceEstimate (Search_state& goal);
@@ -28,6 +29,7 @@ private:
 
     long x;
     long y;
+    int board_index = -1;
     Board_set* board_set_ptr;
 };
 

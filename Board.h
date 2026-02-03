@@ -7,13 +7,14 @@
 
 #include "helper.h"
 #include "coordinates.h"
-#include "Search_state.h"
 
 enum class Board_type {type0, type1, type2};
 
 class Board {
     friend class Board_set;
     friend class Trajectory_generator;
+    friend class Search_state;
+    friend class Graphic_viewer;
 private:
     Polygon profile;
     Point pom;

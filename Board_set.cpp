@@ -27,8 +27,8 @@ const std::vector<Board>& Board_set::get_boards() const {
     return boards;
 }
 
-//TODO: implement exception handling
-const Board& Board_set::get_board (int index) const {
+//TODO: add exception handling
+Board& Board_set::get_board(int index) {
     return boards[index];
 }
 

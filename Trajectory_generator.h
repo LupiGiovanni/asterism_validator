@@ -14,7 +14,7 @@ class Trajectory_generator {
 public:
     explicit Trajectory_generator (const Board_set& board_set);
 
-    bool generate_trajectory (const Board& board, const Point& start, const Point& goal);
+    bool generate_trajectory (int board_index, const Point& start, const Point& goal);
 
     std::vector<Point> get_trajectory() const;
 
@@ -23,7 +23,7 @@ private:
     std::vector<Search_state> path;
     std::vector<Point> trajectory;
 
-    bool find_path (int board_index, const Search_state& start_state, const Search_state& goal_state);
+    bool find_path (int board_index, const Search_state& start, const Search_state& goal);
 };
 
 
