@@ -336,3 +336,62 @@ void Graphic_viewer::animate_linear_trajectory(const Asterism& start, const Aste
         }
     }
 }
+
+void Graphic_viewer::animate_trajectory(const Board_set& initial_board_set, int board_index, const std::vector<Point>& trajectory) {
+    if (trajectory.empty()) {
+        std::cout << "Warning: trajectory vector is empty, nothing to animate." << std::endl;
+        return;
+    }
+
+    sf::RenderWindow window;
+    window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Trajectory Animation", sf::Style::Close | sf::Style::Titlebar);
+
+    Board_set current_board_set = initial_board_set;
+    size_t current_step_index = 0;
+    bool animation_finished = false;
+
+    movement_clock.restart();
+    animation_start_clock.restart();
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                return;
+            }
+        }
+
+        if (movement_clock.getElapsedTime() >= movement_delay) {
+
+            if (!animation_finished) {
+                if (current_step_index < trajectory.size()) {
+                    current_board_set.get_board(board_index).teleport(trajectory[current_step_index]);
+                    current_step_index++;
+                } else {
+                    animation_finished = true;
+                    animation_start_clock.restart(); // Avvia timer per il restart
+                }
+            } else {
+                if (animation_start_clock.getElapsedTime() >= animation_start_delay) {
+                    current_step_index = 0;
+                    current_board_set = initial_board_set; // Reset alla posizione iniziale
+                    animation_finished = false;
+                }
+            }
+
+            setup_boards(current_board_set);
+            movement_clock.restart();
+        }
+
+        window.clear(sf::Color::Black);
+        window.draw(technical_field);
+
+        for (int j = 0; j < BOARDS_COUNT; j++) {
+            window.draw(pom_ranges[j]);
+            window.draw(boards[j]);
+        }
+
+        window.display();
+    }
+}

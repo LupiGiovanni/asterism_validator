@@ -30,6 +30,7 @@ public:
     void draw(const Board_set& board_set, const Asterism& start, const Asterism& destination);
 
     void animate(Movement movement_type, const Asterism& start, const Asterism& destination = Asterism());
+    void animate_trajectory(const Board_set& initial_board_set, int board_index, const std::vector<Point>& trajectory);
 
 private:
     std::vector<sf::VertexArray> boards;

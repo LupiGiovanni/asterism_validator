@@ -9,7 +9,6 @@
 #include "helper.h"
 #include "Board.h"
 #include "Asterism.h"
-#include "coordinates.h"
 
 class Board_set {
 public:
@@ -19,7 +18,7 @@ public:
 
     const std::vector<Board>& get_boards() const;
 
-    const Board& get_board (int index) const;
+    Board& get_board(int index);
 
     bool detect_collision() const;
 

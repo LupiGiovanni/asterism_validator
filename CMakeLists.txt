@@ -28,10 +28,13 @@ add_executable (    asterism_validator
                     Graphic_viewer.h
                     Search_state.h
                     Search_state.cpp
+                    Trajectory_generator.cpp
+                    Trajectory_generator.h
                     stlastar.h
                     helper.h
                     dataset.h
-                    coordinates.h )
+                    coordinates.h
+        )
 
 target_link_libraries(  asterism_validator
                         sfml-graphics
