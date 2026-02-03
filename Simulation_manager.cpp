@@ -45,18 +45,22 @@ void Simulation_manager::simulate_dataset_linear_trajectory(const std::vector<As
         if (simulation.is_destination_reached() && !simulation.is_collision_detected()) {
             successful_simulations++;
             durations_sum += simulation.get_duration();
+
+            //============================================================================================
+            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
+            Graphic_viewer gv;
+            gv.animate(Movement::outside_technical_field, dataset[i]);
+            //============================================================================================
         }
         else if (simulation.is_start_valid() && simulation.is_destination_valid()) {
             std::cout << "Simulation from point " << i-1 << " to point " << i << " failed." << std::endl;
             simulation.print_results();
-            //============================================================================================
+
             //============================================================================================
             // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
             Graphic_viewer gv;
             gv.animate(Movement::linear_trajectory, dataset[i-1], dataset[i]);
             //============================================================================================
-            //============================================================================================
-
         }
     }
 
@@ -87,16 +91,21 @@ void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<A
         if (simulation.is_destination_reached() && !simulation.is_collision_detected()) {
             successful_simulations++;
             durations_sum += simulation.get_duration();
-        }
-        else if (simulation.is_start_valid()) {
-            std::cout << "Simulation from point " << i << " failed." << std::endl;
-            simulation.print_results();
-            //============================================================================================
+
             //============================================================================================
             // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
             Graphic_viewer gv;
             gv.animate(Movement::outside_technical_field, dataset[i]);
             //============================================================================================
+        }
+        else if (simulation.is_start_valid()) {
+            std::cout << "Simulation from point " << i << " failed." << std::endl;
+            simulation.print_results();
+
+            //============================================================================================
+            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
+            Graphic_viewer gv;
+            gv.animate(Movement::outside_technical_field, dataset[i]);
             //============================================================================================
         }
     }
