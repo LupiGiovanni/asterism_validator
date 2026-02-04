@@ -21,6 +21,8 @@ constexpr int CONVEX_SHAPES_TRANSPARENCY = 60;
 constexpr int MOVEMENT_DELAY = 15; // milliseconds
 constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 
+// TODO: maybe draw also trajectories
+// TODO: add draw methods to draw only asterisms
 class Graphic_viewer {
 public:
     Graphic_viewer();

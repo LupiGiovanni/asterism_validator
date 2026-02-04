@@ -7,6 +7,7 @@
 
 #include "helper.h"
 
+// TODO: use std::vector<Point>
 namespace coordinates {
     inline Point A1(-304.000000, 465.000000);
     inline Point B1(-304.000000, 354.085880);

@@ -8,9 +8,11 @@
 #include "Asterism.h"
 #include "Simulation.h"
 #include "Dataset_generator.h"
-#include "Graphic_viewer.h" // for debugging visualization
-                            // TODO: remove later
 
+// For debugging visualization TODO: remove later
+#include "Graphic_viewer.h"
+
+// TODO: add methods to plot results with sciplot
 class Simulation_manager {
 public:
     static void simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset);
