@@ -155,10 +155,10 @@ void Simulation_manager::print_histogram(const std::array<int, HISTOGRAM_INTERVA
 
     sciplot::Plot2D histogram;
 
-    histogram.xlabel("Duration (s)").fontSize(5);
-    histogram.xtics().fontSize(5);
-    histogram.ytics().fontSize(5);
-    histogram.ylabel("Count").fontSize(5);
+    histogram.xlabel("Duration (s)").fontSize(15);
+    histogram.xtics().fontSize(15);
+    histogram.ytics().fontSize(15);
+    histogram.ylabel("Count").fontSize(15);
     histogram.boxWidthRelative(0.65);
     histogram.grid().ytics().show(true);
     histogram.legend().show(false);
@@ -166,5 +166,6 @@ void Simulation_manager::print_histogram(const std::array<int, HISTOGRAM_INTERVA
 
     sciplot::Figure fig = {{histogram}};
     sciplot::Canvas canvas = {{fig}};
+    canvas.size(1200, 800);
     canvas.show();
 }

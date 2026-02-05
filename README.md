@@ -33,14 +33,14 @@ Simulation from point 170 to point 171 failed.
 ======================================================================================
                               Single simulation results                               
 
-> Movement type		    linear trajectory
-> Start asterism	    {156.558380, -100.301720, -23.493893, 165.580800, -230.937740, -199.302780}
-> Start valid		    true
+> Movement type		        linear trajectory
+> Start asterism	        {156.558380, -100.301720, -23.493893, 165.580800, -230.937740, -199.302780}
+> Start valid		        true
 > Destination asterism	    {190.285700, -142.410190, -98.780200, 89.886894, 180.640180, -153.202710}
-> Destination valid	    true
+> Destination valid	        true
 
 > Boards cruise velocity	10.000000 mm/s
-> Movement duration		0.450000 seconds
+> Movement duration		    0.450000 seconds
 > Simulation iterations		9
 > Max iterations exceeded	false
 > Iteration time step		0.050000 seconds
@@ -55,13 +55,13 @@ Simulation from point 170 to point 171 failed.
 ======================================================================================
                              Dataset simulations results                              
 
-> Movement type			linear trajectory
+> Movement type			    linear trajectory
 > Boards cruise velocity	10.000000 mm/s
-> Total simulations		333
+> Total simulations		    333
 > Successful simulations	331
-> Average duration		26.694864 s
+> Average duration		    26.694864 s
 ======================================================================================
 ```
 
-### Example of dataset simulations histogram output:
+### Example of histogram output:
 ![Example of histogram output](include/histogram.png)
