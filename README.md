@@ -64,4 +64,4 @@ Simulation from point 170 to point 171 failed.
 ```
 
 ### Example of histogram output:
-![Example of histogram output](include/histogram.png)
+![Example of histogram output](include/histogram_output.png)
