@@ -125,7 +125,7 @@ void Simulation_manager::print_results(Movement movement_type, int total_simulat
     std::cout << "> Boards cruise velocity\t"<< BOARD_VELOCITY << " mm/s" << std::endl;
     std::cout << "> Total simulations\t\t\t" << total_simulations << std::endl;
     std::cout << "> Successful simulations\t" << successful_simulations << std::endl;
-    std::cout << "> Average duration\t\t\t" << (durations_sum / successful_simulations) << " s" << std::endl;
+    std::cout << "> Average duration\t\t\t" << (durations_sum / successful_simulations) << " seconds" << std::endl;
     std::cout << "======================================================================================" << std::endl;
     std::cout << std::endl;
 }
