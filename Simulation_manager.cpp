@@ -118,15 +118,15 @@ void Simulation_manager::print_results(Movement movement_type, int total_simulat
     std::string movement_type_str = (movement_type == Movement::linear_trajectory) ? "linear trajectory" : "outside technical field";
 
     std::cout << std::endl;
-    std::cout << "====================================================================" << std::endl;
-    std::cout << "                 Dataset simulations results                 " << std::endl;
+    std::cout << "======================================================================================" << std::endl;
+    std::cout << "                             Dataset simulations results                              " << std::endl;
     std::cout << std::endl;
-    std::cout << "> Movement type:\t" << movement_type_str << std::endl;
-    std::cout << "> Boards vel:\t\t"<< BOARD_VELOCITY << " mm/s" << std::endl;
-    std::cout << "> Total sims:\t\t" << total_simulations << std::endl;
-    std::cout << "> Successful sims:\t" << successful_simulations << std::endl;
-    std::cout << "> Avg duration:\t\t" << (durations_sum / successful_simulations) << " s" << std::endl;
-    std::cout << "====================================================================" << std::endl;
+    std::cout << "> Movement type\t\t\t\t" << movement_type_str << std::endl;
+    std::cout << "> Boards cruise velocity\t"<< BOARD_VELOCITY << " mm/s" << std::endl;
+    std::cout << "> Total simulations\t\t\t" << total_simulations << std::endl;
+    std::cout << "> Successful simulations\t" << successful_simulations << std::endl;
+    std::cout << "> Average duration\t\t\t" << (durations_sum / successful_simulations) << " s" << std::endl;
+    std::cout << "======================================================================================" << std::endl;
     std::cout << std::endl;
 }
 
@@ -143,13 +143,10 @@ void Simulation_manager::insert_into_histogram(std::array<int, HISTOGRAM_INTERVA
 
 void Simulation_manager::print_histogram(const std::array<int, HISTOGRAM_INTERVALS_COUNT>& y_values) {
     sciplot::Strings x_labels(HISTOGRAM_INTERVALS_COUNT);
-    for (int i = 0; i < HISTOGRAM_INTERVALS_COUNT - 1; ++i) {
-        if (i % 2 != 0) {
-            x_labels[i] = std::to_string(i * 10) + "-" + std::to_string(i * 10 + 10);
-        } else {
-            x_labels[i] = "";
-        }
-    }
+
+    for (int i = 0; i < HISTOGRAM_INTERVALS_COUNT - 1; ++i)
+        x_labels[i] = std::to_string(i * 10) + "-" + std::to_string(i * 10 + 10);
+
     x_labels[HISTOGRAM_INTERVALS_COUNT - 1] = ">" + std::to_string((HISTOGRAM_INTERVALS_COUNT - 1) * 10);
 
     sciplot::Vec y_count (HISTOGRAM_INTERVALS_COUNT);
@@ -157,18 +154,17 @@ void Simulation_manager::print_histogram(const std::array<int, HISTOGRAM_INTERVA
         y_count[i] = y_values[i];
 
     sciplot::Plot2D histogram;
-    histogram.xlabel("Sim duration (s)");
-    histogram.ylabel("Sim count");
+
+    histogram.xlabel("Duration (s)").fontSize(5);
+    histogram.xtics().fontSize(5);
+    histogram.ytics().fontSize(5);
+    histogram.ylabel("Count").fontSize(5);
     histogram.boxWidthRelative(0.65);
-    histogram.drawBoxes(x_labels, y_values)
-             .fillSolid()
-             .fillColor("blue")
-             .fillIntensity(0.5)
-             .borderShow()
-             .labelNone();
+    histogram.grid().ytics().show(true);
+    histogram.legend().show(false);
+    histogram.drawBoxes(x_labels, y_values).fillSolid().fillColor("blue").fillIntensity(0.7).labelNone();
 
     sciplot::Figure fig = {{histogram}};
     sciplot::Canvas canvas = {{fig}};
     canvas.show();
-    canvas.save("histogram.png");
 }

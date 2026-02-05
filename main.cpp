@@ -8,7 +8,6 @@
 #include "Graphic_viewer.h"
 
 int main () {
-    Simulation_manager sm;
-    sm.simulate_dataset(Movement::outside_technical_field, cedric_dataset);
+    Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset);
     return 0;
 }

@@ -144,7 +144,7 @@ void Simulation::run_outside_tech_field (Board_set& board_set, const Asterism& m
 void Simulation::print_results() const {
     std::cout << std::endl;
     std::cout << "======================================================================================" << std::endl;
-    std::cout << "                                Simulation results                                    " << std::endl;
+    std::cout << "                              Single simulation results                               " << std::endl;
     std::cout << std::endl;
 
     switch ( type ) {
