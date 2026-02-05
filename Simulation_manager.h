@@ -8,11 +8,11 @@
 #include "Asterism.h"
 #include "Simulation.h"
 #include "Dataset_generator.h"
+#include "helper.h"
 
 // For debugging visualization TODO: remove later
 #include "Graphic_viewer.h"
 
-// TODO: add methods to plot results with sciplot
 class Simulation_manager {
 public:
     static void simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset);
@@ -22,6 +22,9 @@ public:
 private:
     static void simulate_dataset_linear_trajectory (const std::vector<Asterism>& dataset);
     static void simulate_dataset_outside_tech_field (const std::vector<Asterism>& dataset);
+    static void print_results (Movement movement_type, int total_simulations, int successful_simulations, double durations_sum);
+    static void insert_into_histogram (std::array<int, HISTOGRAM_INTERVALS_COUNT>& y_values, double duration);
+    static void print_histogram (const std::array<int, HISTOGRAM_INTERVALS_COUNT>& y_values);
 };
 
 

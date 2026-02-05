@@ -8,8 +8,7 @@
 #include "Graphic_viewer.h"
 
 int main () {
-    Board_set bs;
-    Graphic_viewer gv;
-    gv.animate(Movement::linear_trajectory, cedric_dataset[0], cedric_dataset[4]);
+    Simulation_manager sm;
+    sm.simulate_dataset(Movement::outside_technical_field, cedric_dataset);
     return 0;
 }
