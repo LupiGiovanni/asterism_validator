@@ -11,10 +11,10 @@ Libraries used are:
 
 The program can be normally built with ```cmake``` and ```make```.
 
-Example of graphical output:
+### Example of graphical output:
 ![Example of graphical output](include/boards_gif.gif)
 
-Example of main: 
+### Example of main:
 ```c++
 int main () {
     Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset);
@@ -26,22 +26,22 @@ int main () {
 }
 ```
 
-Example of command line output:
-```
-Simulation from point 73 to point 74 failed.
+### Example of command line output:
+```c++
+Simulation from point 170 to point 171 failed.
 
 ======================================================================================
-                                Simulation results                                    
+                              Single simulation results                               
 
-> Movement type			linear trajectory
-> Start asterism		{-161.017300, -175.675520, 26.121872, 149.281560, 53.297924, -243.279530}
-> Start valid			true
-> Destination asterism          {164.464720, -146.879780, -97.516890, 61.492350, 187.146640, -238.569890}
-> Destination valid		true
+> Movement type		    linear trajectory
+> Start asterism	    {156.558380, -100.301720, -23.493893, 165.580800, -230.937740, -199.302780}
+> Start valid		    true
+> Destination asterism	    {190.285700, -142.410190, -98.780200, 89.886894, 180.640180, -153.202710}
+> Destination valid	    true
 
 > Boards cruise velocity	10.000000 mm/s
-> Movement duration		2.500000 seconds
-> Simulation iterations		50
+> Movement duration		0.450000 seconds
+> Simulation iterations		9
 > Max iterations exceeded	false
 > Iteration time step		0.050000 seconds
 > Iteration distance step	0.500000 mm
@@ -55,11 +55,13 @@ Simulation from point 73 to point 74 failed.
 ======================================================================================
                              Dataset simulations results                              
 
-> Movement type 	linear trajectory
-> Boards cruise vel 	10.000000 mm/s
-> Total sims		333
-> Successful sims	331
-> Avg duration		26.694864 s
+> Movement type			linear trajectory
+> Boards cruise velocity	10.000000 mm/s
+> Total simulations		333
+> Successful simulations	331
+> Average duration		26.694864 s
 ======================================================================================
 ```
 
+### Example of dataset simulations histogram output:
+![Example of histogram output](include/histogram.png)
