@@ -74,6 +74,7 @@ double Board_set::calculate_distance(const Asterism& destination_asterism) const
     return distance;
 }
 
+// TODO: maybe optimize also by minimization of maximum span (i.e. the maximum time any board needs to reach its target)
 void Board_set::assign_targets (const Asterism& destination_asterism) {
     Board_set temporary;
     targets.clear();
