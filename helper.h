@@ -22,14 +22,16 @@ typedef CGAL::Aff_transformation_2<Kernel> Transformation;
 
 constexpr int DECIMAL_PLACES_PRINTED = 6;
 constexpr int MAX_ITERATION_INDEX = 10000;
-constexpr double BOARD_VELOCITY = 10.; // mm/s
+// TODO: maybe add public method to set board velocity
+constexpr double BOARD_VELOCITY = 4.; // mm/s
 constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
 constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STEP; // mm
 constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
 constexpr int BOARDS_COUNT = 3;
 constexpr int GENERATED_DATASET_SIZE = 1000;
 constexpr double TOLERANCE = SIMULATION_DISTANCE_STEP;
-constexpr int HISTOGRAM_INTERVALS_COUNT = 10;
+constexpr int HISTOGRAM_INTERVALS_COUNT = 15;
+constexpr int HISTOGRAM_FONT_SIZE = 10;
 
 inline void rotate (Polygon& polygon, double angle_radians) {
     Transformation rotation (CGAL::ROTATION, std::sin(angle_radians), std::cos(angle_radians));
