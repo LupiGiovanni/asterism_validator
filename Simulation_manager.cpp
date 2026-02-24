@@ -130,14 +130,14 @@ void Simulation_manager::print_results(Movement movement_type, int total_simulat
     std::cout << std::endl;
 }
 
-void Simulation_manager::insert_into_histogram(std::array<int, HISTOGRAM_INTERVALS_COUNT>& y_values, double duration) {
+void Simulation_manager::insert_into_histogram(std::array<int, HISTOGRAM_INTERVALS_COUNT>& y_values, double value) {
     for (int i = 0; i < HISTOGRAM_INTERVALS_COUNT - 1; ++i) {
-        if (duration <= ( i * 10 + 10 )) {
+        if (value <= ( i * 10 + 10 )) {
             y_values[i]++;
             break;
         }
     }
-    if (duration > (HISTOGRAM_INTERVALS_COUNT - 1) * 10 )
+    if (value > (HISTOGRAM_INTERVALS_COUNT - 1) * 10 )
         y_values[HISTOGRAM_INTERVALS_COUNT - 1]++;
 }
 
@@ -162,7 +162,7 @@ void Simulation_manager::print_histogram(const std::array<int, HISTOGRAM_INTERVA
     histogram.boxWidthRelative(0.65);
     histogram.grid().ytics().show(true);
     histogram.legend().show(false);
-    histogram.drawBoxes(x_labels, y_values).fillSolid().fillColor("blue").fillIntensity(0.7).labelNone();
+    histogram.drawBoxes(x_labels, y_values).fillSolid().fillColor("blue").fillIntensity(0.5).borderShow(5).labelNone();
 
     sciplot::Figure fig = {{histogram}};
     sciplot::Canvas canvas = {{fig}};

@@ -27,6 +27,11 @@ Board::Board (Board_type type) {
         pom_range.push_back(coordinates::O1);
         pom_range.push_back(coordinates::P1);
         pom_range.push_back(coordinates::Q1);
+
+        pom_safe_zone.push_back(coordinates::N1);
+        pom_safe_zone.push_back(coordinates::AA1);
+        pom_safe_zone.push_back(coordinates::BB1);
+        pom_safe_zone.push_back(coordinates::Q1);
     }
     else if (type == Board_type::type1)
     {
@@ -50,6 +55,11 @@ Board::Board (Board_type type) {
         pom_range.push_back(coordinates::O2);
         pom_range.push_back(coordinates::P2);
         pom_range.push_back(coordinates::Q2);
+
+        pom_safe_zone.push_back(coordinates::N2);
+        pom_safe_zone.push_back(coordinates::AA2);
+        pom_safe_zone.push_back(coordinates::BB2);
+        pom_safe_zone.push_back(coordinates::Q2);
     }
     else if (type == Board_type::type2)
     {
@@ -73,6 +83,11 @@ Board::Board (Board_type type) {
         pom_range.push_back(coordinates::O3);
         pom_range.push_back(coordinates::P3);
         pom_range.push_back(coordinates::Q3);
+
+        pom_safe_zone.push_back(coordinates::N3);
+        pom_safe_zone.push_back(coordinates::AA3);
+        pom_safe_zone.push_back(coordinates::BB3);
+        pom_safe_zone.push_back(coordinates::Q3);
     }
 
     // Rotation is needed to align the CAD reference system with ours
@@ -80,6 +95,7 @@ Board::Board (Board_type type) {
     rotate(pom, M_PI / 2.);
     rotate(pom_home, M_PI / 2.);
     rotate(pom_range, M_PI / 2.);
+    rotate(pom_safe_zone, M_PI / 2.);
 }
 
 const Polygon& Board::get_profile() const {

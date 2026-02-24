@@ -72,6 +72,15 @@ namespace coordinates {
     inline Point W(33.150000, -33.150000);
     inline Point X(33.150000, 33.150000);
     inline Point Y(-33.150000, 33.150000);
+
+    inline Point AA1(-305.000000, 235.566731);
+    inline Point BB1(305.000000, 235.566731);
+
+    inline Point AA2(-51.506773, -381.921114);
+    inline Point BB2(-356.506773, 146.354383);
+
+    inline Point AA3(356.506773, 146.354383);
+    inline Point BB3(51.506773, -381.921114);
 }
 
 #endif //ASTERISM_VALIDATOR_COORDINATES_H

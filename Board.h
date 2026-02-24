@@ -17,6 +17,7 @@ private:
     Point pom;
     Point pom_home;
     Polygon pom_range;
+    Polygon pom_safe_zone;
 
     explicit Board (Board_type type);
 
