@@ -61,6 +61,7 @@ private:
     void rotate_clockwise_around_center(sf::ConvexShape& shape, float angle_degrees);
     void animate_outside_tech_field(const Asterism& start);
     void animate_linear_trajectory(const Asterism& start, const Asterism& destination);
+    void animate_safe_basic(const Asterism& start, const Asterism& destination);
 };
 
 

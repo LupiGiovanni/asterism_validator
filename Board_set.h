@@ -33,11 +33,23 @@ public:
 
     bool is_destination_reached (const Asterism& destination_asterism) const;
 
+    bool is_aligned_x (const Asterism& destination_asterism) const;
+
+    bool is_aligned_y (const Asterism& destination_asterism) const;
+
     bool is_in_technical_field () const;
+
+    bool is_in_safe_zone () const;
 
     bool move (const Asterism& destination_asterism, double distance_step);
 
     bool move_outside_tech_field (double distance_step);
+
+    bool move_to_safe_zone (double distance_step);
+
+    bool move_along_x (const Asterism& destination_asterism, double distance_step);
+
+    bool move_along_y (const Asterism& destination_asterism, double distance_step);
 
 private:
     std::vector<Board> boards;

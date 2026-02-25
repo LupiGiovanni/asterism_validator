@@ -129,12 +129,36 @@ bool Board_set::is_destination_reached (const Asterism &destination_asterism) co
     return true;
 }
 
+bool Board_set::is_aligned_x (const Asterism &destination_asterism) const {
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        if ( ! boards[j].is_aligned_x(destination_asterism.get_ngs(targets[j])) )
+            return false;
+
+    return true;
+}
+
+bool Board_set::is_aligned_y (const Asterism &destination_asterism) const {
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        if ( ! boards[j].is_aligned_y(destination_asterism.get_ngs(targets[j])) )
+            return false;
+
+    return true;
+}
+
 bool Board_set::is_in_technical_field () const {
     for (int j = 0; j < BOARDS_COUNT; j++)
         if ( boards[j].is_in_technical_field(technical_field) )
             return true;
 
     return false;
+}
+
+bool Board_set::is_in_safe_zone () const {
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        if ( ! boards[j].is_in_safe_zone() )
+            return false;
+
+    return true;
 }
 
 bool Board_set::move (const Asterism& destination_asterism, double distance_step) {
@@ -152,6 +176,37 @@ bool Board_set::move (const Asterism& destination_asterism, double distance_step
 bool Board_set::move_outside_tech_field (double distance_step) {
     for (int j = 0; j < BOARDS_COUNT; j++)
         boards[j].move_outside_tech_field(technical_field, distance_step);
+
+    return detect_collision();
+}
+
+bool Board_set::move_to_safe_zone (double distance_step) {
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        boards[j].move_to_safe_zone(distance_step);
+
+    return detect_collision();
+}
+
+bool Board_set::move_along_x (const Asterism& destination_asterism, double distance_step) {
+    if (targets.empty()) {
+        std::cout << "Warning: attempted to move board set along x-axis but 'targets' field is empty" << std::endl;
+        return false;
+    }
+
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        boards[j].move_along_x(destination_asterism.get_ngs(targets[j]), distance_step);
+
+    return detect_collision();
+}
+
+bool Board_set::move_along_y (const Asterism& destination_asterism, double distance_step) {
+    if (targets.empty()) {
+        std::cout << "Warning: attempted to move board set along y-axis but 'targets' field is empty" << std::endl;
+        return false;
+    }
+
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        boards[j].move_along_y(destination_asterism.get_ngs(targets[j]), distance_step);
 
     return detect_collision();
 }

@@ -15,6 +15,7 @@ typedef CGAL::Simple_cartesian<double> Kernel;
 typedef Kernel::Point_2 Point;
 typedef CGAL::Polygon_2<Kernel> Polygon;
 typedef CGAL::Vector_2<Kernel> Vector;
+typedef CGAL::Line_2<Kernel> Line;
 typedef CGAL::Direction_2<Kernel> Direction;
 typedef CGAL::Polygon_set_2<Kernel> PolygonSet;
 typedef CGAL::Circle_2<Kernel> Circle;

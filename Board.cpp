@@ -29,8 +29,8 @@ Board::Board (Board_type type) {
         pom_range.push_back(coordinates::Q1);
 
         pom_safe_zone.push_back(coordinates::N1);
+        pom_safe_zone.push_back(coordinates::Z1);
         pom_safe_zone.push_back(coordinates::AA1);
-        pom_safe_zone.push_back(coordinates::BB1);
         pom_safe_zone.push_back(coordinates::Q1);
     }
     else if (type == Board_type::type1)
@@ -57,8 +57,8 @@ Board::Board (Board_type type) {
         pom_range.push_back(coordinates::Q2);
 
         pom_safe_zone.push_back(coordinates::N2);
+        pom_safe_zone.push_back(coordinates::Z2);
         pom_safe_zone.push_back(coordinates::AA2);
-        pom_safe_zone.push_back(coordinates::BB2);
         pom_safe_zone.push_back(coordinates::Q2);
     }
     else if (type == Board_type::type2)
@@ -85,8 +85,8 @@ Board::Board (Board_type type) {
         pom_range.push_back(coordinates::Q3);
 
         pom_safe_zone.push_back(coordinates::N3);
+        pom_safe_zone.push_back(coordinates::Z3);
         pom_safe_zone.push_back(coordinates::AA3);
-        pom_safe_zone.push_back(coordinates::BB3);
         pom_safe_zone.push_back(coordinates::Q3);
     }
 
@@ -139,6 +139,16 @@ bool Board::is_destination_reached (const Point& pom_destination) const {
     return false;
 }
 
+bool Board::is_aligned_x (const Point& pom_destination) const {
+    Point aligned_point_x = find_aligned_point_x(pom_destination);
+    return is_destination_reached(aligned_point_x);
+}
+
+bool Board::is_aligned_y (const Point& pom_destination) const {
+    Point aligned_point_y = find_aligned_point_y(pom_destination);
+    return is_destination_reached(aligned_point_y);
+}
+
 bool Board::is_in_technical_field (const Circle& technical_field) const {
     bool detected = false;
 
@@ -150,6 +160,12 @@ bool Board::is_in_technical_field (const Circle& technical_field) const {
     }
 
     return detected;
+}
+
+bool Board::is_in_safe_zone () const {
+    if (pom_safe_zone.bounded_side(pom) == CGAL::ON_BOUNDED_SIDE)
+        return true;
+    return false;
 }
 
 double Board::calculate_distance (const Point& pom_destination) const {
@@ -191,3 +207,55 @@ bool Board::move_outside_tech_field (const Circle& tech_field, double distance_s
 
     return true;
 }
+
+bool Board::move_along_x(const Point& pom_destination, double distance_step) {
+    Point aligned_point_x = find_aligned_point_x(pom_destination);
+    return move(aligned_point_x, distance_step);
+}
+
+bool Board::move_along_y(const Point& pom_destination, double distance_step) {
+    Point aligned_point_y = find_aligned_point_y(pom_destination);
+    return move(aligned_point_y, distance_step);
+}
+
+bool Board::move_to_safe_zone (double distance_step) {
+    if (is_in_safe_zone())
+        return false;
+
+    Point centre (0., 0.);
+    Vector v = pom_home - centre;
+    double length = std::sqrt(v.squared_length());
+    Vector step_vector = (v / length) * distance_step;
+    return teleport (pom + step_vector);
+}
+
+Point Board::find_aligned_point_x (const Point& pom_destination) const {
+    Point bottom_left_corner = *pom_range.begin();
+    Point bottom_right_corner = *(pom_range.end() - 1);
+    Vector horizontal_vector = bottom_left_corner - bottom_right_corner;
+
+    Point centre (0., 0.);
+    Vector vertical_vector = centre - pom_home;
+
+    Line horizontal_line (pom, horizontal_vector);
+    Line vertical_line (pom_destination, vertical_vector);
+
+    auto intersection = CGAL::intersection(horizontal_line, vertical_line).value();
+    return std::get<Point>(intersection);
+}
+
+Point Board::find_aligned_point_y (const Point& pom_destination) const {
+    Point bottom_left_corner = *pom_range.begin();
+    Point bottom_right_corner = *(pom_range.end() - 1);
+    Vector horizontal_vector = bottom_left_corner - bottom_right_corner;
+
+    Point centre (0., 0.);
+    Vector vertical_vector = centre - pom_home;
+
+    Line horizontal_line (pom_destination, horizontal_vector);
+    Line vertical_line (pom, vertical_vector);
+
+    auto intersection = CGAL::intersection(horizontal_line, vertical_line).value();
+    return std::get<Point>(intersection);
+}
+
