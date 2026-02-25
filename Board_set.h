@@ -31,6 +31,8 @@ public:
 
     void teleport (const Asterism& destination_asterism);
 
+    bool is_destination_reached (const Asterism& destination_asterism, double tolerance) const;
+
     bool is_destination_reached (const Asterism& destination_asterism) const;
 
     bool is_aligned_x (const Asterism& destination_asterism) const;

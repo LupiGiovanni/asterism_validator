@@ -7,7 +7,10 @@
 void Simulation_manager::simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset) {
     switch ( movement_type ) {
         case Movement::linear_trajectory:
-            simulate_dataset_linear_trajectory(dataset);
+            simulate_dataset_helper(movement_type, dataset);
+            break;
+        case Movement::safe_basic:
+            simulate_dataset_helper(movement_type, dataset);
             break;
         case Movement::outside_technical_field:
             simulate_dataset_outside_tech_field(dataset);
@@ -24,7 +27,7 @@ void Simulation_manager::simulate_random_dataset(Movement movement_type) {
     simulate_dataset(movement_type, dg.get_dataset());
 }
 
-void Simulation_manager::simulate_dataset_linear_trajectory(const std::vector<Asterism> &dataset) {
+void Simulation_manager::simulate_dataset_helper(Movement movement_type, const std::vector<Asterism> &dataset) {
     if ( dataset.empty() ) {
         std::cout << "Warning: attempted to run dataset simulation but 'dataset' vector is empty" << std::endl;
         return;
@@ -39,7 +42,7 @@ void Simulation_manager::simulate_dataset_linear_trajectory(const std::vector<As
     std::array<int, HISTOGRAM_INTERVALS_COUNT> y_values = {0};
 
     for (int i = 1; i < dataset.size(); ++i) {
-        simulation.run(Movement::linear_trajectory,boards, dataset[i-1], dataset[i]);
+        simulation.run(movement_type,boards, dataset[i-1], dataset[i]);
         total_simulations++;
         if (simulation.is_destination_reached() && !simulation.is_collision_detected()) {
             successful_simulations++;
@@ -49,7 +52,7 @@ void Simulation_manager::simulate_dataset_linear_trajectory(const std::vector<As
             //============================================================================================
             // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
             // Graphic_viewer gv;
-            // gv.animate(Movement::outside_technical_field, dataset[i]);
+            // gv.animate(movement_type, dataset[i-1], dataset[i]);
             //============================================================================================
         }
         else if (simulation.is_start_valid() && simulation.is_destination_valid()) {
@@ -59,16 +62,16 @@ void Simulation_manager::simulate_dataset_linear_trajectory(const std::vector<As
             //============================================================================================
             // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
             // Graphic_viewer gv;
-            // gv.animate(Movement::linear_trajectory, dataset[i-1], dataset[i]);
+            // gv.animate(movement_type, dataset[i-1], dataset[i]);
             //============================================================================================
         }
     }
 
-    print_results(Movement::linear_trajectory, total_simulations, successful_simulations, durations_sum);
+    print_results(movement_type, total_simulations, successful_simulations, durations_sum);
     print_histogram(y_values);
 }
 
-void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<Asterism> &dataset) {
+void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<Asterism>& dataset) {
     if ( dataset.empty() ) {
         std::cout << "Warning: attempted to run dataset simulation but 'dataset' vector is empty" << std::endl;
         return;
@@ -112,10 +115,32 @@ void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<A
     print_histogram(y_values);
 }
 
+void Simulation_manager::run_single_simulation(Movement movement_type, const Asterism& start, const Asterism& destination) {
+    Board_set boards;
+    Simulation simulation;
+
+    simulation.run(movement_type, boards, start, destination);
+    simulation.print_results();
+}
+
 void Simulation_manager::print_results(Movement movement_type, int total_simulations, int successful_simulations, double durations_sum) {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
 
-    std::string movement_type_str = (movement_type == Movement::linear_trajectory) ? "linear trajectory" : "outside technical field";
+    std::string movement_type_str;
+    switch (movement_type) {
+        case Movement::linear_trajectory:
+            movement_type_str = "linear trajectory";
+            break;
+        case Movement::safe_basic:
+            movement_type_str = "safe basic";
+            break;
+        case Movement::outside_technical_field:
+            movement_type_str = "outside technical field";
+            break;
+        case Movement::none:
+            movement_type_str = "none";
+            break;
+    }
 
     std::cout << std::endl;
     std::cout << "======================================================================================" << std::endl;

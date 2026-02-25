@@ -121,12 +121,16 @@ void Board_set::teleport (const Asterism& destination_asterism) {
     }
 }
 
-bool Board_set::is_destination_reached (const Asterism &destination_asterism) const {
+bool Board_set::is_destination_reached(const Asterism& destination_asterism, double tolerance) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
-        if ( ! boards[j].is_destination_reached(destination_asterism.get_ngs(targets[j])) )
+        if ( ! boards[j].is_destination_reached(destination_asterism.get_ngs(targets[j]), tolerance) )
             return false;
 
     return true;
+}
+
+bool Board_set::is_destination_reached (const Asterism &destination_asterism) const {
+    return is_destination_reached(destination_asterism, TOLERANCE);
 }
 
 bool Board_set::is_aligned_x (const Asterism &destination_asterism) const {

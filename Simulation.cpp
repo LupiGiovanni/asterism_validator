@@ -94,10 +94,9 @@ void Simulation::run_linear_trajectory (Board_set& board_set, const Asterism& tr
 
         duration = SIMULATION_TIME_STEP * iterations;
 
-        if ( board_set.is_destination_reached(destination) ) {
+        if ( board_set.is_destination_reached(destination) )
             destination_reached = true;
-            distance_from_destination = board_set.calculate_distance(destination);
-        }
+        distance_from_destination = board_set.calculate_distance(destination);
 
         if (iterations > MAX_ITERATION_INDEX)
             max_iterations_exceeded = true;
@@ -136,8 +135,8 @@ void Simulation::run_safe_basic(Board_set& board_set, const Asterism& movement_s
                 iterations += 1;
             }
 
-            while ( ! board_set.is_aligned_x(movement_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-                board_set.move_along_x(movement_destination, SIMULATION_DISTANCE_STEP);
+            while ( ! board_set.is_aligned_x(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                board_set.move_along_x(destination, SIMULATION_DISTANCE_STEP);
 
                 if ( board_set.detect_collision() )
                     collision_detected = true;
@@ -149,8 +148,8 @@ void Simulation::run_safe_basic(Board_set& board_set, const Asterism& movement_s
                 iterations += 1;
             }
 
-            while ( ! board_set.is_destination_reached(movement_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-                board_set.move_along_y(movement_destination, SIMULATION_DISTANCE_STEP);
+            while ( ! board_set.is_destination_reached(destination, TOLERANCE * sqrt(2.)) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                board_set.move_along_y(destination, SIMULATION_DISTANCE_STEP);
 
                 if ( board_set.detect_collision() )
                     collision_detected = true;
@@ -164,10 +163,9 @@ void Simulation::run_safe_basic(Board_set& board_set, const Asterism& movement_s
 
         duration = SIMULATION_TIME_STEP * iterations;
 
-        if (board_set.is_destination_reached(destination)) {
+        if (board_set.is_destination_reached(destination, TOLERANCE * sqrt(2.)) )
             destination_reached = true;
-            distance_from_destination = board_set.calculate_distance(destination);
-        }
+        distance_from_destination = board_set.calculate_distance(destination);
 
         if (iterations > MAX_ITERATION_INDEX)
             max_iterations_exceeded = true;

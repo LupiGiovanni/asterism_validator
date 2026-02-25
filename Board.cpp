@@ -131,12 +131,16 @@ void Board::teleport_home() {
     teleport(pom_home);
 }
 
-bool Board::is_destination_reached (const Point& pom_destination) const {
+bool Board::is_destination_reached (const Point& pom_destination, double tolerance) const {
     Vector displacement (pom_destination - pom);
     double distance = std::sqrt(displacement.squared_length());
-    if (distance <= TOLERANCE)
+    if (distance <= tolerance)
         return true;
     return false;
+}
+
+bool Board::is_destination_reached (const Point& pom_destination) const {
+    return is_destination_reached(pom_destination, TOLERANCE);
 }
 
 bool Board::is_aligned_x (const Point& pom_destination) const {

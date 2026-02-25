@@ -29,6 +29,8 @@ private:
 
     void teleport_home ();
 
+    bool is_destination_reached (const Point& pom_destination, double tolerance) const;
+
     bool is_destination_reached (const Point& pom_destination) const;
 
     bool is_aligned_x (const Point& pom_destination) const;

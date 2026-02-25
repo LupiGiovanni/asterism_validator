@@ -235,8 +235,15 @@ void Graphic_viewer::animate_outside_tech_field(const Asterism &start) {
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
     while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                return;
+            }
+        }
+
         if (animation_start_clock.getElapsedTime() >= animation_start_delay) {
-            sf::Event event;
             setup_start_asterism(start);
             Board_set temporary;
             temporary.assign_targets(start);
@@ -267,16 +274,16 @@ void Graphic_viewer::animate_outside_tech_field(const Asterism &start) {
                         window.display();
 
                         temporary.move_outside_tech_field(SIMULATION_DISTANCE_STEP);
-                        if ( temporary.detect_collision() )
+                        if ( temporary.detect_collision() ) {
                             collision_detected = true;
+                        }
                         iterations += 1;
-
                         movement_clock.restart();
-                    }
+                    } else sf::sleep(sf::milliseconds(1));
                 }
             }
             animation_start_clock.restart();
-        }
+        } else sf::sleep(sf::milliseconds(10));
     }
 }
 
@@ -285,8 +292,15 @@ void Graphic_viewer::animate_linear_trajectory(const Asterism& start, const Aste
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
     while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                return;
+            }
+        }
+
         if (animation_start_clock.getElapsedTime() >= animation_start_delay) {
-            sf::Event event;
             bool start_valid = false;
             bool destination_valid = false;
             setup_start_asterism(start);
@@ -300,15 +314,15 @@ void Graphic_viewer::animate_linear_trajectory(const Asterism& start, const Aste
             }
 
             temporary.assign_targets(destination);
-            if ( ! temporary.get_targets().empty() )
+            if ( ! temporary.get_targets().empty() ) {
                 destination_valid = true;
+            }
 
             if ( start_valid && destination_valid ) {
                 int iterations = 0;
                 bool collision_detected = false;
 
                 while ( ! temporary.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-
                     while (window.pollEvent(event)) {
                         if (event.type == sf::Event::Closed) {
                             window.close();
@@ -329,16 +343,16 @@ void Graphic_viewer::animate_linear_trajectory(const Asterism& start, const Aste
                         window.display();
 
                         temporary.move(destination, SIMULATION_DISTANCE_STEP);
-                        if ( temporary.detect_collision() )
+                        if ( temporary.detect_collision() ) {
                             collision_detected = true;
+                        }
                         iterations += 1;
-
                         movement_clock.restart();
-                    }
+                    } else sf::sleep(sf::milliseconds(1));
                 }
             }
             animation_start_clock.restart();
-        }
+        } else sf::sleep(sf::milliseconds(10));
     }
 }
 
@@ -347,8 +361,15 @@ void Graphic_viewer::animate_safe_basic(const Asterism& start, const Asterism& d
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
     while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                return;
+            }
+        }
+
         if (animation_start_clock.getElapsedTime() >= animation_start_delay) {
-            sf::Event event;
             bool start_valid = false;
             bool destination_valid = false;
             setup_start_asterism(start);
@@ -362,14 +383,15 @@ void Graphic_viewer::animate_safe_basic(const Asterism& start, const Asterism& d
             }
 
             temporary.assign_targets(destination);
-            if ( ! temporary.get_targets().empty() )
+            if ( ! temporary.get_targets().empty() ) {
                 destination_valid = true;
+            }
 
             if ( start_valid && destination_valid ) {
                 int iterations = 0;
                 bool collision_detected = false;
 
-                while ( ! temporary.is_in_safe_zone() and ! collision_detected and iterations <= MAX_ITERATION_INDEX ) {
+                while ( ! temporary.is_in_safe_zone() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 
                     while (window.pollEvent(event)) {
                         if (event.type == sf::Event::Closed) {
@@ -391,12 +413,12 @@ void Graphic_viewer::animate_safe_basic(const Asterism& start, const Asterism& d
                         window.display();
 
                         temporary.move_to_safe_zone(SIMULATION_DISTANCE_STEP);
-                        if ( temporary.detect_collision() )
+                        if ( temporary.detect_collision() ) {
                             collision_detected = true;
+                        }
                         iterations += 1;
-
                         movement_clock.restart();
-                    }
+                    } else sf::sleep(sf::milliseconds(1));
                 }
 
                 while ( ! temporary.is_aligned_x(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
@@ -421,15 +443,15 @@ void Graphic_viewer::animate_safe_basic(const Asterism& start, const Asterism& d
                         window.display();
 
                         temporary.move_along_x(destination, SIMULATION_DISTANCE_STEP);
-                        if ( temporary.detect_collision() )
+                        if ( temporary.detect_collision() ) {
                             collision_detected = true;
+                        }
                         iterations += 1;
-
                         movement_clock.restart();
-                    }
+                    } else sf::sleep(sf::milliseconds(1));
                 }
 
-                while ( ! temporary.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                while ( ! temporary.is_destination_reached(destination, TOLERANCE * sqrt(2.) ) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 
                     while (window.pollEvent(event)) {
                         if (event.type == sf::Event::Closed) {
@@ -451,15 +473,15 @@ void Graphic_viewer::animate_safe_basic(const Asterism& start, const Asterism& d
                         window.display();
 
                         temporary.move_along_y(destination, SIMULATION_DISTANCE_STEP);
-                        if ( temporary.detect_collision() )
+                        if ( temporary.detect_collision() ) {
                             collision_detected = true;
+                        }
                         iterations += 1;
-
                         movement_clock.restart();
-                    }
+                    } else sf::sleep(sf::milliseconds(1));
                 }
             }
             animation_start_clock.restart();
-        }
+        } else sf::sleep(sf::milliseconds(10));
     }
 }
