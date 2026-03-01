@@ -9,11 +9,14 @@
 
 int main () {
     Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset);
-    // Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset_extended);
+    //Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset_extended);
     // Simulation_manager::simulate_dataset(Movement::safe_basic, cedric_dataset_extended);
 
     // Graphic_viewer gv;
     // gv.animate(Movement::linear_trajectory, cedric_dataset[0], cedric_dataset[4]);
+
+    //Simulation_manager::simulate_random_dataset(Movement::linear_trajectory);
+    //Simulation_manager::simulate_random_dataset(Movement::safe_basic);
 
     return 0;
 }
