@@ -26,3 +26,13 @@ void Asterism::print () const {
                      << ngs[0].y() << ", " << ngs[1].y() << ", " << ngs[2].y() << "}";
 }
 
+void Asterism::print_with_labels() const {
+    std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
+    std::cout << std::endl;
+    std::cout << "X_ngs0\t\tX_ngs1\t\tX_ngs2\t\tY_ngs0\t\tY_ngs1\t\tY_ngs2" << std::endl;
+    std::cout << "------\t\t------\t\t------\t\t------\t\t------\t\t------" << std::endl;
+    std::cout << "{" << ngs[0].x() << ", " << ngs[1].x() << ", " << ngs[2].x() << ", "
+                     << ngs[0].y() << ", " << ngs[1].y() << ", " << ngs[2].y() << "}";
+    std::cout << std::endl;
+}
+

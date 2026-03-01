@@ -56,7 +56,9 @@ void Simulation_manager::simulate_dataset_helper(Movement movement_type, const s
             //============================================================================================
         }
         else if (simulation.is_start_valid() && simulation.is_destination_valid()) {
-            std::cout << "Simulation from point " << i-1 << " to point " << i << " failed." << std::endl;
+            std::cout << std::endl;
+            std::cout << "Simulation from asterism " << i-1 << " to asterism " << i << " of the dataset failed. Detailed info below: ";
+            std::cout << std::endl;
             simulation.print_results();
 
             //============================================================================================
@@ -100,7 +102,9 @@ void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<A
             //============================================================================================
         }
         else if (simulation.is_start_valid()) {
-            std::cout << "Simulation from point " << i << " failed." << std::endl;
+            std::cout << std::endl;
+            std::cout << "Simulation from asterism " << i << " of the dataset failed. Detailed info below: " ;
+            std::cout << std::endl;
             simulation.print_results();
 
             //============================================================================================
@@ -143,15 +147,15 @@ void Simulation_manager::print_results(Movement movement_type, int total_simulat
     }
 
     std::cout << std::endl;
-    std::cout << "======================================================================================" << std::endl;
-    std::cout << "                             Dataset simulations results                              " << std::endl;
+    std::cout << "////////////////////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
+    std::cout << "                                      Dataset simulations results                                       " << std::endl;
     std::cout << std::endl;
     std::cout << "> Movement type\t\t\t\t" << movement_type_str << std::endl;
     std::cout << "> Boards cruise velocity\t"<< BOARD_VELOCITY << " mm/s" << std::endl;
     std::cout << "> Total simulations\t\t\t" << total_simulations << std::endl;
     std::cout << "> Successful simulations\t" << successful_simulations << std::endl;
-    std::cout << "> Average duration\t\t\t" << (durations_sum / successful_simulations) << " seconds" << std::endl;
-    std::cout << "======================================================================================" << std::endl;
+    std::cout << "> Average duration\t\t\t" << (durations_sum / successful_simulations) << " s" << std::endl;
+    std::cout << "////////////////////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
     std::cout << std::endl;
 }
 

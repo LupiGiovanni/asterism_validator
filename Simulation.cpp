@@ -216,9 +216,7 @@ void Simulation::run_outside_tech_field (Board_set& board_set, const Asterism& m
 
 void Simulation::print_results() const {
     std::cout << std::endl;
-    std::cout << "======================================================================================" << std::endl;
-    std::cout << "                              Single simulation results                               " << std::endl;
-    std::cout << std::endl;
+    std::cout << "---------------------------------------------------------------------------------------------------------" << std::endl;
 
     switch ( type ) {
         case Movement::linear_trajectory:
@@ -247,17 +245,17 @@ void Simulation::print_results() const {
 
     std::cout << std::endl;
     std::cout << "> Boards cruise velocity\t" << BOARD_VELOCITY << " mm/s" << std::endl;
-    std::cout << "> Movement duration\t\t\t" << duration << " seconds" << std::endl;
+    std::cout << "> Movement duration\t\t\t" << duration << " s" << std::endl;
     std::cout << "> Simulation iterations\t\t" << iterations << std::endl;
     std::cout << "> Max iterations exceeded\t" << (max_iterations_exceeded? "true":"false") << std::endl;
-    std::cout << "> Iteration time step\t\t" << SIMULATION_TIME_STEP << " seconds" << std::endl;
+    std::cout << "> Iteration time step\t\t" << SIMULATION_TIME_STEP << " s" << std::endl;
     std::cout << "> Iteration distance step\t" << SIMULATION_DISTANCE_STEP << " mm" << std::endl;
     std::cout << "> Destination reached\t\t" << (destination_reached? "true":"false") << std::endl;
-    std::cout << "> Distance from dest\t\t" << distance_from_destination << std::endl;
+    std::cout << "> Distance from dest\t\t" << distance_from_destination << " mm" << std::endl;
     std::cout << "> Collision detected\t\t" << (collision_detected? "true":"false") << std::endl;
     std::cout << "> FoV small vignetting\t\t" << (fov_small_vignette_detected? "true":"false") << std::endl;
     std::cout << "> FoV large vignetting\t\t" << (fov_large_vignette_detected? "true":"false") << std::endl;
-    std::cout << "======================================================================================" << std::endl;
-    std::cout << std::endl;
+    std::cout << "---------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << std::endl << std::endl;
 }
 

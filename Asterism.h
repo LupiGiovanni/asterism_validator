@@ -21,6 +21,8 @@ public:
 
     void print() const;
 
+    void print_with_labels() const;
+
 private:
     std::vector<Point> ngs;
 };
