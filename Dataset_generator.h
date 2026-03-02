@@ -13,13 +13,13 @@
 class Dataset_generator {
 public:
     const std::vector<Asterism>& get_dataset () const;
-    void generate_random_valid_dataset ();
+    void generate_dataset_random_valid ();
 
 private:
     std::vector<Asterism> dataset = {};
 
-    Asterism generate_random_asterism ();
-    Asterism generate_random_valid_asterism ();
+    Asterism generate_asterism_random ();
+    Asterism generate_asterism_random_valid ();
 };
 
 

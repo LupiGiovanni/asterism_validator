@@ -15,11 +15,9 @@
 
 class Simulation_manager {
 public:
+    static void simulate (Movement movement_type, const Asterism& start, const Asterism& destination);
     static void simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset);
-
-    static void simulate_random_dataset (Movement movement_type);
-
-    static void run_single_simulation (Movement movement_type, const Asterism& start, const Asterism& destination);
+    static void simulate_dataset_random (Movement movement_type);
 
 private:
     static void simulate_dataset_helper (Movement movement_type, const std::vector<Asterism>& dataset);

@@ -26,11 +26,9 @@ constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 class Graphic_viewer {
 public:
     Graphic_viewer();
-
     void draw(const Board_set& board_set);
     void draw(const Board_set& board_set, const Asterism& asterism);
     void draw(const Board_set& board_set, const Asterism& start, const Asterism& destination);
-
     void animate(Movement movement_type, const Asterism& start, const Asterism& destination = Asterism());
 
 private:

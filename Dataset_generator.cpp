@@ -8,7 +8,7 @@ const std::vector<Asterism>& Dataset_generator::get_dataset() const {
     return dataset;
 }
 
-Asterism Dataset_generator::generate_random_asterism() {
+Asterism Dataset_generator::generate_asterism_random() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
 
@@ -30,21 +30,21 @@ Asterism Dataset_generator::generate_random_asterism() {
     return Asterism(ngs);
 }
 
-Asterism Dataset_generator::generate_random_valid_asterism () {
+Asterism Dataset_generator::generate_asterism_random_valid () {
     Board_set temporary;
     Asterism new_asterism;
     do {
-        new_asterism = generate_random_asterism();
+        new_asterism = generate_asterism_random();
         temporary.assign_targets(new_asterism);
     } while ( temporary.get_targets().empty() );
 
     return new_asterism;
 }
 
-void Dataset_generator::generate_random_valid_dataset() {
+void Dataset_generator::generate_dataset_random_valid() {
     dataset.clear();
     while (dataset.size() < GENERATED_DATASET_SIZE) {
-        Asterism new_asterism = generate_random_valid_asterism();
+        Asterism new_asterism = generate_asterism_random_valid();
         dataset.push_back(new_asterism);
     }
 }

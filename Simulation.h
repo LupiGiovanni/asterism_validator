@@ -14,19 +14,12 @@ enum class Movement {linear_trajectory, outside_technical_field, safe_basic, non
 class Simulation {
 public:
     Simulation();
-
     bool is_start_valid () const;
-
     bool is_destination_valid () const;
-
     bool is_destination_reached () const;
-
     bool is_collision_detected () const;
-
     double get_duration () const;
-
     void run (Movement movement_type, Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination = Asterism());
-
     void print_results() const;
 
 private:

@@ -21,9 +21,9 @@ void Simulation_manager::simulate_dataset (Movement movement_type, const std::ve
     }
 }
 
-void Simulation_manager::simulate_random_dataset(Movement movement_type) {
+void Simulation_manager::simulate_dataset_random(Movement movement_type) {
     Dataset_generator dg;
-    dg.generate_random_valid_dataset();
+    dg.generate_dataset_random_valid();
     simulate_dataset(movement_type, dg.get_dataset());
 }
 
@@ -119,7 +119,7 @@ void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<A
     print_histogram(y_values);
 }
 
-void Simulation_manager::run_single_simulation(Movement movement_type, const Asterism& start, const Asterism& destination) {
+void Simulation_manager::simulate(Movement movement_type, const Asterism& start, const Asterism& destination) {
     Board_set boards;
     Simulation simulation;
 
