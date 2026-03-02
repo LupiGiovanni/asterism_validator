@@ -69,7 +69,7 @@ void Simulation_manager::simulate_dataset_helper(Movement movement_type, const s
         }
     }
 
-    print_results(dataset, movement_type, total_simulations, successful_simulations, durations_sum);
+    print_results(movement_type, dataset.size(), total_simulations, successful_simulations, durations_sum);
     print_histogram(y_values);
 }
 
@@ -115,7 +115,7 @@ void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<A
         }
     }
 
-    print_results(dataset, Movement::outside_technical_field, total_simulations, successful_simulations, durations_sum);
+    print_results(Movement::outside_technical_field, dataset.size(), total_simulations, successful_simulations, durations_sum);
     print_histogram(y_values);
 }
 
@@ -127,7 +127,7 @@ void Simulation_manager::simulate(Movement movement_type, const Asterism& start,
     simulation.print_results();
 }
 
-void Simulation_manager::print_results(const std::vector<Asterism>& dataset, Movement movement_type, int total_simulations, int successful_simulations, double durations_sum) {
+void Simulation_manager::print_results(Movement movement_type, int dataset_size, int total_simulations, int successful_simulations, double durations_sum) {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
 
     std::string movement_type_str;
@@ -152,7 +152,7 @@ void Simulation_manager::print_results(const std::vector<Asterism>& dataset, Mov
     std::cout << std::endl;
     std::cout << "> Movement type\t\t\t\t" << movement_type_str << std::endl;
     std::cout << "> Boards cruise velocity\t"<< BOARD_VELOCITY << " mm/s" << std::endl;
-    std::cout << "> Dataset size\t\t\t\t" << dataset.size() << " asterisms" << std::endl;
+    std::cout << "> Dataset size\t\t\t\t" << dataset_size << " asterisms" << std::endl;
     std::cout << "> Total simulations\t\t\t" << total_simulations << std::endl;
     std::cout << "> Successful simulations\t" << successful_simulations << std::endl;
     std::cout << "> Success rate\t\t\t\t" << (100. * successful_simulations / total_simulations) << " %" << std::endl;

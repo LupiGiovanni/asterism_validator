@@ -25,5 +25,8 @@ int main () {
     Graphic_viewer gv;
     gv.animate(Movement::linear_trajectory, start, destination);
 
+    start.print_with_labels();
+    destination.print_with_labels();
+
     return 0;
 }

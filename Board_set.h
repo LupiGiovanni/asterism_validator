@@ -22,8 +22,7 @@ public:
     double calculate_distance (const Asterism& destination_asterism) const;
     void assign_targets (const Asterism& destination_asterism);
     void teleport (const Asterism& destination_asterism);
-    bool is_destination_reached (const Asterism& destination_asterism, double tolerance) const;
-    bool is_destination_reached (const Asterism& destination_asterism) const;
+    bool is_destination_reached (const Asterism& destination_asterism, double tolerance = TOLERANCE) const;
     bool is_aligned_x (const Asterism& destination_asterism) const;
     bool is_aligned_y (const Asterism& destination_asterism) const;
     bool is_in_technical_field () const;

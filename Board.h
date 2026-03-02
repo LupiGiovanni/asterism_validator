@@ -24,20 +24,19 @@ private:
     bool teleport (double delta_x, double delta_y);
     bool teleport (const Point& pom_destination);
     void teleport_home ();
-    bool is_destination_reached (const Point& pom_destination, double tolerance) const;
-    bool is_destination_reached (const Point& pom_destination) const;
-    bool is_aligned_x (const Point& pom_destination) const;
-    bool is_aligned_y (const Point& pom_destination) const;
+    bool is_destination_reached (const Point& pom_destination, double tolerance = TOLERANCE) const;
+    bool is_aligned_x (const Point& pom_destination) const; // x in board local reference system
+    bool is_aligned_y (const Point& pom_destination) const; // y in board local reference system
     bool is_in_technical_field (const Circle& technical_field) const;
     bool is_in_safe_zone () const;
     double calculate_distance (const Point& pom_destination) const;
     bool move (const Point& pom_destination, double distance_step);
     bool move_outside_tech_field (const Circle& tech_field, double distance_step);
-    bool move_along_x (const Point& pom_destination, double distance_step);
-    bool move_along_y (const Point& pom_destination, double distance_step);
+    bool move_along_x (const Point& pom_destination, double distance_step); // x in board local reference system
+    bool move_along_y (const Point& pom_destination, double distance_step); // y in board local reference system
     bool move_to_safe_zone (double distance_step);
-    Point find_aligned_point_x (const Point& pom_destination) const;
-    Point find_aligned_point_y (const Point& pom_destination) const;
+    Point find_aligned_point_x (const Point& pom_destination) const; // x in board local reference system
+    Point find_aligned_point_y (const Point& pom_destination) const; // y in board local reference system
 
 public:
     const Polygon& get_profile () const;

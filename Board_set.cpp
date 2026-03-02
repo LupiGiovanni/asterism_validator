@@ -129,10 +129,6 @@ bool Board_set::is_destination_reached(const Asterism& destination_asterism, dou
     return true;
 }
 
-bool Board_set::is_destination_reached (const Asterism &destination_asterism) const {
-    return is_destination_reached(destination_asterism, TOLERANCE);
-}
-
 bool Board_set::is_aligned_x (const Asterism &destination_asterism) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
         if ( ! boards[j].is_aligned_x(destination_asterism.get_ngs(targets[j])) )
