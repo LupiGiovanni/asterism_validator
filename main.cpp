@@ -6,17 +6,17 @@
 #include "dataset.h"
 #include "Simulation_manager.h"
 #include "Graphic_viewer.h"
+#include "A_star.h"
 
 int main () {
-    //Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset);
-    //Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset_extended);
-    //Simulation_manager::simulate_dataset(Movement::safe_basic, cedric_dataset_extended);
+    State start (-27,-125,58,252,124,-193);
+    State goal (161,-52,179,139,220,-182);
 
-    Graphic_viewer gv;
-    gv.animate(Movement::safe_basic, cedric_dataset[9], cedric_dataset[11]);
+    std::vector<State> path = A_star::search (start, goal);
 
-    //Simulation_manager::simulate_random_dataset(Movement::linear_trajectory);
-    //Simulation_manager::simulate_random_dataset(Movement::safe_basic);
+    std::cout << "Path from start to goal:" << std::endl;
+    for (const auto& state : path)
+        state.print();
 
     return 0;
 }

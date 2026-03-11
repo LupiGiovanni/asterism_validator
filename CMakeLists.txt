@@ -26,10 +26,12 @@ add_executable (    asterism_validator
                     Simulation_manager.h
                     Graphic_viewer.cpp
                     Graphic_viewer.h
-                    Node.cpp
-                    Node.h
                     A_star.cpp
                     A_star.h
+                    State.cpp
+                    State.h
+                    Board_state.cpp
+                    Board_state.h
                     helper.h
                     dataset.h
                     coordinates.h   )
