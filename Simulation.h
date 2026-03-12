@@ -8,8 +8,9 @@
 #include "helper.h"
 #include "Asterism.h"
 #include "Board_set.h"
+#include "A_star.h"
 
-enum class Movement {linear_trajectory, outside_technical_field, safe_basic, none};
+enum class Movement {linear, outside_technical_field, safe_basic, A_star, none};
 
 class Simulation {
 public:
@@ -43,9 +44,11 @@ private:
 
     void reset_fields();
 
-    void run_linear_trajectory (Board_set& board_set, const Asterism& trajectory_start, const Asterism& trajectory_destination);
+    void run_linear (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
     void run_safe_basic (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
     void run_outside_tech_field (Board_set& board_set, const Asterism& movement_start);
+    void run_A_star (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
+    void run_A_star_segment (Board_set& board_set, const Asterism& segment_start, const Asterism& segment_destination);
 };
 
 

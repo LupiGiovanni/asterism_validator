@@ -224,6 +224,8 @@ void Graphic_viewer::animate(Movement movement_type, const Asterism& start, cons
         case Movement::outside_technical_field:
             animate_outside_tech_field(start);
             break;
+        case Movement::A_star:
+            break;
         case Movement::none:
             std::cout << "Warning: movement type is 'none'" << std::endl;
             break;
@@ -421,7 +423,7 @@ void Graphic_viewer::animate_safe_basic(const Asterism& start, const Asterism& d
                     } else sf::sleep(sf::milliseconds(1));
                 }
 
-                while ( ! temporary.is_aligned_x(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                while ( ! temporary.is_destination_aligned_x(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 
                     while (window.pollEvent(event)) {
                         if (event.type == sf::Event::Closed) {

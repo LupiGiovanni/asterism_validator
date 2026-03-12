@@ -30,8 +30,8 @@ add_executable (    asterism_validator
                     A_star.h
                     State.cpp
                     State.h
-        Position.cpp
-        Position.h
+                    Position.cpp
+                    Position.h
                     helper.h
                     dataset.h
                     coordinates.h   )

@@ -23,10 +23,11 @@ public:
     void assign_targets (const Asterism& destination_asterism);
     void set_targets (const std::vector<int>& new_targets);
     void teleport (const Asterism& destination_asterism);
-    bool is_in_range (const Asterism& destination_asterism) const;
+    bool is_destination_in_range (const Asterism& destination_asterism) const;
+    bool is_destination_valid (const Asterism& destination_asterism) const;
     bool is_destination_reached (const Asterism& destination_asterism, double tolerance = TOLERANCE) const;
-    bool is_aligned_x (const Asterism& destination_asterism) const;
-    bool is_aligned_y (const Asterism& destination_asterism) const;
+    bool is_destination_aligned_x (const Asterism& destination_asterism) const;
+    bool is_destination_aligned_y (const Asterism& destination_asterism) const;
     bool is_in_technical_field () const;
     bool is_in_safe_zone () const;
     bool move (const Asterism& destination_asterism, double distance_step);

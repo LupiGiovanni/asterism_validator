@@ -106,7 +106,7 @@ bool A_star::is_valid_state (const State& state, const std::vector<int>& targets
     temporary.set_targets(targets);
     temporary.teleport(a);
 
-    return !temporary.detect_collision() && temporary.is_in_range(a);
+    return !temporary.detect_collision() && temporary.is_destination_in_range(a);
 }
 
 int A_star::calculate_manhattan_distance (const State& current, const State& goal) {

@@ -6,11 +6,10 @@
 
 void Simulation_manager::simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset) {
     switch ( movement_type ) {
-        case Movement::linear_trajectory:
-            simulate_dataset_helper(movement_type, dataset);
-            break;
+        case Movement::linear:
         case Movement::safe_basic:
-            simulate_dataset_helper(movement_type, dataset);
+        case Movement::A_star:
+            simulate_dataset_other_movements(movement_type, dataset);
             break;
         case Movement::outside_technical_field:
             simulate_dataset_outside_tech_field(dataset);
@@ -27,7 +26,7 @@ void Simulation_manager::simulate_dataset_random(Movement movement_type) {
     simulate_dataset(movement_type, dg.get_dataset());
 }
 
-void Simulation_manager::simulate_dataset_helper(Movement movement_type, const std::vector<Asterism> &dataset) {
+void Simulation_manager::simulate_dataset_other_movements(Movement movement_type, const std::vector<Asterism> &dataset) {
     if ( dataset.empty() ) {
         std::cout << "Warning: attempted to run dataset simulation but 'dataset' vector is empty" << std::endl;
         return;
@@ -132,14 +131,17 @@ void Simulation_manager::print_results(Movement movement_type, int dataset_size,
 
     std::string movement_type_str;
     switch (movement_type) {
-        case Movement::linear_trajectory:
-            movement_type_str = "linear trajectory";
+        case Movement::linear:
+            movement_type_str = "linear";
             break;
         case Movement::safe_basic:
             movement_type_str = "safe basic";
             break;
         case Movement::outside_technical_field:
             movement_type_str = "outside technical field";
+            break;
+        case Movement::A_star:
+            movement_type_str = "A star";
             break;
         case Movement::none:
             movement_type_str = "none";

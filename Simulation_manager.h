@@ -20,8 +20,8 @@ public:
     static void simulate_dataset_random (Movement movement_type);
 
 private:
-    static void simulate_dataset_helper (Movement movement_type, const std::vector<Asterism>& dataset);
     static void simulate_dataset_outside_tech_field (const std::vector<Asterism>& dataset);
+    static void simulate_dataset_other_movements (Movement movement_type, const std::vector<Asterism>& dataset);
     static void print_results (Movement movement_type, int dataset_size, int total_simulations, int successful_simulations, double durations_sum);
     static void insert_into_histogram (std::array<int, HISTOGRAM_INTERVALS_COUNT>& y_values, double value);
     static void print_histogram (const std::array<int, HISTOGRAM_INTERVALS_COUNT>& y_values);

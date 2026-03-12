@@ -10,6 +10,7 @@
 class Position {
     friend class State;
     friend class A_star;
+    friend class Simulation;
 public:
     Position (int x, int y);
     bool operator == (const Position& other) const;

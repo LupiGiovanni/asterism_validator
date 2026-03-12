@@ -128,7 +128,7 @@ void Board_set::teleport (const Asterism& destination_asterism) {
     }
 }
 
-bool Board_set::is_in_range (const Asterism& destination_asterism) const {
+bool Board_set::is_destination_in_range (const Asterism& destination_asterism) const {
     if (targets.empty()) {
         std::cout << "Warning: attempted to check if asterism is in range but 'targets' vector is empty" << std::endl;
         return false;
@@ -141,6 +141,13 @@ bool Board_set::is_in_range (const Asterism& destination_asterism) const {
     return true;
 }
 
+bool Board_set::is_destination_valid (const Asterism& destination_asterism) const {
+    Board_set temporary;
+    temporary.assign_targets(destination_asterism);
+
+    return ! temporary.get_targets().empty();
+}
+
 bool Board_set::is_destination_reached(const Asterism& destination_asterism, double tolerance) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
         if ( ! boards[j].is_destination_reached(destination_asterism.get_ngs(targets[j]), tolerance) )
@@ -149,7 +156,7 @@ bool Board_set::is_destination_reached(const Asterism& destination_asterism, dou
     return true;
 }
 
-bool Board_set::is_aligned_x (const Asterism &destination_asterism) const {
+bool Board_set::is_destination_aligned_x (const Asterism &destination_asterism) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
         if ( ! boards[j].is_aligned_x(destination_asterism.get_ngs(targets[j])) )
             return false;
@@ -157,7 +164,7 @@ bool Board_set::is_aligned_x (const Asterism &destination_asterism) const {
     return true;
 }
 
-bool Board_set::is_aligned_y (const Asterism &destination_asterism) const {
+bool Board_set::is_destination_aligned_y (const Asterism &destination_asterism) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
         if ( ! boards[j].is_aligned_y(destination_asterism.get_ngs(targets[j])) )
             return false;
