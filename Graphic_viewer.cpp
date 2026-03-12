@@ -215,7 +215,7 @@ void Graphic_viewer::draw(const Board_set& board_set, const Asterism& start, con
 
 void Graphic_viewer::animate(Movement movement_type, const Asterism& start, const Asterism& destination) {
     switch (movement_type) {
-        case Movement::linear_trajectory:
+        case Movement::linear:
             animate_linear_trajectory(start, destination);
             break;
         case Movement::safe_basic:

@@ -111,6 +111,13 @@ void Board_set::assign_targets (const Asterism& destination_asterism) {
     }
 }
 
+void Board_set::set_targets(const std::vector<int>& new_targets) {
+    if (new_targets.size() == BOARDS_COUNT)
+        targets = new_targets;
+    else
+        std::cout << "Warning: attempted to set targets but 'new_targets' vector has size != 3" << std::endl;
+}
+
 void Board_set::teleport (const Asterism& destination_asterism) {
     if (targets.empty()) {
         std::cout << "Warning: attempted to teleport boards but 'targets' vector is empty" << std::endl;
@@ -119,6 +126,19 @@ void Board_set::teleport (const Asterism& destination_asterism) {
         for (int j = 0; j < BOARDS_COUNT; j++)
             boards[j].teleport(destination_asterism.get_ngs(targets[j]));
     }
+}
+
+bool Board_set::is_in_range (const Asterism& destination_asterism) const {
+    if (targets.empty()) {
+        std::cout << "Warning: attempted to check if asterism is in range but 'targets' vector is empty" << std::endl;
+        return false;
+    }
+
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        if ( ! boards[j].is_in_range(destination_asterism.get_ngs(targets[j])) )
+            return false;
+
+    return true;
 }
 
 bool Board_set::is_destination_reached(const Asterism& destination_asterism, double tolerance) const {

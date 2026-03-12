@@ -4,22 +4,23 @@
 
 #include "State.h"
 
-State::State (): s{} {}
+State::State (): pos{} {}
 
-State::State(const Board_state& s0, const Board_state& s1, const Board_state& s2) : s{s0, s1, s2} {}
+State::State(const Position& pos0, const Position& pos1, const Position& pos2) : pos{pos0, pos1, pos2} {}
 
-State::State(long s0_x, long s1_x, long s2_x, long s0_y, long s1_y, long s2_y) : s{Board_state(s0_x, s0_y), Board_state(s1_x, s1_y), Board_state(s2_x, s2_y)} {}
+State::State(int pos0_x, int pos1_x, int pos2_x, int pos0_y, int pos1_y, int pos2_y) :
+    pos{Position(pos0_x, pos0_y), Position(pos1_x, pos1_y), Position(pos2_x, pos2_y)} {}
 
-std::vector<Board_state> State::get_s() const {
-    return s;
+std::vector<Position> State::get_positions() const {
+    return pos;
 }
 
 bool State::operator == (const State& other) const {
-    return s[0] == other.s[0] && s[1] == other.s[1] && s[2] == other.s[2];
+    return pos[0] == other.pos[0] && pos[1] == other.pos[1] && pos[2] == other.pos[2];
 }
 
 void State::print() const {
-    for (const auto& bs : s) {
+    for (const auto& bs : pos) {
         bs.print();
         std::cout << " ";
     }

@@ -6,20 +6,20 @@
 #define ASTERISM_VALIDATOR_STATE_H
 
 #include <vector>
-#include "Board_state.h"
+#include "Position.h"
 
 class State {
     friend class A_star;
 public:
     State ();
-    State (const Board_state& s0, const Board_state& s1, const Board_state& s2);
-    State (long s0_x, long s1_x, long s2_x, long s0_y, long s1_y, long s2_y);
-    std::vector<Board_state> get_s () const;
+    State (const Position& pos0, const Position& pos1, const Position& pos2);
+    State (int pos0_x, int pos1_x, int pos2_x, int pos0_y, int pos1_y, int pos2_y);
+    std::vector<Position> get_positions () const;
     bool operator == (const State& other) const;
     void print() const;
 
 private:
-    std::vector<Board_state> s;
+    std::vector<Position> pos;
 };
 
 
