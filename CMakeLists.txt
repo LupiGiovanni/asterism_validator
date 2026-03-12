@@ -34,7 +34,8 @@ add_executable (    asterism_validator
                     Position.h
                     helper.h
                     dataset.h
-                    coordinates.h   )
+                    coordinates.h
+                    transformations.h   )
 
 target_link_libraries(  asterism_validator
                         sfml-graphics

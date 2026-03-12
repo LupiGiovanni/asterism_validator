@@ -234,8 +234,8 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
         destination_valid = true;
 
     if (start_valid && destination_valid) {
-        State start_state (movement_start);
-        State goal_state (movement_destination);
+        State start_state = transform_into_state (movement_start);
+        State goal_state =  transform_into_state (movement_destination);
 
         std::vector<State> path = A_star::search (start_state, goal_state);
 
@@ -244,23 +244,19 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
             return;
         }
 
-        Asterism start_state_asterism ( start_state.pos[0].x, start_state.pos[0].y, start_state.pos[1].x,
-                                        start_state.pos[1].y, start_state.pos[2].x, start_state.pos[2].y );
+        Asterism start_state_asterism = transform_into_asterism (start_state);
 
         run_A_star_segment (board_set, movement_start, start_state_asterism);
 
         for (int i = 1; i < path.size(); ++i) {
-            Asterism segment_start_asterism ( path[i-1].pos[0].x, path[i-1].pos[0].y, path[i-1].pos[1].x,
-                                              path[i-1].pos[1].y, path[i-1].pos[2].x, path[i-1].pos[2].y );
+            Asterism segment_start_asterism = transform_into_asterism(path[i-1]);
 
-            Asterism segment_destination_asterism ( path[i].pos[0].x, path[i].pos[0].y, path[i].pos[1].x,
-                                                    path[i].pos[1].y, path[i].pos[2].x, path[i].pos[2].y );
+            Asterism segment_destination_asterism = transform_into_asterism(path[i]);
 
             run_A_star_segment (board_set, segment_start_asterism, segment_destination_asterism);
         }
 
-        Asterism goal_state_asterism ( goal_state.pos[0].x, goal_state.pos[0].y, goal_state.pos[1].x,
-                                       goal_state.pos[1].y, goal_state.pos[2].x, goal_state.pos[2].y );
+        Asterism goal_state_asterism = transform_into_asterism (goal_state);
 
         run_A_star_segment( board_set, goal_state_asterism, movement_destination);
 
@@ -316,7 +312,8 @@ void Simulation::print_results () const {
             std::cout << "> Movement type\t\t\t\tsafe basic" << std::endl;
             break;
         case Movement::A_star:
-            std::cout << "> Movement type\t\t\t\tA star";
+            std::cout << "> Movement type\t\t\t\tA star" << std::endl;
+            break;
         case Movement::none:
             std::cout << "> Movement type\t\t\t\tnone" << std::endl;
             break;
@@ -337,8 +334,8 @@ void Simulation::print_results () const {
     std::cout << "> Movement duration\t\t\t" << duration << " s" << std::endl;
     std::cout << "> Simulation iterations\t\t" << iterations << std::endl;
     std::cout << "> Max iterations exceeded\t" << (max_iterations_exceeded? "true":"false") << std::endl;
-    std::cout << "> Iteration time step\t\t" << SIMULATION_TIME_STEP << " s" << std::endl;
-    std::cout << "> Iteration distance step\t" << SIMULATION_DISTANCE_STEP << " mm" << std::endl;
+    std::cout << "> Simulation time step\t\t" << SIMULATION_TIME_STEP << " s" << std::endl;
+    std::cout << "> Simulation distance step\t" << SIMULATION_DISTANCE_STEP << " mm" << std::endl;
     std::cout << "> Destination reached\t\t" << (destination_reached? "true":"false") << std::endl;
     std::cout << "> Distance from dest\t\t" << distance_from_destination << " mm" << std::endl;
     std::cout << "> Collision detected\t\t" << (collision_detected? "true":"false") << std::endl;

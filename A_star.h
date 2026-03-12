@@ -37,7 +37,7 @@ struct A_star::State_hasher {
     std::size_t operator() (const State& state) const {
         std::size_t seed = 0;
 
-        for (const auto& bs : state.get_positions()) {
+        for (const auto& bs : state.get_pos()) {
             seed ^= std::hash<int>{}(bs.x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
             seed ^= std::hash<int>{}(bs.y) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         }

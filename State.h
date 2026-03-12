@@ -7,7 +7,6 @@
 
 #include <vector>
 #include "Position.h"
-#include "Asterism.h"
 
 class State {
     friend class A_star;
@@ -17,8 +16,7 @@ public:
     State ();
     State (const Position& pos0, const Position& pos1, const Position& pos2);
     State (int pos0_x, int pos1_x, int pos2_x, int pos0_y, int pos1_y, int pos2_y);
-    explicit State (const Asterism& asterism);
-    std::vector<Position> get_positions () const;
+    std::vector<Position> get_pos () const;
     bool operator == (const State& other) const;
     void print() const;
 
