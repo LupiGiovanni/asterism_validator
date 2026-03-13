@@ -18,7 +18,8 @@ int main () {
     // for (const auto& state : path)
     //     state.print();
 
-    Simulation_manager::simulate(Movement::A_star, cedric_dataset[0], cedric_dataset[1]);
+   Graphic_viewer gv;
+   gv.animate(Movement::A_star, cedric_dataset[30], cedric_dataset[58]);
 
     return 0;
 }

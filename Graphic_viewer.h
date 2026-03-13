@@ -6,7 +6,7 @@
 #define ASTERISM_VALIDATOR_GRAPHIC_VIEWER_H
 
 #include <SFML/Graphics.hpp>
-#include "helper.h"
+#include "transformations.h"
 #include "Board_set.h"
 #include "Asterism.h"
 #include "Simulation.h"
@@ -49,17 +49,18 @@ private:
     double window_coordinate_x (double x) const;
     double window_coordinate_y (double y) const;
 
-    void setup_pom_ranges();
-    void setup_fov_large();
-    void setup_fov_small();
-    void setup_technical_field();
-    void setup_boards(const Board_set& board_set);
-    void setup_start_asterism(const Asterism& asterism);
-    void setup_destination_asterism(const Asterism& asterism);
-    void rotate_clockwise_around_center(sf::ConvexShape& shape, float angle_degrees);
-    void animate_outside_tech_field(const Asterism& start);
-    void animate_linear_trajectory(const Asterism& start, const Asterism& destination);
-    void animate_safe_basic(const Asterism& start, const Asterism& destination);
+    void setup_pom_ranges ();
+    void setup_fov_large ();
+    void setup_fov_small ();
+    void setup_technical_field ();
+    void setup_boards (const Board_set& board_set);
+    void setup_start_asterism (const Asterism& asterism);
+    void setup_destination_asterism (const Asterism& asterism);
+    void rotate_clockwise_around_center (sf::ConvexShape& shape, float angle_degrees);
+    void animate_outside_tech_field (const Asterism& start);
+    void animate_linear (const Asterism& start, const Asterism& destination);
+    void animate_safe_basic (const Asterism& start, const Asterism& destination);
+    void animate_A_star (const Asterism& start, const Asterism& destination);
 };
 
 
