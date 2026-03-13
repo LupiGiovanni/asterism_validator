@@ -28,8 +28,8 @@ private:
     static void align_states (const State& start, State& goal);
     static std::vector<State> get_next_states (const State& state, const std::vector<int>& targets);
     static bool is_valid_state (const State& state, const std::vector<int>& targets);
-    static int calculate_manhattan_distance (const State& current, const State& goal);
-    static int calculate_manhattan_distance_helper (const Position& current, const Position& goal);
+    static int calculate_manhattan_distance_global (const State& current, const State& goal);
+    static int calculate_manhattan_distance (const Position& current, const Position& goal);
     static std::vector<State> reconstruct_path (std::unordered_map<State, State, State_hasher>& came_from, State current);
 };
 

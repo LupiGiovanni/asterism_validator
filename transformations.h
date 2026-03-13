@@ -10,10 +10,10 @@
 
 inline Asterism transform_into_asterism (const State& state) {
     Asterism a ( state.get_pos()[0].get_x(),
-                  state.get_pos()[1].get_x(),
+                 state.get_pos()[1].get_x(),
                  state.get_pos()[2].get_x(),
                  state.get_pos()[0].get_y(),
-                  state.get_pos()[1].get_y(),
+                 state.get_pos()[1].get_y(),
                  state.get_pos()[2].get_y() );
     return a;
 }

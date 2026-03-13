@@ -4,6 +4,8 @@
 
 #include "A_star.h"
 
+#include "transformations.h"
+
 std::vector<State> A_star::search(const State& start, State& goal) {
     std::priority_queue<std::pair<int, State>, std::vector<std::pair<int, State>>, State_comparator> open_set;
     std::unordered_map<State, State, State_hasher> came_from;
@@ -13,7 +15,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
     const std::vector<int> targets = assign_targets(goal);
 
     g_score[start] = 0;
-    open_set.push({calculate_manhattan_distance(start, goal), start});
+    open_set.push({calculate_manhattan_distance_global(start, goal), start});
 
     while (!open_set.empty()) {
         State current = open_set.top().second;
@@ -29,7 +31,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
             if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
                 came_from[neighbor] = current;
                 g_score[neighbor] = tentative_g;
-                int f_score = tentative_g + HEURISTIC_SCALED_WEIGHT * calculate_manhattan_distance(neighbor, goal);
+                int f_score = tentative_g + HEURISTIC_SCALED_WEIGHT * calculate_manhattan_distance_global(neighbor, goal);
                 open_set.push({f_score, neighbor});
             }
         }
@@ -39,7 +41,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
 }
 
 std::vector<int> A_star::assign_targets (const State& state) {
-    Asterism goal_asterism (state.pos[0].x, state.pos[1].x, state.pos[2].x, state.pos[0].y, state.pos[1].y, state.pos[2].y);
+    Asterism goal_asterism = transform_into_asterism (state);
     Board_set temporary;
     temporary.assign_targets(goal_asterism);
     return temporary.get_targets();
@@ -102,26 +104,25 @@ bool A_star::is_valid_state (const State& state, const std::vector<int>& targets
     std::cout << "Checking validity of state: ";
     state.print();
 
-    Asterism a (state.pos[0].x, state.pos[1].x, state.pos[2].x, state.pos[0].y, state.pos[1].y, state.pos[2].y);
+    Asterism a = transform_into_asterism (state);
     temporary.set_targets(targets);
     temporary.teleport(a);
 
     return !temporary.detect_collision() && temporary.is_destination_in_range(a);
 }
 
-int A_star::calculate_manhattan_distance (const State& current, const State& goal) {
+int A_star::calculate_manhattan_distance_global (const State& current, const State& goal) {
     int h = 0;
 
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        int new_h = calculate_manhattan_distance_helper (current.pos[i], goal.pos[i]);
-        if (new_h > h)
-            h = new_h;
+        // Somma le distanze invece di cercare il massimo
+        h += calculate_manhattan_distance (current.pos[i], goal.pos[i]);
     }
 
     return h;
 }
 
-int A_star::calculate_manhattan_distance_helper (const Position& current, const Position& goal) {
+int A_star::calculate_manhattan_distance (const Position& current, const Position& goal) {
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
 
