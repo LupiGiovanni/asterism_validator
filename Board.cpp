@@ -139,12 +139,12 @@ bool Board::is_destination_reached (const Point& pom_destination, double toleran
     return false;
 }
 
-bool Board::is_aligned_x (const Point& pom_destination) const {
+bool Board::is_destination_aligned_x (const Point& pom_destination) const {
     Point aligned_point_x = find_aligned_point_x(pom_destination);
     return is_destination_reached(aligned_point_x);
 }
 
-bool Board::is_aligned_y (const Point& pom_destination) const {
+bool Board::is_destination_aligned_y (const Point& pom_destination) const {
     Point aligned_point_y = find_aligned_point_y(pom_destination);
     return is_destination_reached(aligned_point_y);
 }

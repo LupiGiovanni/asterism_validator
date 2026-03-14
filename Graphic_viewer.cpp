@@ -535,38 +535,74 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                 }
 
                 Asterism current_destination;
+                const std::vector<int>& targets = A_star::assign_targets(goal_state);
+
+                // for (int i = 0; i < path.size(); i++) {
+                //     current_destination = transform_into_asterism (path[i]);
+                //
+                //     while ( ! temporary.is_destination_reached(current_destination, targets) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                //         while (window.pollEvent(event)) {
+                //             if (event.type == sf::Event::Closed) {
+                //                 window.close();
+                //                 return;
+                //             }
+                //         }
+                //
+                //         if (movement_clock.getElapsedTime() >= movement_delay) {
+                //             setup_boards(temporary);
+                //             window.clear(sf::Color::Black);
+                //             window.draw(technical_field);
+                //             for (int j = 0; j < BOARDS_COUNT; j++) {
+                //                 window.draw(pom_ranges[j]);
+                //                 window.draw(boards[j]);
+                //                 window.draw(start_asterism[j]);
+                //                 window.draw(destination_asterism[j]);
+                //             }
+                //             window.display();
+                //
+                //             temporary.move(current_destination, SIMULATION_DISTANCE_STEP, targets);
+                //             if ( temporary.detect_collision() ) {
+                //                 collision_detected = true;
+                //             }
+                //             iterations += 1;
+                //             movement_clock.restart();
+                //         } else sf::sleep(sf::milliseconds(1));
+                //     }
+                // }
+
+                temporary.set_targets(targets);
 
                 for (int i = 0; i < path.size(); i++) {
                     current_destination = transform_into_asterism (path[i]);
+                    temporary.teleport(current_destination);
 
-                    while ( ! temporary.is_destination_reached(current_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                    // if ( temporary.detect_collision() ) {
+                    //     collision_detected = true;
+                    //     break;
+                    // }
+
+                    while (movement_clock.getElapsedTime() < movement_delay) {
                         while (window.pollEvent(event)) {
                             if (event.type == sf::Event::Closed) {
                                 window.close();
                                 return;
                             }
                         }
-
-                        if (movement_clock.getElapsedTime() >= movement_delay) {
-                            setup_boards(temporary);
-                            window.clear(sf::Color::Black);
-                            window.draw(technical_field);
-                            for (int j = 0; j < BOARDS_COUNT; j++) {
-                                window.draw(pom_ranges[j]);
-                                window.draw(boards[j]);
-                                window.draw(start_asterism[j]);
-                                window.draw(destination_asterism[j]);
-                            }
-                            window.display();
-
-                            temporary.move(current_destination, SIMULATION_DISTANCE_STEP);
-                            if ( temporary.detect_collision() ) {
-                                collision_detected = true;
-                            }
-                            iterations += 1;
-                            movement_clock.restart();
-                        } else sf::sleep(sf::milliseconds(1));
+                        sf::sleep(sf::milliseconds(1));
                     }
+
+                    setup_boards(temporary);
+                    window.clear(sf::Color::Black);
+                    window.draw(technical_field);
+                    for (int j = 0; j < BOARDS_COUNT; j++) {
+                        window.draw(pom_ranges[j]);
+                        window.draw(boards[j]);
+                        window.draw(start_asterism[j]);
+                        window.draw(destination_asterism[j]);
+                    }
+                    window.display();
+
+                    movement_clock.restart();
                 }
             }
             animation_start_clock.restart();

@@ -9,8 +9,9 @@
 #include "A_star.h"
 
 int main () {
-    // State start (-27,-125,58,252,124,-193);
-    // State goal (161,-52,179,139,220,-182);
+
+    // State start (232.223713, 66.640670, -41.871824, 116.354008, -112.966366, -165.532668);
+    // State goal (-64.074902, -38.632346, 216.687889, 107.928191, -10.634813, 132.970463);
     //
     // std::vector<State> path = A_star::search (start, goal);
     //
@@ -18,8 +19,11 @@ int main () {
     // for (const auto& state : path)
     //     state.print();
 
-   Graphic_viewer gv;
-   gv.animate(Movement::A_star, cedric_dataset[30], cedric_dataset[58]);
+    Asterism start_a (232.223713, 66.640670, -41.871824, 116.354008, -112.966366, -165.532668);
+    Asterism goal_a (-64.074902, -38.632346, 216.687889, 107.928191, -10.634813, 132.970463);
+
+    Graphic_viewer gv;
+    gv.animate(Movement::A_star, start_a, goal_a);
 
     return 0;
 }

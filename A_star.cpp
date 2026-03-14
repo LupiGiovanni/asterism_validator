@@ -3,8 +3,26 @@
 //
 
 #include "A_star.h"
-
 #include "transformations.h"
+
+struct A_star::State_hasher {
+    std::size_t operator() (const State& state) const {
+        std::size_t seed = 0;
+
+        for (const auto& bs : state.get_pos()) {
+            seed ^= std::hash<int>{}(bs.x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= std::hash<int>{}(bs.y) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        }
+
+        return seed;
+    }
+};
+
+struct A_star::State_comparator {
+    bool operator()(const std::pair<int, State>& a, const std::pair<int, State>& b) const {
+        return a.first > b.first;
+    }
+};
 
 std::vector<State> A_star::search(const State& start, State& goal) {
     std::priority_queue<std::pair<int, State>, std::vector<std::pair<int, State>>, State_comparator> open_set;
@@ -15,7 +33,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
     const std::vector<int> targets = assign_targets(goal);
 
     g_score[start] = 0;
-    open_set.push({calculate_manhattan_distance_global(start, goal), start});
+    open_set.push({calculate_octile_distance_global(start, goal), start});
 
     while (!open_set.empty()) {
         State current = open_set.top().second;
@@ -31,7 +49,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
             if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
                 came_from[neighbor] = current;
                 g_score[neighbor] = tentative_g;
-                int f_score = tentative_g + HEURISTIC_SCALED_WEIGHT * calculate_manhattan_distance_global(neighbor, goal);
+                int f_score = tentative_g + calculate_octile_distance_global(neighbor, goal);
                 open_set.push({f_score, neighbor});
             }
         }
@@ -48,18 +66,18 @@ std::vector<int> A_star::assign_targets (const State& state) {
 }
 
 void A_star::align_states (const State& start, State& goal) {
-    std::vector<int> s_tar = assign_targets(start);
-    std::vector<int> g_tar = assign_targets(goal);
+    std::vector<int> s_targets = assign_targets(start);
+    std::vector<int> g_targets = assign_targets(goal);
 
-    if (s_tar.empty() || g_tar.empty()) {
-        std::cout << "Warning: attempted to align states but one or both of the states have empty 'targets' vector" << std::endl;
+    if (s_targets.empty() || g_targets.empty()) {
+        std::cout << "Warning: attempted to align states but one or both of the states have no valid targets" << std::endl;
         return;
     }
 
     std::vector<Position> swapped_goal_pos {Position(0,0), Position(0,0), Position(0,0)};
 
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        swapped_goal_pos[s_tar[i]] = goal.pos[g_tar[i]];
+        swapped_goal_pos[s_targets[i]] = goal.pos[g_targets[i]];
     }
 
     goal.pos = swapped_goal_pos;
@@ -71,19 +89,23 @@ std::vector<State> A_star::get_next_states (const State& state, const std::vecto
     for (int i = 0; i < NUM_DIRECTIONS; ++i)
         for (int j = 0; j < NUM_DIRECTIONS; ++j)
             for (int k = 0; k < NUM_DIRECTIONS; ++k) {
-                if (i == 4 && j == 4 && k == 4)
+                if (i == 0 && j == 0 && k == 0)
                     continue;
 
+                //------------------------------------------------------------------------------
                 // TODO: debug remove later
                 std::cout << "Considering possible next state" << std::endl;
+                //------------------------------------------------------------------------------
 
                 State next ( Position(state.pos[0].x + DX[i], state.pos[0].y + DY[i]),
                              Position(state.pos[1].x + DX[j], state.pos[1].y + DY[j]),
                              Position(state.pos[2].x + DX[k], state.pos[2].y + DY[k]) );
 
                 if (is_valid_state(next, targets)) {
+                    //------------------------------------------------------------------------------
                     // TODO: debug remove later
                     std::cout << "Adding valid state to next states" << std::endl;
+                    //------------------------------------------------------------------------------
 
                     next_vector.push_back(next);
                 }
@@ -93,29 +115,23 @@ std::vector<State> A_star::get_next_states (const State& state, const std::vecto
 }
 
 bool A_star::is_valid_state (const State& state, const std::vector<int>& targets) {
-    if (targets.size() != BOARDS_COUNT) {
-        std::cout << "Warning: attempted to check validity of state but 'fixed_targets' vector has size != 3" << std::endl;
-        return false;
-    }
-
     Board_set temporary;
 
+    //------------------------------------------------------------------------------
     // TODO: debug remove later
     std::cout << "Checking validity of state: ";
     state.print();
+    //------------------------------------------------------------------------------
 
     Asterism a = transform_into_asterism (state);
-    temporary.set_targets(targets);
-    temporary.teleport(a);
 
-    return !temporary.detect_collision() && temporary.is_destination_in_range(a);
+    return temporary.is_destination_valid(a, targets);
 }
 
 int A_star::calculate_manhattan_distance_global (const State& current, const State& goal) {
     int h = 0;
 
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        // Somma le distanze invece di cercare il massimo
         h += calculate_manhattan_distance (current.pos[i], goal.pos[i]);
     }
 
@@ -126,7 +142,30 @@ int A_star::calculate_manhattan_distance (const Position& current, const Positio
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
 
-    return dx + dy;
+    return (dx + dy) * SCALE_FACTOR;
+}
+
+int A_star::calculate_octile_distance_global (const State& current, const State& goal) {
+    int h = 0;
+
+    for (int i = 0; i < BOARDS_COUNT; i++) {
+        h += calculate_octile_distance(current.pos[i], goal.pos[i]);
+    }
+
+    return h;
+}
+
+int A_star::calculate_octile_distance(const Position& current, const Position& goal) {
+    int dx = std::abs(current.x - goal.x);
+    int dy = std::abs(current.y - goal.y);
+
+    int orthogonal_cost = 1500; // weight = 1.5
+    int diagonal_cost = 2121; // weight = 1.2
+
+    if (dx < dy)
+        return diagonal_cost * dx + orthogonal_cost * (dy - dx);
+
+    return diagonal_cost * dy + orthogonal_cost * (dx - dy);
 }
 
 std::vector<State> A_star::reconstruct_path (std::unordered_map<State, State, State_hasher>& came_from, State current) {
