@@ -24,10 +24,10 @@ private:
     struct State_hasher;
     struct State_comparator;
 
-    static int calculate_manhattan_distance_global (const State& current, const State& goal);
-    static int calculate_manhattan_distance (const Position& current, const Position& goal);
-    static int calculate_octile_distance_global (const State& current, const State& goal);
-    static int calculate_octile_distance (const Position& current, const Position& goal);
+    static int calculate_distance_manhattan_global (const State& current, const State& goal);
+    static int calculate_distance_manhattan (const Position& current, const Position& goal);
+    static int calculate_distance_octile_global (const State& current, const State& goal);
+    static int calculate_distance_octile (const Position& current, const Position& goal);
 
     static bool is_valid_state (Board_set& board_set, const State& state, const std::vector<int>& targets);
     static std::vector<State> get_next_states (Board_set& board_set, const State& state, const std::vector<int>& targets);

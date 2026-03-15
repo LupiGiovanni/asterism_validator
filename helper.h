@@ -45,4 +45,5 @@ inline void rotate (Point& point, double angle_radians) {
     point = rotation.transform(point);
 }
 
+
 #endif //ASTERISM_VALIDATOR_HELPER_H

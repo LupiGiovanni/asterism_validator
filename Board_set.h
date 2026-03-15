@@ -52,4 +52,5 @@ private:
     Polygon fov_large;
 };
 
+
 #endif //ASTERISM_VALIDATOR_BOARD_SET_H

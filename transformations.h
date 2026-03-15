@@ -25,8 +25,8 @@ inline State transform_into_state (const Asterism& asterism) {
               static_cast<int>(std::round(asterism.get_ngs(0).y())),
               static_cast<int>(std::round(asterism.get_ngs(1).y())),
               static_cast<int>(std::round(asterism.get_ngs(2).y())) );
-
     return s;
 }
+
 
 #endif //ASTERISM_VALIDATOR_TRANSFORMATIONS_H

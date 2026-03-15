@@ -34,7 +34,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
     const std::vector<int> targets = assign_targets(goal);
 
     g_score[start] = 0;
-    open_set.push({calculate_octile_distance_global(start, goal), start});
+    open_set.push({calculate_distance_octile_global(start, goal), start});
 
     while (!open_set.empty()) {
         State current = open_set.top().second;
@@ -49,7 +49,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
             if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
                 came_from[neighbor] = current;
                 g_score[neighbor] = tentative_g;
-                int f_score = tentative_g + calculate_octile_distance_global(neighbor, goal);
+                int f_score = tentative_g + calculate_distance_octile_global(neighbor, goal);
                 open_set.push({f_score, neighbor});
             }
         }
@@ -131,34 +131,34 @@ bool A_star::is_valid_state (Board_set& board_set, const State& state, const std
     return ( ! board_set.detect_collision() ) && board_set.is_destination_in_range(a);
 }
 
-int A_star::calculate_manhattan_distance_global (const State& current, const State& goal) {
+int A_star::calculate_distance_manhattan_global (const State& current, const State& goal) {
     int h = 0;
 
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += calculate_manhattan_distance (current.pos[i], goal.pos[i]);
+        h += calculate_distance_manhattan (current.pos[i], goal.pos[i]);
     }
 
     return h;
 }
 
-int A_star::calculate_manhattan_distance (const Position& current, const Position& goal) {
+int A_star::calculate_distance_manhattan (const Position& current, const Position& goal) {
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
 
     return (dx + dy) * SCALE_FACTOR;
 }
 
-int A_star::calculate_octile_distance_global (const State& current, const State& goal) {
+int A_star::calculate_distance_octile_global (const State& current, const State& goal) {
     int h = 0;
 
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += calculate_octile_distance(current.pos[i], goal.pos[i]);
+        h += calculate_distance_octile(current.pos[i], goal.pos[i]);
     }
 
     return h;
 }
 
-int A_star::calculate_octile_distance (const Position& current, const Position& goal) {
+int A_star::calculate_distance_octile (const Position& current, const Position& goal) {
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
 

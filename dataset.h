@@ -4044,4 +4044,5 @@ inline std::vector<Asterism> cedric_dataset_extended = {
     {15.667575,-159.37308,220.70113,251.53479,102.93396,-93.32044}
 };
 
+
 #endif //ASTERISM_VALIDATOR_DATASET_H

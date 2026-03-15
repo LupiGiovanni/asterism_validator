@@ -10,9 +10,8 @@
 class Position {
     friend class State;
     friend class A_star;
-    friend class Simulation;
+
 public:
-    Position (int x, int y);
     bool operator == (const Position& other) const;
     int get_x() const;
     int get_y() const;
@@ -22,7 +21,7 @@ private:
     int x;
     int y;
 
-
+    Position (int x, int y);
 };
 
 

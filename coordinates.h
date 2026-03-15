@@ -83,4 +83,5 @@ namespace coordinates {
     inline Point AA3(51.506773, -381.921114);
 }
 
+
 #endif //ASTERISM_VALIDATOR_COORDINATES_H

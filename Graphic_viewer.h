@@ -26,9 +26,11 @@ constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 class Graphic_viewer {
 public:
     Graphic_viewer();
+
     void draw(const Board_set& board_set);
     void draw(const Board_set& board_set, const Asterism& asterism);
     void draw(const Board_set& board_set, const Asterism& start, const Asterism& destination);
+
     void animate(Movement movement_type, const Asterism& start, const Asterism& destination = Asterism());
 
 private:
@@ -56,11 +58,13 @@ private:
     void setup_boards (const Board_set& board_set);
     void setup_start_asterism (const Asterism& asterism);
     void setup_destination_asterism (const Asterism& asterism);
-    void rotate_clockwise_around_center (sf::ConvexShape& shape, float angle_degrees);
+
     void animate_outside_tech_field (const Asterism& start);
     void animate_linear (const Asterism& start, const Asterism& destination);
     void animate_safe_basic (const Asterism& start, const Asterism& destination);
     void animate_A_star (const Asterism& start, const Asterism& destination);
+
+    void rotate_clockwise_around_center (sf::ConvexShape& shape, float angle_degrees);
 };
 
 
