@@ -23,23 +23,19 @@ public:
     bool detect_collision() const;
     bool detect_vignette_fov_small() const;
     bool detect_vignette_fov_large() const;
-    double calculate_distance (const Asterism& destination_asterism, const std::vector<int>& t) const;
-    double calculate_distance (const Asterism& destination_asterism) const;
 
-    void teleport (const Asterism& destination_asterism, const std::vector<int>& t);
+    double calculate_distance (const Asterism& destination_asterism) const;
+    int calculate_distance_min_squared () const;
+
     void teleport (const Asterism& destination_asterism);
 
-    bool move (const Asterism& destination_asterism, double distance_step, const std::vector<int>& t);
     bool move (const Asterism& destination_asterism, double distance_step);
     bool move_outside_tech_field (double distance_step);
     bool move_to_safe_zone (double distance_step);
     bool move_along_x (const Asterism& destination_asterism, double distance_step); // x in board local reference system
     bool move_along_y (const Asterism& destination_asterism, double distance_step); // y in board local reference system
-    bool is_destination_in_range (const Asterism& destination_asterism, const std::vector<int>& t) const;
+
     bool is_destination_in_range (const Asterism& destination_asterism) const;
-    bool is_destination_valid (const Asterism& destination_asterism, const std::vector<int>& t) const;
-    bool is_destination_valid (const Asterism& destination_asterism) const;
-    bool is_destination_reached (const Asterism& destination_asterism, const std::vector<int>& t, double tolerance = TOLERANCE) const;
     bool is_destination_reached (const Asterism& destination_asterism, double tolerance = TOLERANCE) const;
     bool is_destination_aligned_x (const Asterism& destination_asterism) const;
     bool is_destination_aligned_y (const Asterism& destination_asterism) const;

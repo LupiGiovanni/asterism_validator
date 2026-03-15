@@ -228,7 +228,7 @@ void Graphic_viewer::animate (Movement movement_type, const Asterism& start, con
             animate_A_star(start, destination);
             break;
         case Movement::none:
-            std::cout << "Warning: movement type is 'none'" << std::endl;
+            std::cout << "Warning: attempted to run Graphic_viewer::animate but movement type is 'none'" << std::endl;
             break;
     }
 }
@@ -530,7 +530,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                 const std::vector<State>& path = A_star::search (state_start, state_goal);
 
                 if (path.empty()) {
-                    std::cout << "Warning: attempted to run A star simulation but no path was found" << std::endl;
+                    std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
                     return;
                 }
 

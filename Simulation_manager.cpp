@@ -15,7 +15,7 @@ void Simulation_manager::simulate_dataset (Movement movement_type, const std::ve
             simulate_dataset_outside_tech_field(dataset);
             break;
         case Movement::none:
-            std::cout << "Warning: attempted to run dataset simulation but 'movement_type' is 'none'" << std::endl;
+            std::cout << "Warning: attempted to run Simulation_manager::simulate_dataset but 'movement_type' is 'none'" << std::endl;
             break;
     }
 }
@@ -26,9 +26,9 @@ void Simulation_manager::simulate_dataset_random(Movement movement_type) {
     simulate_dataset(movement_type, dg.get_dataset());
 }
 
-void Simulation_manager::simulate_dataset_other_movements(Movement movement_type, const std::vector<Asterism> &dataset) {
+void Simulation_manager::simulate_dataset_other_movements (Movement movement_type, const std::vector<Asterism>& dataset) {
     if ( dataset.empty() ) {
-        std::cout << "Warning: attempted to run dataset simulation but 'dataset' vector is empty" << std::endl;
+        std::cout << "Warning: attempted to run Simulation_manager::simulate_dataset_other_movements but 'dataset' vector is empty" << std::endl;
         return;
     }
 
@@ -72,9 +72,9 @@ void Simulation_manager::simulate_dataset_other_movements(Movement movement_type
     print_histogram(y_values);
 }
 
-void Simulation_manager::simulate_dataset_outside_tech_field(const std::vector<Asterism>& dataset) {
+void Simulation_manager::simulate_dataset_outside_tech_field (const std::vector<Asterism>& dataset) {
     if ( dataset.empty() ) {
-        std::cout << "Warning: attempted to run dataset simulation but 'dataset' vector is empty" << std::endl;
+        std::cout << "Warning: attempted to run Simulation_manager::simulate_dataset_outside_tech_field but 'dataset' vector is empty" << std::endl;
         return;
     }
 

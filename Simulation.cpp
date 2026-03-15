@@ -60,7 +60,7 @@ void Simulation::run (Movement movement_type, Board_set& board_set, const Asteri
             run_A_star(board_set, movement_start, movement_destination);
             break;
         case Movement::none:
-            std::cout << "Warning: movement type is none" << std::endl;
+            std::cout << "Warning: attempted to run Simulation::run but movement type is 'none'" << std::endl;
             break;
     }
 }
@@ -105,10 +105,10 @@ void Simulation::run_linear (Board_set& board_set, const Asterism& movement_star
             max_iterations_exceeded = true;
     }
     else
-        std::cout << "Warning: attempted to run linear trajectory simulation but start or destination asterism are not valid" << std::endl;
+        std::cout << "Warning: attempted to run Simulation::run_linear but start or destination asterism are not valid" << std::endl;
 }
 
-void Simulation::run_safe_basic(Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination) {
+void Simulation::run_safe_basic (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination) {
     reset_fields();
     type = Movement::safe_basic;
     start = movement_start;
@@ -125,7 +125,7 @@ void Simulation::run_safe_basic(Board_set& board_set, const Asterism& movement_s
         destination_valid = true;
 
     if ( start_valid && destination_valid ) {
-            while ( ! board_set.is_in_safe_zone() and ! collision_detected and iterations <= MAX_ITERATION_INDEX ) {
+            while ( ! board_set.is_in_safe_zone() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
                 board_set.move_to_safe_zone(SIMULATION_DISTANCE_STEP);
 
                 if ( board_set.detect_collision() )
@@ -174,7 +174,7 @@ void Simulation::run_safe_basic(Board_set& board_set, const Asterism& movement_s
             max_iterations_exceeded = true;
     }
     else
-        std::cout << "Warning: attempted to run safe basic movement simulation but start or destination asterism are not valid" << std::endl;
+        std::cout << "Warning: attempted to run Simulation::run_safe_basic but start or destination asterism are not valid" << std::endl;
 }
 
 void Simulation::run_outside_tech_field (Board_set& board_set, const Asterism& movement_start) {
@@ -211,10 +211,9 @@ void Simulation::run_outside_tech_field (Board_set& board_set, const Asterism& m
 
         if (iterations > MAX_ITERATION_INDEX)
             max_iterations_exceeded = true;
-
     }
     else
-        std::cout << "Warning: attempted to run outside-technical-field movement simulation but start asterism is not valid" << std::endl;
+        std::cout << "Warning: attempted to run Simulation::run_outside_tech_field but start asterism is not valid" << std::endl;
 }
 
 void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination) {
@@ -240,7 +239,7 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
         const std::vector<State>& path = A_star::search (state_start, state_goal);
 
         if (path.empty()) {
-            std::cout << "Warning: attempted to run A star simulation but no path was found" << std::endl;
+            std::cout << "Warning: attempted to run Simulation::run_A_star but no path was found" << std::endl;
             return;
         }
 
@@ -289,7 +288,7 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
             max_iterations_exceeded = true;
     }
     else
-        std::cout << "Warning: attempted to run A star simulation but start or destination asterism are not valid" << std::endl;
+        std::cout << "Warning: attempted to run Simulation::run_A_star but start or destination asterism are not valid" << std::endl;
 }
 
 void Simulation::print_results () const {

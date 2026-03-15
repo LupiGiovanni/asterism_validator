@@ -29,8 +29,8 @@ private:
     static int calculate_octile_distance_global (const State& current, const State& goal);
     static int calculate_octile_distance (const Position& current, const Position& goal);
 
-    static bool is_valid_state (const State& state, const std::vector<int>& targets);
-    static std::vector<State> get_next_states (const State& state, const std::vector<int>& targets);
+    static bool is_valid_state (Board_set& board_set, const State& state, const std::vector<int>& targets);
+    static std::vector<State> get_next_states (Board_set& board_set, const State& state, const std::vector<int>& targets);
     static void align_states (const State& start, State& goal);
 
     static std::vector<State> reconstruct_path (std::unordered_map<State, State, State_hasher>& came_from, State current);

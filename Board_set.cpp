@@ -54,25 +54,21 @@ bool Board_set::detect_vignette_fov_large() const {
     return false;
 }
 
-double Board_set::calculate_distance (const Asterism& destination_asterism, const std::vector<int>& t) const {
+double Board_set::calculate_distance (const Asterism& destination_asterism) const {
     double distance = std::numeric_limits<double>::infinity();
 
-    if (t.size() == BOARDS_COUNT) {
+    if (targets.size() == BOARDS_COUNT) {
         distance = 0;
         for (int i = 0; i < BOARDS_COUNT; i++)
-            distance += boards[i].calculate_distance(destination_asterism.get_ngs(t[i]));
+            distance += boards[i].calculate_distance(destination_asterism.get_ngs(targets[i]));
     }
-    else if (t.empty())
-        std::cout << "Warning: attempted to calculate distance but targets vector is empty" << std::endl;
+    else if (targets.empty())
+        std::cout << "Warning: attempted to run Board_set::calculate_distance but 'targets' field is empty" << std::endl;
 
     else
-        std::cout << "Warning: attempted to calculate distance but targets vector has size != 3" << std::endl;
+        std::cout << "Warning: attempted to run Board_set::calculate_distance but 'targets' field has size != 3" << std::endl;
 
     return distance;
-}
-
-double Board_set::calculate_distance (const Asterism& destination_asterism) const {
-    return calculate_distance (destination_asterism, targets);
 }
 
 // TODO: maybe optimize also by minimization of maximum span (i.e. the maximum time any board needs to reach its target)
@@ -116,72 +112,49 @@ void Board_set::set_targets (const std::vector<int>& new_targets) {
     if (new_targets.size() == BOARDS_COUNT || new_targets.empty())
         targets = new_targets;
     else
-        std::cout << "Warning: attempted to set targets but 'new_targets' vector has size != 3" << std::endl;
-}
-
-void Board_set::teleport (const Asterism& destination_asterism, const std::vector<int>& t) {
-    if (t.empty())
-        std::cout << "Warning: attempted to teleport boards but targets vector is empty" << std::endl;
-
-    else if (t.size() != BOARDS_COUNT)
-        std::cout << "Warning: attempted to teleport boards but targets vector has size != 3" << std::endl;
-
-    else
-        for (int j = 0; j < BOARDS_COUNT; j++)
-            boards[j].teleport(destination_asterism.get_ngs(t[j]));
+        std::cout << "Warning: attempted to run Board_set::set_targets but 'new_targets' vector has size != 3" << std::endl;
 }
 
 void Board_set::teleport (const Asterism& destination_asterism) {
-    teleport(destination_asterism, targets);
-}
+    if (targets.empty())
+        std::cout << "Warning: attempted to run Board_set::teleport but 'targets' field is empty" << std::endl;
 
-bool Board_set::is_destination_in_range (const Asterism& destination_asterism, const std::vector<int>& t) const {
-    if (t.empty())
-        std::cout << "Warning: attempted to teleport boards but targets vector is empty" << std::endl;
-
-    else if (t.size() != BOARDS_COUNT)
-        std::cout << "Warning: attempted to teleport boards but targets vector has size != 3" << std::endl;
+    else if (targets.size() != BOARDS_COUNT)
+        std::cout << "Warning: attempted to run Board_set::teleport but 'targets' field has size != 3" << std::endl;
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
-            if ( ! boards[j].is_in_range(destination_asterism.get_ngs(t[j])) )
-                return false;
-
-    return true;
+            boards[j].teleport(destination_asterism.get_ngs(targets[j]));
 }
 
 bool Board_set::is_destination_in_range (const Asterism& destination_asterism) const {
-    return is_destination_in_range (destination_asterism, targets);
-}
+    if (targets.empty())
+        std::cout << "Warning: attempted to run Board_set::is_destination_in_range but 'targets' field is empty" << std::endl;
 
-bool Board_set::is_destination_valid (const Asterism& destination_asterism, const std::vector<int>& t) const {
-    Board_set temporary;
-    temporary.teleport(destination_asterism, t);
-
-    return ( ! temporary.detect_collision() ) && is_destination_in_range(destination_asterism, t);
-}
-
-bool Board_set::is_destination_valid (const Asterism& destination_asterism) const {
-    return is_destination_valid (destination_asterism, targets);
-}
-
-bool Board_set::is_destination_reached (const Asterism& destination_asterism, const std::vector<int>& t, double tolerance) const {
-    if (t.empty())
-        std::cout << "Warning: attempted to teleport boards but targets vector is empty" << std::endl;
-
-    else if (t.size() != BOARDS_COUNT)
-        std::cout << "Warning: attempted to teleport boards but targets vector has size != 3" << std::endl;
+    else if (targets.size() != BOARDS_COUNT)
+        std::cout << "Warning: attempted to run Board_set::is_destination_in_range but 'targets' field has size != 3" << std::endl;
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
-            if ( ! boards[j].is_destination_reached(destination_asterism.get_ngs(t[j]), tolerance) )
+            if ( ! boards[j].is_in_range(destination_asterism.get_ngs(targets[j])) )
                 return false;
 
     return true;
 }
 
 bool Board_set::is_destination_reached (const Asterism& destination_asterism, double tolerance) const {
-    return is_destination_reached (destination_asterism, targets, tolerance);
+    if (targets.empty())
+        std::cout << "Warning: attempted to run Board_set::is_destination_reached but 'targets' field is empty" << std::endl;
+
+    else if (targets.size() != BOARDS_COUNT)
+        std::cout << "Warning: attempted to run Board_set::is_destination_reached but 'targets' field has size != 3" << std::endl;
+
+    else
+        for (int j = 0; j < BOARDS_COUNT; j++)
+            if ( ! boards[j].is_destination_reached(destination_asterism.get_ngs(targets[j]), tolerance) )
+                return false;
+
+    return true;
 }
 
 bool Board_set::is_destination_aligned_x (const Asterism& destination_asterism) const {
@@ -216,22 +189,18 @@ bool Board_set::is_in_safe_zone () const {
     return true;
 }
 
-bool Board_set::move (const Asterism& destination_asterism, double distance_step, const std::vector<int>& t) {
-    if (t.empty())
-        std::cout << "Warning: attempted to teleport boards but targets vector is empty" << std::endl;
+bool Board_set::move (const Asterism& destination_asterism, double distance_step) {
+    if (targets.empty())
+        std::cout << "Warning: attempted to run Board_set::move but 'targets' field is empty" << std::endl;
 
-    else if (t.size() != BOARDS_COUNT)
-        std::cout << "Warning: attempted to teleport boards but targets vector has size != 3" << std::endl;
+    else if (targets.size() != BOARDS_COUNT)
+        std::cout << "Warning: attempted to run Board_set::move but 'targets' field has size != 3" << std::endl;
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
             boards[j].move(destination_asterism.get_ngs(targets[j]), distance_step);
 
     return detect_collision();
-}
-
-bool Board_set::move (const Asterism& destination_asterism, double distance_step) {
-    return move (destination_asterism, distance_step, targets);
 }
 
 bool Board_set::move_outside_tech_field (double distance_step) {
@@ -250,7 +219,7 @@ bool Board_set::move_to_safe_zone (double distance_step) {
 
 bool Board_set::move_along_x (const Asterism& destination_asterism, double distance_step) {
     if (targets.empty()) {
-        std::cout << "Warning: attempted to move board set along x-axis but 'targets' field is empty" << std::endl;
+        std::cout << "Warning: attempted to run Board_set::move_along_x but 'targets' field is empty" << std::endl;
         return false;
     }
 
@@ -262,7 +231,7 @@ bool Board_set::move_along_x (const Asterism& destination_asterism, double dista
 
 bool Board_set::move_along_y (const Asterism& destination_asterism, double distance_step) {
     if (targets.empty()) {
-        std::cout << "Warning: attempted to move board set along y-axis but 'targets' field is empty" << std::endl;
+        std::cout << "Warning: attempted to run Board_set::move_along_y but 'targets' field is empty" << std::endl;
         return false;
     }
 

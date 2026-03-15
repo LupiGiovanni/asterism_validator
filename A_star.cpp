@@ -25,6 +25,7 @@ struct A_star::State_comparator {
 };
 
 std::vector<State> A_star::search(const State& start, State& goal) {
+    Board_set temporary;
     std::priority_queue<std::pair<int, State>, std::vector<std::pair<int, State>>, State_comparator> open_set;
     std::unordered_map<State, State, State_hasher> came_from;
     std::unordered_map<State, int, State_hasher> g_score;
@@ -39,11 +40,10 @@ std::vector<State> A_star::search(const State& start, State& goal) {
         State current = open_set.top().second;
         open_set.pop();
 
-        if (current == goal) {
+        if (current == goal)
             return reconstruct_path(came_from, current);
-        }
 
-        for (const auto& neighbor : get_next_states(current, targets)) {
+        for (const auto& neighbor : get_next_states(temporary, current, targets)) {
             int tentative_g = g_score[current] + 1 * SCALE_FACTOR;
 
             if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
@@ -59,9 +59,10 @@ std::vector<State> A_star::search(const State& start, State& goal) {
 }
 
 std::vector<int> A_star::assign_targets (const State& state) {
-    Asterism goal_asterism = transform_into_asterism (state);
+    Asterism asterism = transform_into_asterism (state);
     Board_set temporary;
-    temporary.assign_targets(goal_asterism);
+    temporary.assign_targets(asterism);
+
     return temporary.get_targets();
 }
 
@@ -70,20 +71,20 @@ void A_star::align_states (const State& start, State& goal) {
     std::vector<int> g_targets = assign_targets(goal);
 
     if (s_targets.empty() || g_targets.empty()) {
-        std::cout << "Warning: attempted to align states but one or both of the states have no valid targets" << std::endl;
+        std::cout << "Warning: attempted to run A_star::align_states but one or both of the states have no valid targets" << std::endl;
         return;
     }
 
     std::vector<Position> swapped_goal_pos {Position(0,0), Position(0,0), Position(0,0)};
 
-    for (int i = 0; i < BOARDS_COUNT; i++) {
+    for (int i = 0; i < BOARDS_COUNT; i++)
         swapped_goal_pos[s_targets[i]] = goal.pos[g_targets[i]];
-    }
 
     goal.pos = swapped_goal_pos;
 }
 
-std::vector<State> A_star::get_next_states (const State& state, const std::vector<int>& targets) {
+std::vector<State> A_star::get_next_states (Board_set& board_set, const State& state, const std::vector<int>& targets) {
+    State next;
     std::vector<State> next_vector;
 
     for (int i = 0; i < NUM_DIRECTIONS; ++i)
@@ -97,11 +98,12 @@ std::vector<State> A_star::get_next_states (const State& state, const std::vecto
                 std::cout << "Considering possible next state" << std::endl;
                 //------------------------------------------------------------------------------
 
-                State next ( Position(state.pos[0].x + DX[i], state.pos[0].y + DY[i]),
-                             Position(state.pos[1].x + DX[j], state.pos[1].y + DY[j]),
-                             Position(state.pos[2].x + DX[k], state.pos[2].y + DY[k]) );
+                next = { Position(state.pos[0].x + DX[i], state.pos[0].y + DY[i]),
+                            Position(state.pos[1].x + DX[j], state.pos[1].y + DY[j]),
+                            Position(state.pos[2].x + DX[k], state.pos[2].y + DY[k]) };
 
-                if (is_valid_state(next, targets)) {
+                if (is_valid_state(board_set, next, targets)) {
+
                     //------------------------------------------------------------------------------
                     // TODO: debug remove later
                     std::cout << "Adding valid state to next states" << std::endl;
@@ -114,8 +116,8 @@ std::vector<State> A_star::get_next_states (const State& state, const std::vecto
     return next_vector;
 }
 
-bool A_star::is_valid_state (const State& state, const std::vector<int>& targets) {
-    Board_set temporary;
+bool A_star::is_valid_state (Board_set& board_set, const State& state, const std::vector<int>& targets) {
+    board_set.set_targets(targets);
 
     //------------------------------------------------------------------------------
     // TODO: debug remove later
@@ -124,8 +126,9 @@ bool A_star::is_valid_state (const State& state, const std::vector<int>& targets
     //------------------------------------------------------------------------------
 
     Asterism a = transform_into_asterism (state);
+    board_set.teleport(a);
 
-    return temporary.is_destination_valid(a, targets);
+    return ( ! board_set.detect_collision() ) && board_set.is_destination_in_range(a);
 }
 
 int A_star::calculate_manhattan_distance_global (const State& current, const State& goal) {
@@ -155,7 +158,7 @@ int A_star::calculate_octile_distance_global (const State& current, const State&
     return h;
 }
 
-int A_star::calculate_octile_distance(const Position& current, const Position& goal) {
+int A_star::calculate_octile_distance (const Position& current, const Position& goal) {
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
 
