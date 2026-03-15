@@ -234,31 +234,52 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
         destination_valid = true;
 
     if (start_valid && destination_valid) {
-        State start_state = transform_into_state (movement_start);
-        State goal_state =  transform_into_state (movement_destination);
+        State state_start = transform_into_state (movement_start);
+        State state_goal = transform_into_state (movement_destination);
 
-        std::vector<State> path = A_star::search (start_state, goal_state);
+        const std::vector<State>& path = A_star::search (state_start, state_goal);
 
         if (path.empty()) {
             std::cout << "Warning: attempted to run A star simulation but no path was found" << std::endl;
             return;
         }
 
-        Asterism start_state_asterism = transform_into_asterism (start_state);
+        Asterism current_destination;
 
-        run_A_star_segment (board_set, movement_start, start_state_asterism);
+        for (int i = 0; i < path.size(); ++i) {
+            if (collision_detected)
+                break;
 
-        for (int i = 1; i < path.size(); ++i) {
-            Asterism segment_start_asterism = transform_into_asterism(path[i-1]);
+            current_destination = transform_into_asterism (path[i]);
 
-            Asterism segment_destination_asterism = transform_into_asterism(path[i]);
+            while ( ! board_set.is_destination_reached(current_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                board_set.move(current_destination, SIMULATION_DISTANCE_STEP);
 
-            run_A_star_segment (board_set, segment_start_asterism, segment_destination_asterism);
+                if ( board_set.detect_collision() )
+                    collision_detected = true;
+                if ( board_set.detect_vignette_fov_small() )
+                    fov_small_vignette_detected = true;
+                if ( board_set.detect_vignette_fov_large() )
+                    fov_large_vignette_detected = true;
+
+                iterations += 1;
+            }
         }
 
-        Asterism goal_state_asterism = transform_into_asterism (goal_state);
+        while ( ! board_set.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            board_set.move(destination, SIMULATION_DISTANCE_STEP);
 
-        run_A_star_segment( board_set, goal_state_asterism, movement_destination);
+            if ( board_set.detect_collision() )
+                collision_detected = true;
+            if ( board_set.detect_vignette_fov_small() )
+                fov_small_vignette_detected = true;
+            if ( board_set.detect_vignette_fov_large() )
+                fov_large_vignette_detected = true;
+
+            iterations += 1;
+        }
+
+        duration = SIMULATION_TIME_STEP * iterations;
 
         if ( board_set.is_destination_reached(destination) )
             destination_reached = true;
@@ -269,32 +290,6 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
     }
     else
         std::cout << "Warning: attempted to run A star simulation but start or destination asterism are not valid" << std::endl;
-}
-
-void Simulation::run_A_star_segment(Board_set& board_set, const Asterism& segment_start, const Asterism& segment_destination) {
-
-    int local_iterations = 0;
-    int local_max_iterations = 1000;
-
-    if ( board_set.is_destination_valid(segment_start) && board_set.is_destination_valid(segment_destination) ) {
-        while ( ! board_set.is_destination_reached(segment_destination) && ! collision_detected && local_iterations <= local_max_iterations ) {
-            board_set.move(segment_destination, SIMULATION_DISTANCE_STEP);
-
-            if ( board_set.detect_collision() )
-                collision_detected = true;
-            if ( board_set.detect_vignette_fov_small() )
-                fov_small_vignette_detected = true;
-            if ( board_set.detect_vignette_fov_large() )
-                fov_large_vignette_detected = true;
-
-            local_iterations += 1;
-        }
-
-        iterations = iterations + local_iterations;
-        duration = duration + SIMULATION_TIME_STEP * local_iterations;
-    }
-    else
-        std::cout << "Warning: attempted to run A star segment simulation but segment start or segment destination are not valid" << std::endl;
 }
 
 void Simulation::print_results () const {

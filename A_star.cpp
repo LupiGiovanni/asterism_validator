@@ -159,8 +159,8 @@ int A_star::calculate_octile_distance(const Position& current, const Position& g
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
 
-    int orthogonal_cost = 1500; // weight = 1.5
-    int diagonal_cost = 2121; // weight = 1.2
+    int orthogonal_cost = 2000; // weight = 2
+    int diagonal_cost = 2828; // weight = 2
 
     if (dx < dy)
         return diagonal_cost * dx + orthogonal_cost * (dy - dx);

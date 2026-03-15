@@ -15,7 +15,6 @@ Board_set::Board_set(): boards{Board(Board_type::type0), Board(Board_type::type1
     fov_small.push_back(coordinates::X);
     fov_small.push_back(coordinates::Y);
 
-    // Technical field definition
     constexpr double technical_field_radius_squared = TECHNICAL_FIELD_RADIUS * TECHNICAL_FIELD_RADIUS;
     technical_field = Circle(Point(0., 0.), technical_field_radius_squared);
 
@@ -56,21 +55,18 @@ bool Board_set::detect_vignette_fov_large() const {
 }
 
 double Board_set::calculate_distance (const Asterism& destination_asterism, const std::vector<int>& t) const {
-    double distance = std::numeric_limits<double>::max();
+    double distance = std::numeric_limits<double>::infinity();
 
     if (t.size() == BOARDS_COUNT) {
         distance = 0;
         for (int i = 0; i < BOARDS_COUNT; i++)
             distance += boards[i].calculate_distance(destination_asterism.get_ngs(t[i]));
     }
-    else if (t.empty()) {
-        distance = std::numeric_limits<double>::infinity();
+    else if (t.empty())
         std::cout << "Warning: attempted to calculate distance but targets vector is empty" << std::endl;
-    }
-    else {
-        distance = std::numeric_limits<double>::infinity();
+
+    else
         std::cout << "Warning: attempted to calculate distance but targets vector has size != 3" << std::endl;
-    }
 
     return distance;
 }
@@ -136,7 +132,7 @@ void Board_set::teleport (const Asterism& destination_asterism, const std::vecto
 }
 
 void Board_set::teleport (const Asterism& destination_asterism) {
-    teleport (destination_asterism, targets);
+    teleport(destination_asterism, targets);
 }
 
 bool Board_set::is_destination_in_range (const Asterism& destination_asterism, const std::vector<int>& t) const {
@@ -188,7 +184,7 @@ bool Board_set::is_destination_reached (const Asterism& destination_asterism, do
     return is_destination_reached (destination_asterism, targets, tolerance);
 }
 
-bool Board_set::is_destination_aligned_x (const Asterism &destination_asterism) const {
+bool Board_set::is_destination_aligned_x (const Asterism& destination_asterism) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
         if ( ! boards[j].is_destination_aligned_x(destination_asterism.get_ngs(targets[j])) )
             return false;
@@ -196,7 +192,7 @@ bool Board_set::is_destination_aligned_x (const Asterism &destination_asterism) 
     return true;
 }
 
-bool Board_set::is_destination_aligned_y (const Asterism &destination_asterism) const {
+bool Board_set::is_destination_aligned_y (const Asterism& destination_asterism) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
         if ( ! boards[j].is_destination_aligned_y(destination_asterism.get_ngs(targets[j])) )
             return false;

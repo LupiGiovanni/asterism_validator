@@ -49,7 +49,6 @@ private:
     void run_safe_basic (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
     void run_outside_tech_field (Board_set& board_set, const Asterism& movement_start);
     void run_A_star (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
-    void run_A_star_segment (Board_set& board_set, const Asterism& segment_start, const Asterism& segment_destination);
 };
 
 

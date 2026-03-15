@@ -110,15 +110,15 @@ bool Board::is_in_range (const Point& point) const {
 
 bool Board::teleport (double delta_x, double delta_y) {
     Vector displacement (delta_x, delta_y);
-    Point destination = pom + displacement;
+    Point pom_destination = pom + displacement;
 
-    if (!is_in_range(destination))
+    if (!is_in_range(pom_destination))
         return false;
 
     for (auto it = profile.begin(); it != profile.end(); ++it)
         *it = *it + displacement;
 
-    pom = destination;
+    pom = pom_destination;
 
     return true;
 }
@@ -178,8 +178,8 @@ bool Board::move (const Point& pom_destination, double distance_step) {
         return false;
 
     Vector displacement (pom_destination - pom);
-    double length = std::sqrt(displacement.squared_length());
-    Vector step_vector = (displacement / length) * distance_step;
+    double displacement_length = std::sqrt(displacement.squared_length());
+    Vector step_vector = (displacement / displacement_length) * distance_step;
     teleport (pom + step_vector);
 
     return true;
@@ -201,19 +201,19 @@ bool Board::move_outside_tech_field (const Circle& tech_field, double distance_s
     else
         displacement = bottom_right_corner - pom;
 
-    double length = std::sqrt(displacement.squared_length());
-    Vector step_vector = (displacement / length) * distance_step;
+    double displacement_length = std::sqrt(displacement.squared_length());
+    Vector step_vector = (displacement / displacement_length) * distance_step;
     teleport (pom + step_vector);
 
     return true;
 }
 
-bool Board::move_along_x(const Point& pom_destination, double distance_step) {
+bool Board::move_along_x (const Point& pom_destination, double distance_step) {
     Point aligned_point_x = find_aligned_point_x(pom_destination);
     return move(aligned_point_x, distance_step);
 }
 
-bool Board::move_along_y(const Point& pom_destination, double distance_step) {
+bool Board::move_along_y (const Point& pom_destination, double distance_step) {
     Point aligned_point_y = find_aligned_point_y(pom_destination);
     return move(aligned_point_y, distance_step);
 }
@@ -224,9 +224,9 @@ bool Board::move_to_safe_zone (double distance_step) {
 
     Point centre (0., 0.);
     Vector v = pom_home - centre;
-    double length = std::sqrt(v.squared_length());
-    Vector step_vector = (v / length) * distance_step;
-    return teleport (pom + step_vector);
+    double v_length = std::sqrt(v.squared_length());
+    Vector step_vector = (v / v_length) * distance_step;
+    return teleport(pom + step_vector);
 }
 
 Point Board::find_aligned_point_x (const Point& pom_destination) const {
