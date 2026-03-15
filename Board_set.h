@@ -25,7 +25,6 @@ public:
     bool detect_vignette_fov_large() const;
 
     double calculate_distance (const Asterism& destination_asterism) const;
-    int calculate_distance_min_squared () const;
 
     void teleport (const Asterism& destination_asterism);
 
