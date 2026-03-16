@@ -34,7 +34,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
     const std::vector<int> targets = assign_targets(goal);
 
     g_score[start] = 0;
-    open_set.push({calculate_distance_octile_global(start, goal), start});
+    open_set.push({calculate_octile_distance_global(start, goal), start});
 
     while (!open_set.empty()) {
         State current = open_set.top().second;
@@ -50,7 +50,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
             if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
                 came_from[neighbor] = current;
                 g_score[neighbor] = tentative_g;
-                int f_score = tentative_g + calculate_distance_octile_global(neighbor, goal);
+                int f_score = tentative_g + calculate_octile_distance_global(neighbor, goal);
                 open_set.push({f_score, neighbor});
             }
         }
@@ -130,51 +130,45 @@ bool A_star::is_valid_state(Board_set& board_set, const State& state, const std:
     return !board_set.detect_collision();
 }
 
-int A_star::calculate_distance_manhattan_global (const State& current, const State& goal) {
+int A_star::calculate_manhattan_distance_global (const State& current, const State& goal) {
     int h = 0;
 
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += calculate_distance_manhattan (current.pos[i], goal.pos[i]);
+        h += calculate_manhattan_distance_weighted (current.pos[i], goal.pos[i]);
     }
 
     return h;
 }
 
-int A_star::calculate_distance_manhattan (const Position& current, const Position& goal) {
+int A_star::calculate_manhattan_distance_weighted (const Position& current, const Position& goal) {
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
 
-    return (dx + dy) * SCALE_FACTOR;
+    return (dx + dy) * ORTHOGONAL_COST_WEIGHTED;
 }
 
-int A_star::calculate_distance_octile_global (const State& current, const State& goal) {
+int A_star::calculate_octile_distance_global (const State& current, const State& goal) {
     int h = 0;
 
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += calculate_distance_octile(current.pos[i], goal.pos[i]);
+        h += calculate_octile_distance_weighted(current.pos[i], goal.pos[i]);
     }
 
     return h;
 }
 
-int A_star::calculate_distance_octile (const Position& current, const Position& goal) {
+int A_star::calculate_octile_distance_weighted (const Position& current, const Position& goal) {
     int dx = std::abs(current.x - goal.x);
     int dy = std::abs(current.y - goal.y);
-
-    int orthogonal_cost = 2000; // weight = 2
-    int diagonal_cost = 2828; // weight = 2
 
     if (dx < dy)
-        return diagonal_cost * dx + orthogonal_cost * (dy - dx);
+        return DIAGONAL_COST_WEIGHTED * dx + ORTHOGONAL_COST_WEIGHTED * (dy - dx);
 
-    return diagonal_cost * dy + orthogonal_cost * (dx - dy);
+    return DIAGONAL_COST_WEIGHTED * dy + ORTHOGONAL_COST_WEIGHTED * (dx - dy);
 }
 
 int A_star::calculate_move_cost(const State& current, const State& neighbor) {
     int total_cost = 0;
-
-    const int orthogonal_cost = 2000;
-    const int diagonal_cost = 2828;
 
     for (int i = 0; i < BOARDS_COUNT; ++i) {
         int dx = (neighbor.pos[i].x > current.pos[i].x) ? neighbor.pos[i].x - current.pos[i].x : current.pos[i].x - neighbor.pos[i].x;
@@ -184,9 +178,9 @@ int A_star::calculate_move_cost(const State& current, const State& neighbor) {
             continue;
 
         if (dx != 0 && dy != 0)
-            total_cost += diagonal_cost;
+            total_cost += DIAGONAL_COST;
         else
-            total_cost += orthogonal_cost;
+            total_cost += ORTHOGONAL_COST;
     }
     return total_cost;
 }
@@ -200,6 +194,7 @@ std::vector<State> A_star::reconstruct_path (std::unordered_map<State, State, St
     }
 
     std::reverse(total_path.begin(), total_path.end());
+
     return total_path;
 }
 

@@ -28,7 +28,5 @@ int main () {
     Graphic_viewer gv;
     gv.animate(Movement::A_star, start_b, goal_b);
 
-    //Simulation_manager::simulate(Movement::A_star, start_a, goal_a);
-
     return 0;
 }

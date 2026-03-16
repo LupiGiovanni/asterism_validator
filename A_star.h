@@ -14,6 +14,11 @@ constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
 constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
 constexpr int NUM_DIRECTIONS = DX.size();
 constexpr int SCALE_FACTOR = 1000;
+constexpr float HEURISTIC_WEIGHT = 5;
+constexpr int ORTHOGONAL_COST = 1 * SCALE_FACTOR;
+constexpr int ORTHOGONAL_COST_WEIGHTED = ORTHOGONAL_COST * HEURISTIC_WEIGHT;
+constexpr int DIAGONAL_COST = 1.414 * SCALE_FACTOR;
+constexpr int DIAGONAL_COST_WEIGHTED = DIAGONAL_COST * HEURISTIC_WEIGHT;
 constexpr int SAFE_DISTANCE = 100; // between POMs, measured  in mm
 constexpr int SAFE_DISTANCE_SQUARED = SAFE_DISTANCE * SAFE_DISTANCE;
 
@@ -26,10 +31,10 @@ private:
     struct State_hasher;
     struct State_comparator;
 
-    static int calculate_distance_manhattan_global (const State& current, const State& goal);
-    static int calculate_distance_manhattan (const Position& current, const Position& goal);
-    static int calculate_distance_octile_global (const State& current, const State& goal);
-    static int calculate_distance_octile (const Position& current, const Position& goal);
+    static int calculate_manhattan_distance_global (const State& current, const State& goal);
+    static int calculate_manhattan_distance_weighted (const Position& current, const Position& goal);
+    static int calculate_octile_distance_global (const State& current, const State& goal);
+    static int calculate_octile_distance_weighted (const Position& current, const Position& goal);
 
     static int calculate_move_cost (const State& current, const State& neighbor);
 
