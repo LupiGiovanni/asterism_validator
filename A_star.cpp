@@ -9,9 +9,9 @@ struct A_star::State_hasher {
     std::size_t operator() (const State& state) const {
         std::size_t seed = 0;
 
-        for (const auto& bs : state.get_pos()) {
-            seed ^= std::hash<int>{}(bs.x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-            seed ^= std::hash<int>{}(bs.y) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        for (const auto& p : state.get_pos()) {
+            seed ^= std::hash<int>{}(p.x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= std::hash<int>{}(p.y) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         }
 
         return seed;
@@ -44,7 +44,8 @@ std::vector<State> A_star::search(const State& start, State& goal) {
             return reconstruct_path(came_from, current);
 
         for (const auto& neighbor : get_next_states(temporary, current, targets)) {
-            int tentative_g = g_score[current] + 1 * SCALE_FACTOR;
+            int move_cost = calculate_move_cost(current, neighbor);
+            int tentative_g = g_score[current] + move_cost;
 
             if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
                 came_from[neighbor] = current;
@@ -117,9 +118,9 @@ std::vector<State> A_star::get_next_states (Board_set& board_set, const State& s
 }
 
 bool A_star::is_valid_state(Board_set& board_set, const State& state, const std::vector<int>& targets) {
-    if (state.pos[0].calculate_distance_squared(state.pos[1]) <= 8100) return false;
-    if (state.pos[1].calculate_distance_squared(state.pos[2]) <= 8100) return false;
-    if (state.pos[0].calculate_distance_squared(state.pos[2]) <= 8100) return false;
+    if (state.pos[0].calculate_distance_squared(state.pos[1]) <= SAFE_DISTANCE_SQUARED) return false;
+    if (state.pos[1].calculate_distance_squared(state.pos[2]) <= SAFE_DISTANCE_SQUARED) return false;
+    if (state.pos[0].calculate_distance_squared(state.pos[2]) <= SAFE_DISTANCE_SQUARED) return false;
 
     board_set.set_targets(targets);
     Asterism a = transform_into_asterism(state);
@@ -167,6 +168,27 @@ int A_star::calculate_distance_octile (const Position& current, const Position& 
         return diagonal_cost * dx + orthogonal_cost * (dy - dx);
 
     return diagonal_cost * dy + orthogonal_cost * (dx - dy);
+}
+
+int A_star::calculate_move_cost(const State& current, const State& neighbor) {
+    int total_cost = 0;
+
+    const int orthogonal_cost = 2000;
+    const int diagonal_cost = 2828;
+
+    for (int i = 0; i < BOARDS_COUNT; ++i) {
+        int dx = (neighbor.pos[i].x > current.pos[i].x) ? neighbor.pos[i].x - current.pos[i].x : current.pos[i].x - neighbor.pos[i].x;
+        int dy = (neighbor.pos[i].y > current.pos[i].y) ? neighbor.pos[i].y - current.pos[i].y : current.pos[i].y - neighbor.pos[i].y;
+
+        if (dx == 0 && dy == 0)
+            continue;
+
+        if (dx != 0 && dy != 0)
+            total_cost += diagonal_cost;
+        else
+            total_cost += orthogonal_cost;
+    }
+    return total_cost;
 }
 
 std::vector<State> A_star::reconstruct_path (std::unordered_map<State, State, State_hasher>& came_from, State current) {

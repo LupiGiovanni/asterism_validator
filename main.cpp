@@ -22,8 +22,11 @@ int main () {
     Asterism start_a (-76.305647, 158.618230, -136.754214, -36.137091, -111.701498, 217.041397);
     Asterism goal_a (122.718571, -33.932973, 249.711987, 36.378866, 260.887333, -54.757124);
 
+    Asterism start_b (232.223713, 66.640670, -41.871824, 116.354008, -112.966366, -165.532668);
+    Asterism goal_b (-64.074902, -38.632346, 216.687889, 107.928191, -10.634813, 132.970463);
+
     Graphic_viewer gv;
-    gv.animate(Movement::A_star, start_a, goal_a);
+    gv.animate(Movement::A_star, start_b, goal_b);
 
     //Simulation_manager::simulate(Movement::A_star, start_a, goal_a);
 

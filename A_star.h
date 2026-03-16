@@ -10,10 +10,12 @@
 #include "Board_set.h"
 
 // TODO: maybe move const expressions to helper.h
-constexpr int DX[] = {0, 0, 0, 1, -1, 1, 1, -1, -1};
-constexpr int DY[] = {0, 1, -1, 0, 0, 1, -1, 1, -1};
-constexpr int NUM_DIRECTIONS = 9;
+constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
+constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
+constexpr int NUM_DIRECTIONS = DX.size();
 constexpr int SCALE_FACTOR = 1000;
+constexpr int SAFE_DISTANCE = 100; // between POMs, measured  in mm
+constexpr int SAFE_DISTANCE_SQUARED = SAFE_DISTANCE * SAFE_DISTANCE;
 
 class A_star {
 public:
@@ -28,6 +30,8 @@ private:
     static int calculate_distance_manhattan (const Position& current, const Position& goal);
     static int calculate_distance_octile_global (const State& current, const State& goal);
     static int calculate_distance_octile (const Position& current, const Position& goal);
+
+    static int calculate_move_cost (const State& current, const State& neighbor);
 
     static bool is_valid_state (Board_set& board_set, const State& state, const std::vector<int>& targets);
     static std::vector<State> get_next_states (Board_set& board_set, const State& state, const std::vector<int>& targets);
