@@ -19,12 +19,12 @@ struct A_star::State_hasher {
 };
 
 struct A_star::State_comparator {
-    bool operator()(const std::pair<int, State>& a, const std::pair<int, State>& b) const {
+    bool operator() (const std::pair<int, State>& a, const std::pair<int, State>& b) const {
         return a.first > b.first;
     }
 };
 
-std::vector<State> A_star::search(const State& start, State& goal) {
+std::vector<State> A_star::search_octile (const State& start, State& goal) {
     Board_set temporary;
     std::priority_queue<std::pair<int, State>, std::vector<std::pair<int, State>>, State_comparator> open_set;
     std::unordered_map<State, State, State_hasher> came_from;
@@ -43,7 +43,7 @@ std::vector<State> A_star::search(const State& start, State& goal) {
         if (current == goal)
             return reconstruct_path(came_from, current);
 
-        for (const auto& neighbor : get_next_states(temporary, current, targets)) {
+        for (const auto& neighbor : get_next_states_octile(temporary, current, targets)) {
             int move_cost = calculate_move_cost(current, neighbor);
             int tentative_g = g_score[current] + move_cost;
 
@@ -51,6 +51,41 @@ std::vector<State> A_star::search(const State& start, State& goal) {
                 came_from[neighbor] = current;
                 g_score[neighbor] = tentative_g;
                 int f_score = tentative_g + calculate_octile_distance_global(neighbor, goal);
+                open_set.push({f_score, neighbor});
+            }
+        }
+    }
+
+    return {};
+}
+
+std::vector<State> A_star::search_manhattan (const State& start, State& goal) {
+    Board_set temporary;
+    std::priority_queue<std::pair<int, State>, std::vector<std::pair<int, State>>, State_comparator> open_set;
+    std::unordered_map<State, State, State_hasher> came_from;
+    std::unordered_map<State, int, State_hasher> g_score;
+
+    align_states (start, goal);
+    const std::vector<int> targets = assign_targets(goal);
+
+    g_score[start] = 0;
+    open_set.push({calculate_manhattan_distance_global(start, goal), start});
+
+    while (!open_set.empty()) {
+        State current = open_set.top().second;
+        open_set.pop();
+
+        if (current == goal)
+            return reconstruct_path(came_from, current);
+
+        for (const auto& neighbor : get_next_states_manhattan(temporary, current, targets)) {
+            int move_cost = calculate_move_cost(current, neighbor);
+            int tentative_g = g_score[current] + move_cost;
+
+            if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
+                came_from[neighbor] = current;
+                g_score[neighbor] = tentative_g;
+                int f_score = tentative_g + calculate_manhattan_distance_global(neighbor, goal);
                 open_set.push({f_score, neighbor});
             }
         }
@@ -84,13 +119,13 @@ void A_star::align_states (const State& start, State& goal) {
     goal.pos = swapped_goal_pos;
 }
 
-std::vector<State> A_star::get_next_states (Board_set& board_set, const State& state, const std::vector<int>& targets) {
+std::vector<State> A_star::get_next_states_octile (Board_set& board_set, const State& state, const std::vector<int>& targets) {
     State next;
     std::vector<State> next_vector;
 
-    for (int i = 0; i < NUM_DIRECTIONS; ++i)
-        for (int j = 0; j < NUM_DIRECTIONS; ++j)
-            for (int k = 0; k < NUM_DIRECTIONS; ++k) {
+    for (int i = 0; i < NUM_DIRECTIONS_OCTILE; ++i)
+        for (int j = 0; j < NUM_DIRECTIONS_OCTILE; ++j)
+            for (int k = 0; k < NUM_DIRECTIONS_OCTILE; ++k) {
                 if (i == 0 && j == 0 && k == 0)
                     continue;
 
@@ -99,9 +134,42 @@ std::vector<State> A_star::get_next_states (Board_set& board_set, const State& s
                 std::cout << "Considering possible next state" << std::endl;
                 //------------------------------------------------------------------------------
 
-                next = { Position(state.pos[0].x + DX[i], state.pos[0].y + DY[i]),
-                            Position(state.pos[1].x + DX[j], state.pos[1].y + DY[j]),
-                            Position(state.pos[2].x + DX[k], state.pos[2].y + DY[k]) };
+                next = { Position(state.pos[0].x + DX_OCTILE[i] * SEARCH_GRID_SIZE, state.pos[0].y + DY_OCTILE[i] * SEARCH_GRID_SIZE),
+                            Position(state.pos[1].x + DX_OCTILE[j] * SEARCH_GRID_SIZE, state.pos[1].y + DY_OCTILE[j] * SEARCH_GRID_SIZE),
+                            Position(state.pos[2].x + DX_OCTILE[k] * SEARCH_GRID_SIZE, state.pos[2].y + DY_OCTILE[k] * SEARCH_GRID_SIZE) };
+
+                if (is_valid_state(board_set, next, targets)) {
+
+                    //------------------------------------------------------------------------------
+                    // TODO: debug remove later
+                    std::cout << "Adding valid state to next states" << std::endl;
+                    //------------------------------------------------------------------------------
+
+                    next_vector.push_back(next);
+                }
+            }
+
+    return next_vector;
+}
+
+std::vector<State> A_star::get_next_states_manhattan (Board_set& board_set, const State& state, const std::vector<int>& targets) {
+    State next;
+    std::vector<State> next_vector;
+
+    for (int i = 0; i < NUM_DIRECTIONS_MANHATTAN; ++i)
+        for (int j = 0; j < NUM_DIRECTIONS_MANHATTAN; ++j)
+            for (int k = 0; k < NUM_DIRECTIONS_MANHATTAN; ++k) {
+                if (i == 0 && j == 0 && k == 0)
+                    continue;
+
+                //------------------------------------------------------------------------------
+                // TODO: debug remove later
+                std::cout << "Considering possible next state" << std::endl;
+                //------------------------------------------------------------------------------
+
+                next = { Position(state.pos[0].x + DX_MANHATTAN[i] * SEARCH_GRID_SIZE, state.pos[0].y + DY_MANHATTAN[i] * SEARCH_GRID_SIZE),
+                            Position(state.pos[1].x + DX_MANHATTAN[j] * SEARCH_GRID_SIZE, state.pos[1].y + DY_MANHATTAN[j] * SEARCH_GRID_SIZE),
+                            Position(state.pos[2].x + DX_MANHATTAN[k] * SEARCH_GRID_SIZE, state.pos[2].y + DY_MANHATTAN[k] * SEARCH_GRID_SIZE) };
 
                 if (is_valid_state(board_set, next, targets)) {
 

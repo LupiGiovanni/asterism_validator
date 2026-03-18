@@ -90,6 +90,8 @@ Board::Board (Board_type type) {
         pom_safe_zone.push_back(coordinates::Q3);
     }
 
+    profile_safe_zone = enlarge(profile, BOARD_SAFE_ZONE_OFFSET);
+
     // Rotation is needed to align the CAD reference system with ours
     rotate(profile, M_PI / 2.);
     rotate(pom, M_PI / 2.);

@@ -6,6 +6,7 @@
 #define ASTERISM_VALIDATOR_TRANSFORMATIONS_H
 
 #include "Asterism.h"
+#include "A_star.h"
 #include "State.h"
 
 inline Asterism transform_into_asterism (const State& state) {
@@ -18,14 +19,24 @@ inline Asterism transform_into_asterism (const State& state) {
     return a;
 }
 
-inline State transform_into_state (const Asterism& asterism) {
-    State s ( static_cast<int>(std::round(asterism.get_ngs(0).x())),
-              static_cast<int>(std::round(asterism.get_ngs(1).x())),
-              static_cast<int>(std::round(asterism.get_ngs(2).x())),
-              static_cast<int>(std::round(asterism.get_ngs(0).y())),
-              static_cast<int>(std::round(asterism.get_ngs(1).y())),
-              static_cast<int>(std::round(asterism.get_ngs(2).y())) );
-    return s;
+inline State transform_into_state(const Asterism& asterism, int search_grid_size = SEARCH_GRID_SIZE) {
+    if (search_grid_size <= 0) {
+        std::cout << "Warning: attempted to run transform_into_state but grid size is <= 0" << std::endl;
+        return State (0, 0, 0, 0, 0, 0);
+    }
+
+    auto round_to_grid = [search_grid_size](double val) -> int {
+        return static_cast<int>(std::round(val / static_cast<double>(search_grid_size))) * search_grid_size;
+    };
+
+    return State(
+        round_to_grid(asterism.get_ngs(0).x()),
+        round_to_grid(asterism.get_ngs(1).x()),
+        round_to_grid(asterism.get_ngs(2).x()),
+        round_to_grid(asterism.get_ngs(0).y()),
+        round_to_grid(asterism.get_ngs(1).y()),
+        round_to_grid(asterism.get_ngs(2).y())
+    );
 }
 
 
