@@ -31,8 +31,9 @@ std::vector<int> Board_set::get_targets() const {
 }
 
 bool Board_set::detect_collision() const {
-    if (CGAL::do_intersect(boards[0].profile, boards[1].profile) || CGAL::do_intersect(boards[1].profile, boards[2].profile)
-        || CGAL::do_intersect(boards[0].profile, boards[2].profile))
+    if ( CGAL::do_intersect(boards[0].profile, boards[1].profile) ||
+         CGAL::do_intersect(boards[1].profile, boards[2].profile) ||
+         CGAL::do_intersect(boards[0].profile, boards[2].profile) )
         return true;
 
     return false;
@@ -239,4 +240,13 @@ bool Board_set::move_along_y (const Asterism& destination_asterism, double dista
         boards[j].move_along_y(destination_asterism.get_ngs(targets[j]), distance_step);
 
     return detect_collision();
+}
+
+bool Board_set::detect_collision_buffers () const {
+    if ( CGAL::do_intersect(boards[0].profile_buffer_zone, boards[1].profile_buffer_zone) ||
+         CGAL::do_intersect(boards[1].profile_buffer_zone, boards[2].profile_buffer_zone) ||
+         CGAL::do_intersect(boards[0].profile_buffer_zone, boards[2].profile_buffer_zone) )
+        return true;
+
+    return false;
 }

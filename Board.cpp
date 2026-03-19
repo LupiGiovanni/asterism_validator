@@ -90,10 +90,11 @@ Board::Board (Board_type type) {
         pom_safe_zone.push_back(coordinates::Q3);
     }
 
-    profile_safe_zone = enlarge(profile, BOARD_SAFE_ZONE_OFFSET);
+    profile_buffer_zone = enlarge(profile, BOARD_BUFFER_WIDTH);
 
     // Rotation is needed to align the CAD reference system with ours
     rotate(profile, M_PI / 2.);
+    rotate(profile_buffer_zone, M_PI / 2.);
     rotate(pom, M_PI / 2.);
     rotate(pom_home, M_PI / 2.);
     rotate(pom_range, M_PI / 2.);
@@ -110,17 +111,20 @@ bool Board::is_in_range (const Point& point) const {
     return false;
 }
 
-bool Board::teleport (double delta_x, double delta_y) {
-    Vector displacement (delta_x, delta_y);
-    Point pom_destination = pom + displacement;
+bool Board::teleport(double delta_x, double delta_y) {
+    const Point destination = pom + Vector(delta_x, delta_y);
 
-    if (!is_in_range(pom_destination))
+    if (!is_in_range(destination))
         return false;
 
-    for (auto it = profile.begin(); it != profile.end(); ++it)
-        *it = *it + displacement;
+    const Vector displacement(delta_x, delta_y);
 
-    pom = pom_destination;
+    for (auto& point : profile)
+        point += displacement;
+    for (auto& point : profile_buffer_zone)
+        point += displacement;
+
+    pom = destination;
 
     return true;
 }

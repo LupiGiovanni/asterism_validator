@@ -9,7 +9,7 @@
 #include <CGAL/Boolean_set_operations_2.h>
 #include <CGAL/draw_polygon_set_2.h>
 #include <CGAL/Aff_transformation_2.h>
-#include <CGAL/create_offset_polygons_2.h>
+#include <CGAL/approximated_offset_2.h>
 #include <sciplot/sciplot.hpp>
 
 typedef CGAL::Simple_cartesian<double> Kernel;
@@ -26,7 +26,7 @@ constexpr int DECIMAL_PLACES_PRINTED = 6;
 constexpr int MAX_ITERATION_INDEX = 10000;
 // TODO: maybe add public method to set board velocity
 constexpr double BOARD_VELOCITY = 10.; // mm/s
-constexpr double BOARD_SAFE_ZONE_OFFSET = 20.; // mm
+constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
 constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STEP; // mm
 constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
@@ -47,17 +47,20 @@ inline void rotate (Point& point, double angle_radians) {
     point = rotation.transform(point);
 }
 
-inline Polygon enlarge (const Polygon& polygon, double offset) {
-    auto offset_polygons = CGAL::create_exterior_skeleton_and_offset_polygons_2(offset, polygon);
+inline Polygon enlarge(const Polygon& polygon, double offset) {
+    Polygon p = polygon;
+    if (p.is_clockwise_oriented())
+        p.reverse_orientation();
 
-    if (offset_polygons.empty())
-        return polygon;
+    const double eps = 0.1;
+    auto offset_poly_with_holes = CGAL::approximated_offset_2(p, offset, eps);
 
-    const auto& result_poly = *(offset_polygons[0]);
     Polygon enlarged_poly;
+    auto outer = offset_poly_with_holes.outer_boundary();
 
-    for (auto it = result_poly.vertices_begin(); it != result_poly.vertices_end(); ++it) {
-        enlarged_poly.push_back(Point(CGAL::to_double(it->x()), CGAL::to_double(it->y())));
+    for (auto c = outer.curves_begin(); c != outer.curves_end(); ++c) {
+        auto pt = c->source();
+        enlarged_poly.push_back(Point(CGAL::to_double(pt.x()), CGAL::to_double(pt.y())));
     }
 
     return enlarged_poly;

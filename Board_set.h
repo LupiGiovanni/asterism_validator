@@ -21,6 +21,7 @@ public:
     void assign_targets (const Asterism& destination_asterism);
 
     bool detect_collision() const;
+    bool detect_collision_buffers () const;
     bool detect_vignette_fov_small() const;
     bool detect_vignette_fov_large() const;
 
@@ -40,6 +41,7 @@ public:
     bool is_destination_aligned_y (const Asterism& destination_asterism) const;
     bool is_in_technical_field () const;
     bool is_in_safe_zone () const;
+
 
 private:
     std::vector<Board> boards;

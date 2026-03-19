@@ -14,7 +14,7 @@ class Board {
     friend class Board_set;
 private:
     Polygon profile;
-    Polygon profile_safe_zone;
+    Polygon profile_buffer_zone;
     Point pom;
     Point pom_home;
     Polygon pom_range;

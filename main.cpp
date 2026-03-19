@@ -26,7 +26,7 @@ int main () {
     Asterism goal_b (-64.074902, -38.632346, 216.687889, 107.928191, -10.634813, 132.970463);
 
     Graphic_viewer gv;
-    gv.animate(Movement::A_star, start_a, goal_a);
+    gv.animate(Movement::A_star, start_b, goal_b);
 
     return 0;
 }

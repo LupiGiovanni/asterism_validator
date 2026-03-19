@@ -12,8 +12,6 @@ class Position {
     friend class A_star;
 
 public:
-    int calculate_distance_squared (const Position& other) const;
-
     bool operator == (const Position& other) const;
     int get_x() const;
     int get_y() const;

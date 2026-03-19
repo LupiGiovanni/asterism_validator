@@ -186,16 +186,12 @@ std::vector<State> A_star::get_next_states_manhattan (Board_set& board_set, cons
 }
 
 bool A_star::is_valid_state(Board_set& board_set, const State& state, const std::vector<int>& targets) {
-    if (state.pos[0].calculate_distance_squared(state.pos[1]) <= SAFE_DISTANCE_SQUARED) return false;
-    if (state.pos[1].calculate_distance_squared(state.pos[2]) <= SAFE_DISTANCE_SQUARED) return false;
-    if (state.pos[0].calculate_distance_squared(state.pos[2]) <= SAFE_DISTANCE_SQUARED) return false;
-
     board_set.set_targets(targets);
     Asterism a = transform_into_asterism(state);
     if (!board_set.is_destination_in_range(a)) return false;
 
     board_set.teleport(a);
-    return !board_set.detect_collision();
+    return !board_set.detect_collision_buffers();
 }
 
 int A_star::calculate_manhattan_distance_global (const State& current, const State& goal) {
