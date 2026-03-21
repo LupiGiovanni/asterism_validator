@@ -45,7 +45,7 @@ private:
     int iterations;
     bool max_iterations_exceeded;
 
-    void reset_fields();
+    void reset_fields ();
 
     void run_linear (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
     void run_safe_basic (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);

@@ -282,6 +282,7 @@ void Graphic_viewer::animate_outside_tech_field (const Asterism &start) {
 
     if ( temporary.get_targets().empty() ) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_outside_tech_field but start asterism is invalid" << std::endl;
+        window.close();
         return;
     }
 
@@ -351,6 +352,7 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
 
     if ( ! start_valid || ! destination_valid ) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_linear but start or destination asterism are invalid" << std::endl;
+        window.close();
         return;
     }
 
@@ -425,6 +427,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
 
     if ( ! start_valid || ! destination_valid ) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_safe_basic but start or destination asterism are invalid" << std::endl;
+        window.close();
         return;
     }
 
@@ -543,6 +546,17 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
 }
 
 void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& destination) {
+
+    State state_start = transform_into_state (start);
+    State state_goal =  transform_into_state (destination);
+
+    const std::vector<State>& path = A_star::search_octile (state_start, state_goal);
+
+    if (path.empty()) {
+        std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
+        return;
+    }
+
     sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
@@ -561,13 +575,9 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
         destination_valid = true;
     }
 
-    State state_start = transform_into_state (start);
-    State state_goal =  transform_into_state (destination);
-
-    const std::vector<State>& path = A_star::search_octile (state_start, state_goal);
-
-    if (path.empty()) {
-        std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
+    if ( ! start_valid || ! destination_valid ) {
+        std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but start or destination asterism are invalid" << std::endl;
+        window.close();
         return;
     }
 
