@@ -46,6 +46,7 @@ private:
 
 public:
     const Polygon& get_profile () const;
+    const Point& get_pom_position () const;
 };
 
 

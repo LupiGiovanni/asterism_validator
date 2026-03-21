@@ -7,12 +7,14 @@
 Graphic_viewer::Graphic_viewer () {
     for (int j = 0; j < BOARDS_COUNT; j++) {
         boards.push_back( sf::VertexArray(sf::LineStrip, BOARD_VERTICES_COUNT + 1) );
+        trajectories.push_back(sf::VertexArray(sf::Points));
         pom_ranges.push_back(sf::ConvexShape(POM_RANGE_VERTICES_COUNT));
         start_asterism.push_back(sf::CircleShape(ASTERISM_CIRCLE_RADIUS));
         destination_asterism.push_back(sf::CircleShape(ASTERISM_CIRCLE_RADIUS));
     }
 
     setup_pom_ranges();
+    clear_trajectories();
     setup_fov_large();
     setup_fov_small();
     setup_technical_field();
@@ -118,6 +120,26 @@ void Graphic_viewer::setup_destination_asterism (const Asterism& asterism) {
         destination_asterism[j].setOutlineThickness(2);
         destination_asterism[j].setOutlineColor(sf::Color::Black);
         destination_asterism[j].setFillColor(sf::Color::Red);
+    }
+}
+
+void Graphic_viewer::clear_trajectories () {
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        trajectories[j].clear();
+}
+
+void Graphic_viewer::update_trajectories (const Board_set& board_set) {
+    std::vector<Board> b = board_set.get_boards();
+
+    for (int j = 0; j < BOARDS_COUNT; j++) {
+        Point pom_pos = b[j].get_pom_position();
+        sf::Vertex v;
+
+        v.position = sf::Vector2f(transform_into_window_x(pom_pos.x()), transform_into_window_y(pom_pos.y()));
+        v.color = sf::Color::Green;
+        v.color.a = 255;
+
+        trajectories[j].append(v);
     }
 }
 
@@ -295,6 +317,7 @@ void Graphic_viewer::animate_outside_tech_field (const Asterism &start) {
         if (animation_clock.getElapsedTime() >= animation_delay) {
             int iterations = 0;
             bool collision_detected = false;
+            clear_trajectories();
             temporary.teleport(start);
 
             while ( temporary.is_in_technical_field() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
@@ -307,6 +330,7 @@ void Graphic_viewer::animate_outside_tech_field (const Asterism &start) {
                 }
 
                 if (movement_clock.getElapsedTime() >= movement_delay) {
+                    update_trajectories(temporary);
                     setup_boards(temporary);
                     window.clear(sf::Color::Black);
                     window.draw(technical_field);
@@ -314,6 +338,7 @@ void Graphic_viewer::animate_outside_tech_field (const Asterism &start) {
                     window.draw(fov_small);
                     for (int j = 0; j < BOARDS_COUNT; j++) {
                         window.draw(pom_ranges[j]);
+                        window.draw(trajectories[j]);
                         window.draw(boards[j]);
                         window.draw(start_asterism[j]);
                     }
@@ -366,6 +391,7 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
         if (animation_clock.getElapsedTime() >= animation_delay) {
             int iterations = 0;
             bool collision_detected = false;
+            clear_trajectories();
             temporary.assign_targets(start);
             temporary.teleport(start);
             temporary.assign_targets(destination);
@@ -380,6 +406,7 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
                 }
 
                 if (movement_clock.getElapsedTime() >= movement_delay) {
+                    update_trajectories(temporary);
                     setup_boards(temporary);
                     window.clear(sf::Color::Black);
                     window.draw(technical_field);
@@ -387,6 +414,7 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
                     window.draw(fov_small);
                     for (int j = 0; j < BOARDS_COUNT; j++) {
                         window.draw(pom_ranges[j]);
+                        window.draw(trajectories[j]);
                         window.draw(boards[j]);
                         window.draw(start_asterism[j]);
                         window.draw(destination_asterism[j]);
@@ -441,6 +469,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
         if (animation_clock.getElapsedTime() >= animation_delay) {
             int iterations = 0;
             bool collision_detected = false;
+            clear_trajectories();
             temporary.assign_targets(start);
             temporary.teleport(start);
             temporary.assign_targets(destination);
@@ -455,6 +484,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                 }
 
                 if (movement_clock.getElapsedTime() >= movement_delay) {
+                    update_trajectories(temporary);
                     setup_boards(temporary);
                     window.clear(sf::Color::Black);
                     window.draw(technical_field);
@@ -463,6 +493,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                     for (int j = 0; j < BOARDS_COUNT; j++) {
                         window.draw(pom_ranges[j]);
                         window.draw(boards[j]);
+                        window.draw(trajectories[j]);
                         window.draw(start_asterism[j]);
                         window.draw(destination_asterism[j]);
                     }
@@ -487,6 +518,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                 }
 
                 if (movement_clock.getElapsedTime() >= movement_delay) {
+                    update_trajectories(temporary);
                     setup_boards(temporary);
                     window.clear(sf::Color::Black);
                     window.draw(technical_field);
@@ -494,6 +526,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                     window.draw(fov_small);
                     for (int j = 0; j < BOARDS_COUNT; j++) {
                         window.draw(pom_ranges[j]);
+                        window.draw(trajectories[j]);
                         window.draw(boards[j]);
                         window.draw(start_asterism[j]);
                         window.draw(destination_asterism[j]);
@@ -519,6 +552,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                 }
 
                 if (movement_clock.getElapsedTime() >= movement_delay) {
+                    update_trajectories(temporary);
                     setup_boards(temporary);
                     window.clear(sf::Color::Black);
                     window.draw(technical_field);
@@ -526,6 +560,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                     window.draw(fov_small);
                     for (int j = 0; j < BOARDS_COUNT; j++) {
                         window.draw(pom_ranges[j]);
+                        window.draw(trajectories[j]);
                         window.draw(boards[j]);
                         window.draw(start_asterism[j]);
                         window.draw(destination_asterism[j]);
@@ -594,6 +629,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
         if (animation_clock.getElapsedTime() >= animation_delay) {
             int iterations = 0;
             bool collision_detected = false;
+            clear_trajectories();
             temporary.assign_targets(start);
             temporary.teleport(start);
             temporary.set_targets(targets);
@@ -614,6 +650,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                     }
 
                     if (movement_clock.getElapsedTime() >= movement_delay) {
+                        update_trajectories(temporary);
                         setup_boards(temporary);
                         window.clear(sf::Color::Black);
                         window.draw(technical_field);
@@ -621,6 +658,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                         window.draw(fov_small);
                         for (int j = 0; j < BOARDS_COUNT; j++) {
                             window.draw(pom_ranges[j]);
+                            window.draw(trajectories[j]);
                             window.draw(boards[j]);
                             window.draw(start_asterism[j]);
                             window.draw(destination_asterism[j]);

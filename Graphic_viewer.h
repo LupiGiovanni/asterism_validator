@@ -26,6 +26,7 @@ public:
 
 private:
     std::vector< sf::VertexArray > boards;
+    std::vector< sf::VertexArray > trajectories;
     std::vector< sf::ConvexShape > pom_ranges;
     sf::ConvexShape fov_small;
     sf::ConvexShape fov_large;
@@ -54,6 +55,9 @@ private:
     void animate_linear (const Asterism& start, const Asterism& destination);
     void animate_safe_basic (const Asterism& start, const Asterism& destination);
     void animate_A_star (const Asterism& start, const Asterism& destination);
+
+    void clear_trajectories ();
+    void update_trajectories (const Board_set& board_set);
 
     void rotate_clockwise_around_center (sf::ConvexShape& shape, float angle_degrees);
 };

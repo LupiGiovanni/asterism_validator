@@ -105,6 +105,10 @@ const Polygon& Board::get_profile () const {
     return profile;
 }
 
+const Point& Board::get_pom_position () const {
+    return pom;
+}
+
 bool Board::is_in_range (const Point& point) const {
     if (pom_range.bounded_side(point) == CGAL::ON_BOUNDED_SIDE || pom_range.bounded_side(point) == CGAL::ON_BOUNDARY)
         return true;
