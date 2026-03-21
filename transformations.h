@@ -18,7 +18,7 @@ inline Asterism transform_into_asterism (const State& state) {
     return a;
 }
 
-inline State transform_into_state(const Asterism& asterism, int search_grid_size = SEARCH_GRID_SIZE) {
+inline State transform_into_state (const Asterism& asterism, int search_grid_size = SEARCH_GRID_SIZE) {
     if (search_grid_size <= 0) {
         std::cout << "Warning: attempted to run transform_into_state but grid size is <= 0" << std::endl;
         return State (0, 0, 0, 0, 0, 0);

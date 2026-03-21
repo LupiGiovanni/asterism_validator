@@ -10,23 +10,23 @@
 #include "Board_set.h"
 #include "Asterism.h"
 #include "Simulation.h"
-#include "helper.h"
 
 // TODO: maybe draw also trajectories
 // TODO: add draw methods to draw only asterisms
 class Graphic_viewer {
 public:
-    Graphic_viewer();
+    Graphic_viewer ();
 
-    void draw(const Board_set& board_set);
-    void draw(const Board_set& board_set, const Asterism& asterism);
-    void draw(const Board_set& board_set, const Asterism& start, const Asterism& destination);
+    void draw (const Board_set& board_set);
+    void draw (const Board_set& board_set, const Asterism& asterism);
+    void draw (const Board_set& board_set, const Asterism& start, const Asterism& destination);
+    void draw (const Asterism& start, const Asterism& destination);
 
-    void animate(Movement movement_type, const Asterism& start, const Asterism& destination = Asterism());
+    void animate (Movement movement_type, const Asterism& start, const Asterism& destination = Asterism());
 
 private:
-    std::vector<sf::VertexArray> boards;
-    std::vector<sf::ConvexShape> pom_ranges;
+    std::vector< sf::VertexArray > boards;
+    std::vector< sf::ConvexShape > pom_ranges;
     sf::ConvexShape fov_small;
     sf::ConvexShape fov_large;
     sf::CircleShape technical_field;
@@ -36,11 +36,11 @@ private:
     sf::Clock movement_clock;
     sf::Time movement_delay;
 
-    sf::Clock animation_start_clock;
-    sf::Time animation_start_delay;
+    sf::Clock animation_clock;
+    sf::Time animation_delay;
 
-    double window_coordinate_x (double x) const;
-    double window_coordinate_y (double y) const;
+    double transform_into_window_x (double x_coordinate) const;
+    double transform_into_window_y (double y_coordinate) const;
 
     void setup_pom_ranges ();
     void setup_fov_large ();
