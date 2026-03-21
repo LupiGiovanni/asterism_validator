@@ -47,24 +47,12 @@ void Simulation_manager::simulate_dataset_other_movements (Movement movement_typ
             successful_simulations++;
             durations_sum += simulation.get_duration();
             insert_into_histogram(y_values, simulation.get_duration());
-
-            //============================================================================================
-            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
-            // Graphic_viewer gv;
-            // gv.animate(movement_type, dataset[i-1], dataset[i]);
-            //============================================================================================
         }
         else {
             std::cout << std::endl;
             std::cout << "Simulation from asterism " << i-1 << " to asterism " << i << " of the dataset failed. Detailed info below: ";
             std::cout << std::endl;
             simulation.print_results();
-
-            //============================================================================================
-            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
-            // Graphic_viewer gv;
-            // gv.animate(movement_type, dataset[i-1], dataset[i]);
-            //============================================================================================
         }
     }
 

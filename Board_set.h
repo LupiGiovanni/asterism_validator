@@ -13,17 +13,17 @@
 
 class Board_set {
 public:
-    Board_set();
+    Board_set ();
 
-    const std::vector<Board>& get_boards() const;
-    std::vector<int> get_targets() const;
+    const std::vector<Board>& get_boards () const;
+    std::vector<int> get_targets () const;
     void set_targets (const std::vector<int>& new_targets);
     void assign_targets (const Asterism& destination_asterism);
 
-    bool detect_collision() const;
+    bool detect_collision () const;
     bool detect_collision_buffers () const;
-    bool detect_vignette_fov_small() const;
-    bool detect_vignette_fov_large() const;
+    bool detect_vignette_fov_small () const;
+    bool detect_vignette_fov_large () const;
 
     double calculate_distance (const Asterism& destination_asterism) const;
 
@@ -41,7 +41,6 @@ public:
     bool is_destination_aligned_y (const Asterism& destination_asterism) const;
     bool is_in_technical_field () const;
     bool is_in_safe_zone () const;
-
 
 private:
     std::vector<Board> boards;

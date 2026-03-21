@@ -101,7 +101,7 @@ Board::Board (Board_type type) {
     rotate(pom_safe_zone, M_PI / 2.);
 }
 
-const Polygon& Board::get_profile() const {
+const Polygon& Board::get_profile () const {
     return profile;
 }
 
@@ -111,13 +111,12 @@ bool Board::is_in_range (const Point& point) const {
     return false;
 }
 
-bool Board::teleport(double delta_x, double delta_y) {
-    const Point destination = pom + Vector(delta_x, delta_y);
+bool Board::teleport (double delta_x, double delta_y) {
+    const Vector displacement(delta_x, delta_y);
+    const Point destination = pom + displacement;
 
     if (!is_in_range(destination))
         return false;
-
-    const Vector displacement(delta_x, delta_y);
 
     for (auto& point : profile)
         point += displacement;
@@ -133,7 +132,7 @@ bool Board::teleport (const Point& pom_destination) {
     return teleport (pom_destination.x() - pom.x(), pom_destination.y() - pom.y());
 }
 
-void Board::teleport_home() {
+void Board::teleport_home () {
     teleport(pom_home);
 }
 
@@ -198,11 +197,8 @@ bool Board::move_outside_tech_field (const Circle& tech_field, double distance_s
     Point bottom_left_corner = *pom_range.begin();
     Point bottom_right_corner = *(pom_range.end() - 1);
 
-    double distance_to_bottom_left_corner = calculate_distance(bottom_left_corner);
-    double distance_to_bottom_right_corner = calculate_distance(bottom_right_corner);
-
     Vector displacement;
-    if (distance_to_bottom_left_corner < distance_to_bottom_right_corner)
+    if ( calculate_distance(bottom_left_corner) < calculate_distance(bottom_right_corner) )
         displacement = bottom_left_corner - pom;
     else
         displacement = bottom_right_corner - pom;

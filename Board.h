@@ -12,6 +12,7 @@ enum class Board_type {type0, type1, type2};
 
 class Board {
     friend class Board_set;
+
 private:
     Polygon profile;
     Polygon profile_buffer_zone;

@@ -6,7 +6,6 @@
 #define ASTERISM_VALIDATOR_TRANSFORMATIONS_H
 
 #include "Asterism.h"
-#include "A_star.h"
 #include "State.h"
 
 inline Asterism transform_into_asterism (const State& state) {

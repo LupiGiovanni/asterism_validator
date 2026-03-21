@@ -236,7 +236,7 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
         State state_start = transform_into_state (movement_start);
         State state_goal = transform_into_state (movement_destination);
 
-        const std::vector<State>& path = A_star::search_manhattan (state_start, state_goal);
+        const std::vector<State>& path = A_star::search_octile (state_start, state_goal);
 
         if (path.empty()) {
             std::cout << "Warning: attempted to run Simulation::run_A_star but no path was found" << std::endl;
