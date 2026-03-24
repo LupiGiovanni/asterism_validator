@@ -94,6 +94,82 @@ std::vector<State> A_star::search_manhattan (const State& start, State& goal) {
     return {};
 }
 
+std::vector<State> A_star::search_euclidean (const State& start, State& goal) {
+    Board_set temporary;
+    std::priority_queue<std::pair<int, State>, std::vector<std::pair<int, State>>, State_comparator> open_set;
+    std::unordered_map<State, State, State_hasher> came_from;
+    std::unordered_map<State, int, State_hasher> g_score;
+
+    align_states (start, goal);
+    const std::vector<int> targets = assign_targets(goal);
+
+    g_score[start] = 0;
+    open_set.push({calculate_euclidean_distance_global(start, goal), start});
+
+    while (!open_set.empty()) {
+        State current = open_set.top().second;
+        open_set.pop();
+
+        if (current == goal)
+            return reconstruct_path(came_from, current);
+
+        for (const auto& neighbor : get_next_states_euclidean(temporary, current, targets)) {
+            int move_cost = calculate_move_cost(current, neighbor);
+            int tentative_g = g_score[current] + move_cost;
+
+            if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
+                came_from[neighbor] = current;
+                g_score[neighbor] = tentative_g;
+                int f_score = tentative_g + calculate_euclidean_distance_global(neighbor, goal);
+                open_set.push({f_score, neighbor});
+            }
+        }
+    }
+
+    return {};
+}
+
+std::vector<State> A_star::search_debug (const State& start, State& goal) {
+    Board_set temporary;
+    std::priority_queue<std::pair<int, State>, std::vector<std::pair<int, State>>, State_comparator> open_set;
+    std::unordered_map<State, State, State_hasher> came_from;
+    std::unordered_map<State, int, State_hasher> g_score;
+
+    align_states (start, goal);
+    const std::vector<int> targets = assign_targets(goal);
+
+    g_score[start] = 0;
+    open_set.push({calculate_octile_distance_global(start, goal), start});
+
+    int iterations = 0;
+    int max_iterations = 1500;  // Arbitrary limit to prevent infinite loops during debugging
+    State current;
+
+    while (!open_set.empty() && iterations < max_iterations) {
+        current = open_set.top().second;
+        open_set.pop();
+
+        if (current == goal)
+            return reconstruct_path(came_from, current);
+
+        for (const auto& neighbor : get_next_states_octile(temporary, current, targets)) {
+            int move_cost = calculate_move_cost(current, neighbor);
+            int tentative_g = g_score[current] + move_cost;
+
+            if (g_score.find(neighbor) == g_score.end() || tentative_g < g_score[neighbor]) {
+                came_from[neighbor] = current;
+                g_score[neighbor] = tentative_g;
+                int f_score = tentative_g + calculate_octile_distance_global(neighbor, goal);
+                open_set.push({f_score, neighbor});
+            }
+        }
+
+        iterations++;
+    }
+
+    return reconstruct_path(came_from, current);
+}
+
 std::vector<int> A_star::assign_targets (const State& state) {
     Asterism asterism = transform_into_asterism (state);
     Board_set temporary;
@@ -143,6 +219,7 @@ std::vector<State> A_star::get_next_states_octile (Board_set& board_set, const S
                     //------------------------------------------------------------------------------
                     // TODO: debug remove later
                     std::cout << "Adding valid state to next states" << std::endl;
+                    next.print();
                     //------------------------------------------------------------------------------
 
                     next_vector.push_back(next);
@@ -176,6 +253,41 @@ std::vector<State> A_star::get_next_states_manhattan (Board_set& board_set, cons
                     //------------------------------------------------------------------------------
                     // TODO: debug remove later
                     std::cout << "Adding valid state to next states" << std::endl;
+                    next.print();
+                    //------------------------------------------------------------------------------
+
+                    next_vector.push_back(next);
+                }
+            }
+
+    return next_vector;
+}
+
+std::vector<State> A_star::get_next_states_euclidean(Board_set& board_set, const State& state, const std::vector<int>& targets) {
+    State next;
+    std::vector<State> next_vector;
+
+    for (int i = 0; i < NUM_DIRECTIONS_EUCLIDEAN; ++i)
+        for (int j = 0; j < NUM_DIRECTIONS_EUCLIDEAN; ++j)
+            for (int k = 0; k < NUM_DIRECTIONS_EUCLIDEAN; ++k) {
+                if (i == 0 && j == 0 && k == 0)
+                    continue;
+
+                //------------------------------------------------------------------------------
+                // TODO: debug remove later
+                std::cout << "Considering possible next state" << std::endl;
+                //------------------------------------------------------------------------------
+
+                next = { Position(state.pos[0].x + DX_EUCLIDEAN[i] * SEARCH_GRID_SIZE, state.pos[0].y + DY_EUCLIDEAN[i] * SEARCH_GRID_SIZE),
+                            Position(state.pos[1].x + DX_EUCLIDEAN[j] * SEARCH_GRID_SIZE, state.pos[1].y + DY_EUCLIDEAN[j] * SEARCH_GRID_SIZE),
+                            Position(state.pos[2].x + DX_EUCLIDEAN[k] * SEARCH_GRID_SIZE, state.pos[2].y + DY_EUCLIDEAN[k] * SEARCH_GRID_SIZE) };
+
+                if (is_valid_state(board_set, next, targets)) {
+
+                    //------------------------------------------------------------------------------
+                    // TODO: debug remove later
+                    std::cout << "Adding valid state to next states" << std::endl;
+                    next.print();
                     //------------------------------------------------------------------------------
 
                     next_vector.push_back(next);
@@ -229,6 +341,23 @@ int A_star::calculate_octile_distance_weighted (const Position& current, const P
         return DIAGONAL_COST_WEIGHTED * dx + ORTHOGONAL_COST_WEIGHTED * (dy - dx);
 
     return DIAGONAL_COST_WEIGHTED * dy + ORTHOGONAL_COST_WEIGHTED * (dx - dy);
+}
+
+int A_star::calculate_euclidean_distance_global (const State& current, const State& goal) {
+    int h = 0;
+
+    for (int i = 0; i < BOARDS_COUNT; i++) {
+        h += calculate_euclidean_distance_weighted(current.pos[i], goal.pos[i]);
+    }
+
+    return h;
+}
+
+int A_star::calculate_euclidean_distance_weighted (const Position& current, const Position& goal) {
+    int dx = std::abs(current.x - goal.x);
+    int dy = std::abs(current.y - goal.y);
+
+    return static_cast<int>(std::sqrt(dx * dx + dy * dy) * HEURISTIC_WEIGHT * SCALE_FACTOR);
 }
 
 int A_star::calculate_move_cost(const State& current, const State& neighbor) {

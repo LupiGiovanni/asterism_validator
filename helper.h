@@ -34,15 +34,18 @@ constexpr std::array<int, 9> DX_OCTILE= {0, 0, 0, 1, -1, 1, 1, -1, -1};
 constexpr std::array<int, 9> DY_OCTILE = {0, 1, -1, 0, 0, 1, -1, 1, -1};
 constexpr std::array<int, 5> DX_MANHATTAN = {0, 0, 0, 1, -1};
 constexpr std::array<int, 5> DY_MANHATTAN = {0, 1, -1, 0, 0};
-constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
+constexpr std::array<int, 9> DX_EUCLIDEAN = DX_OCTILE;
+constexpr std::array<int, 9> DY_EUCLIDEAN = DY_OCTILE;
 constexpr int NUM_DIRECTIONS_OCTILE = 9;
+constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
+constexpr int NUM_DIRECTIONS_EUCLIDEAN = NUM_DIRECTIONS_OCTILE;
 constexpr int SCALE_FACTOR = 1000;
-constexpr float HEURISTIC_WEIGHT = 1.5;
+constexpr float HEURISTIC_WEIGHT = 1.2;
 constexpr int ORTHOGONAL_COST = 1 * SCALE_FACTOR;
 constexpr int ORTHOGONAL_COST_WEIGHTED = ORTHOGONAL_COST * HEURISTIC_WEIGHT;
 constexpr int DIAGONAL_COST = 1.414 * SCALE_FACTOR;
 constexpr int DIAGONAL_COST_WEIGHTED = DIAGONAL_COST * HEURISTIC_WEIGHT;
-constexpr int SEARCH_GRID_SIZE = 5; // mm
+constexpr int SEARCH_GRID_SIZE = 30; // mm
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 
 // Graphic rendering parameters

@@ -585,7 +585,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     State state_start = transform_into_state (start);
     State state_goal =  transform_into_state (destination);
 
-    const std::vector<State>& path = A_star::search_octile (state_start, state_goal);
+    const std::vector<State>& path = A_star::search_debug (state_start, state_goal);
 
     if (path.empty()) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
