@@ -6,7 +6,6 @@
 #define ASTERISM_VALIDATOR_GRAPHIC_VIEWER_H
 
 #include <SFML/Graphics.hpp>
-#include "transformations.h"
 #include "Board_set.h"
 #include "Asterism.h"
 #include "Simulation.h"

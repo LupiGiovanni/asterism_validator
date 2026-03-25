@@ -24,11 +24,12 @@ int main () {
     Asterism start_b (232.223713, 66.640670, -41.871824, 116.354008, -112.966366, -165.532668);
     Asterism goal_b (-64.074902, -38.632346, 216.687889, 107.928191, -10.634813, 132.970463);
 
-    State state_start = transform_into_state (start_a);
-    state_start.print();
+    Asterism start_c {-139.814452, 78.426841, -9.328945, 202.766608, 219.972478, -264.680021};
+    Asterism goal_c {-84.306862, 194.272736, -83.241414, -245.583848, 43.987158, 89.859614};
 
     Graphic_viewer gv;
-    gv.animate(Movement::A_star, start_a, goal_a);
+    gv.animate(Movement::A_star, start_b, goal_b);
+    gv.animate(Movement::A_star, start_c, goal_c);
 
     return 0;
 }

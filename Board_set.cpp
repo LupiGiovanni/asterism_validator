@@ -5,15 +5,15 @@
 #include "Board_set.h"
 
 Board_set::Board_set(): boards{Board(Board_type::type0), Board(Board_type::type1), Board(Board_type::type2)}, targets{} {
-    fov_large.push_back(coordinates::R);
-    fov_large.push_back(coordinates::S);
-    fov_large.push_back(coordinates::T);
-    fov_large.push_back(coordinates::U);
+    fov_large.push_back(CAD_coordinates::R);
+    fov_large.push_back(CAD_coordinates::S);
+    fov_large.push_back(CAD_coordinates::T);
+    fov_large.push_back(CAD_coordinates::U);
 
-    fov_small.push_back(coordinates::V);
-    fov_small.push_back(coordinates::W);
-    fov_small.push_back(coordinates::X);
-    fov_small.push_back(coordinates::Y);
+    fov_small.push_back(CAD_coordinates::V);
+    fov_small.push_back(CAD_coordinates::W);
+    fov_small.push_back(CAD_coordinates::X);
+    fov_small.push_back(CAD_coordinates::Y);
 
     constexpr double technical_field_radius_squared = TECHNICAL_FIELD_RADIUS * TECHNICAL_FIELD_RADIUS;
     technical_field = Circle(Point(0., 0.), technical_field_radius_squared);
@@ -61,7 +61,7 @@ double Board_set::calculate_distance (const Asterism& destination_asterism) cons
     if (targets.size() == BOARDS_COUNT) {
         distance = 0;
         for (int i = 0; i < BOARDS_COUNT; i++)
-            distance += boards[i].calculate_distance(destination_asterism.get_ngs(targets[i]));
+            distance += boards[i].calculate_distance(destination_asterism[ targets[i] ]);
     }
     else if (targets.empty())
         std::cout << "Warning: attempted to run Board_set::calculate_distance but 'targets' field is empty" << std::endl;
@@ -90,9 +90,9 @@ void Board_set::assign_targets (const Asterism& destination_asterism) {
     std::vector< std::pair< std::vector<int>, double > > target_distance_vector;
 
     for (int i = 0; i < permutations_count; i++)
-            if ( temporary.boards[0].teleport( destination_asterism.get_ngs( permutations[i][0] ) ) &&
-                 temporary.boards[1].teleport( destination_asterism.get_ngs( permutations[i][1] ) ) &&
-                 temporary.boards[2].teleport( destination_asterism.get_ngs( permutations[i][2] ) ) &&
+            if ( temporary.boards[0].teleport( destination_asterism[ permutations[i][0] ] ) &&
+                 temporary.boards[1].teleport( destination_asterism[ permutations[i][1] ] ) &&
+                 temporary.boards[2].teleport( destination_asterism[ permutations[i][2] ] ) &&
                  ! temporary.detect_collision() )
                 {
                 temporary.targets = permutations[i];
@@ -125,7 +125,7 @@ void Board_set::teleport (const Asterism& destination_asterism) {
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
-            boards[j].teleport(destination_asterism.get_ngs(targets[j]));
+            boards[j].teleport(destination_asterism[ targets[j] ]);
 }
 
 bool Board_set::is_destination_in_range (const Asterism& destination_asterism) const {
@@ -137,7 +137,7 @@ bool Board_set::is_destination_in_range (const Asterism& destination_asterism) c
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
-            if ( ! boards[j].is_in_range(destination_asterism.get_ngs(targets[j])) )
+            if ( ! boards[j].is_in_range( destination_asterism[targets[j]] ) )
                 return false;
 
     return true;
@@ -152,7 +152,7 @@ bool Board_set::is_destination_reached (const Asterism& destination_asterism, do
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
-            if ( ! boards[j].is_destination_reached(destination_asterism.get_ngs(targets[j]), tolerance) )
+            if ( ! boards[j].is_destination_reached(destination_asterism[ targets[j] ], tolerance) )
                 return false;
 
     return true;
@@ -160,7 +160,7 @@ bool Board_set::is_destination_reached (const Asterism& destination_asterism, do
 
 bool Board_set::is_destination_aligned_x (const Asterism& destination_asterism) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
-        if ( ! boards[j].is_destination_aligned_x(destination_asterism.get_ngs(targets[j])) )
+        if ( ! boards[j].is_destination_aligned_x(destination_asterism[ targets[j] ]) )
             return false;
 
     return true;
@@ -168,7 +168,7 @@ bool Board_set::is_destination_aligned_x (const Asterism& destination_asterism) 
 
 bool Board_set::is_destination_aligned_y (const Asterism& destination_asterism) const {
     for (int j = 0; j < BOARDS_COUNT; j++)
-        if ( ! boards[j].is_destination_aligned_y(destination_asterism.get_ngs(targets[j])) )
+        if ( ! boards[j].is_destination_aligned_y(destination_asterism[ targets[j] ]) )
             return false;
 
     return true;
@@ -199,7 +199,7 @@ bool Board_set::move (const Asterism& destination_asterism, double distance_step
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
-            boards[j].move(destination_asterism.get_ngs(targets[j]), distance_step);
+            boards[j].move(destination_asterism[ targets[j] ], distance_step);
 
     return detect_collision();
 }
@@ -225,7 +225,7 @@ bool Board_set::move_along_x (const Asterism& destination_asterism, double dista
     }
 
     for (int j = 0; j < BOARDS_COUNT; j++)
-        boards[j].move_along_x(destination_asterism.get_ngs(targets[j]), distance_step);
+        boards[j].move_along_x(destination_asterism[ targets[j] ], distance_step);
 
     return detect_collision();
 }
@@ -237,7 +237,7 @@ bool Board_set::move_along_y (const Asterism& destination_asterism, double dista
     }
 
     for (int j = 0; j < BOARDS_COUNT; j++)
-        boards[j].move_along_y(destination_asterism.get_ngs(targets[j]), distance_step);
+        boards[j].move_along_y(destination_asterism[ targets[j] ], distance_step);
 
     return detect_collision();
 }

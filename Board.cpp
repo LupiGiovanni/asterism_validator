@@ -7,87 +7,87 @@
 Board::Board (Board_type type) {
     if (type == Board_type::type0)
     {
-        profile.push_back(coordinates::A1);
-        profile.push_back(coordinates::B1);
-        profile.push_back(coordinates::C1);
-        profile.push_back(coordinates::D1);
-        profile.push_back(coordinates::E1);
-        profile.push_back(coordinates::F1);
-        profile.push_back(coordinates::G1);
-        profile.push_back(coordinates::H1);
-        profile.push_back(coordinates::I1);
-        profile.push_back(coordinates::J1);
-        profile.push_back(coordinates::K1);
-        profile.push_back(coordinates::L1);
+        profile.push_back(CAD_coordinates::A1);
+        profile.push_back(CAD_coordinates::B1);
+        profile.push_back(CAD_coordinates::C1);
+        profile.push_back(CAD_coordinates::D1);
+        profile.push_back(CAD_coordinates::E1);
+        profile.push_back(CAD_coordinates::F1);
+        profile.push_back(CAD_coordinates::G1);
+        profile.push_back(CAD_coordinates::H1);
+        profile.push_back(CAD_coordinates::I1);
+        profile.push_back(CAD_coordinates::J1);
+        profile.push_back(CAD_coordinates::K1);
+        profile.push_back(CAD_coordinates::L1);
 
-        pom = coordinates::M1;
-        pom_home = coordinates::M1;
+        pom = CAD_coordinates::M1;
+        pom_home = CAD_coordinates::M1;
 
-        pom_range.push_back(coordinates::N1);
-        pom_range.push_back(coordinates::O1);
-        pom_range.push_back(coordinates::P1);
-        pom_range.push_back(coordinates::Q1);
+        pom_range.push_back(CAD_coordinates::N1);
+        pom_range.push_back(CAD_coordinates::O1);
+        pom_range.push_back(CAD_coordinates::P1);
+        pom_range.push_back(CAD_coordinates::Q1);
 
-        pom_safe_zone.push_back(coordinates::N1);
-        pom_safe_zone.push_back(coordinates::Z1);
-        pom_safe_zone.push_back(coordinates::AA1);
-        pom_safe_zone.push_back(coordinates::Q1);
+        pom_safe_zone.push_back(CAD_coordinates::N1);
+        pom_safe_zone.push_back(CAD_coordinates::Z1);
+        pom_safe_zone.push_back(CAD_coordinates::AA1);
+        pom_safe_zone.push_back(CAD_coordinates::Q1);
     }
     else if (type == Board_type::type1)
     {
-        profile.push_back(coordinates::A2);
-        profile.push_back(coordinates::B2);
-        profile.push_back(coordinates::C2);
-        profile.push_back(coordinates::D2);
-        profile.push_back(coordinates::E2);
-        profile.push_back(coordinates::F2);
-        profile.push_back(coordinates::G2);
-        profile.push_back(coordinates::H2);
-        profile.push_back(coordinates::I2);
-        profile.push_back(coordinates::J2);
-        profile.push_back(coordinates::K2);
-        profile.push_back(coordinates::L2);
+        profile.push_back(CAD_coordinates::A2);
+        profile.push_back(CAD_coordinates::B2);
+        profile.push_back(CAD_coordinates::C2);
+        profile.push_back(CAD_coordinates::D2);
+        profile.push_back(CAD_coordinates::E2);
+        profile.push_back(CAD_coordinates::F2);
+        profile.push_back(CAD_coordinates::G2);
+        profile.push_back(CAD_coordinates::H2);
+        profile.push_back(CAD_coordinates::I2);
+        profile.push_back(CAD_coordinates::J2);
+        profile.push_back(CAD_coordinates::K2);
+        profile.push_back(CAD_coordinates::L2);
 
-        pom = coordinates::M2;
-        pom_home = coordinates::M2;
+        pom = CAD_coordinates::M2;
+        pom_home = CAD_coordinates::M2;
 
-        pom_range.push_back(coordinates::N2);
-        pom_range.push_back(coordinates::O2);
-        pom_range.push_back(coordinates::P2);
-        pom_range.push_back(coordinates::Q2);
+        pom_range.push_back(CAD_coordinates::N2);
+        pom_range.push_back(CAD_coordinates::O2);
+        pom_range.push_back(CAD_coordinates::P2);
+        pom_range.push_back(CAD_coordinates::Q2);
 
-        pom_safe_zone.push_back(coordinates::N2);
-        pom_safe_zone.push_back(coordinates::Z2);
-        pom_safe_zone.push_back(coordinates::AA2);
-        pom_safe_zone.push_back(coordinates::Q2);
+        pom_safe_zone.push_back(CAD_coordinates::N2);
+        pom_safe_zone.push_back(CAD_coordinates::Z2);
+        pom_safe_zone.push_back(CAD_coordinates::AA2);
+        pom_safe_zone.push_back(CAD_coordinates::Q2);
     }
     else if (type == Board_type::type2)
     {
-        profile.push_back(coordinates::A3);
-        profile.push_back(coordinates::B3);
-        profile.push_back(coordinates::C3);
-        profile.push_back(coordinates::D3);
-        profile.push_back(coordinates::E3);
-        profile.push_back(coordinates::F3);
-        profile.push_back(coordinates::G3);
-        profile.push_back(coordinates::H3);
-        profile.push_back(coordinates::I3);
-        profile.push_back(coordinates::J3);
-        profile.push_back(coordinates::K3);
-        profile.push_back(coordinates::L3);
+        profile.push_back(CAD_coordinates::A3);
+        profile.push_back(CAD_coordinates::B3);
+        profile.push_back(CAD_coordinates::C3);
+        profile.push_back(CAD_coordinates::D3);
+        profile.push_back(CAD_coordinates::E3);
+        profile.push_back(CAD_coordinates::F3);
+        profile.push_back(CAD_coordinates::G3);
+        profile.push_back(CAD_coordinates::H3);
+        profile.push_back(CAD_coordinates::I3);
+        profile.push_back(CAD_coordinates::J3);
+        profile.push_back(CAD_coordinates::K3);
+        profile.push_back(CAD_coordinates::L3);
 
-        pom = coordinates::M3;
-        pom_home = coordinates::M3;
+        pom = CAD_coordinates::M3;
+        pom_home = CAD_coordinates::M3;
 
-        pom_range.push_back(coordinates::N3);
-        pom_range.push_back(coordinates::O3);
-        pom_range.push_back(coordinates::P3);
-        pom_range.push_back(coordinates::Q3);
+        pom_range.push_back(CAD_coordinates::N3);
+        pom_range.push_back(CAD_coordinates::O3);
+        pom_range.push_back(CAD_coordinates::P3);
+        pom_range.push_back(CAD_coordinates::Q3);
 
-        pom_safe_zone.push_back(coordinates::N3);
-        pom_safe_zone.push_back(coordinates::Z3);
-        pom_safe_zone.push_back(coordinates::AA3);
-        pom_safe_zone.push_back(coordinates::Q3);
+        pom_safe_zone.push_back(CAD_coordinates::N3);
+        pom_safe_zone.push_back(CAD_coordinates::Z3);
+        pom_safe_zone.push_back(CAD_coordinates::AA3);
+        pom_safe_zone.push_back(CAD_coordinates::Q3);
     }
 
     profile_buffer_zone = enlarge(profile, BOARD_BUFFER_WIDTH);

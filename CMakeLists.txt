@@ -28,14 +28,9 @@ add_executable (    asterism_validator
                     Graphic_viewer.h
                     A_star.cpp
                     A_star.h
-                    State.cpp
-                    State.h
-                    Position.cpp
-                    Position.h
                     helper.h
                     dataset.h
-                    coordinates.h
-                    transformations.h   )
+                    CAD_coordinates.h    )
 
 target_link_libraries(  asterism_validator
                         sfml-graphics

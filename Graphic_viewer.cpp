@@ -32,24 +32,24 @@ double Graphic_viewer::transform_into_window_y (double y_coordinate) const {
 }
 
 void Graphic_viewer::setup_pom_ranges () {
-    pom_ranges[0].setPoint(0, sf::Vector2f(transform_into_window_x(coordinates::N1.x()), transform_into_window_y(coordinates::N1.y())));
-    pom_ranges[0].setPoint(1, sf::Vector2f(transform_into_window_x(coordinates::O1.x()), transform_into_window_y(coordinates::O1.y())));
-    pom_ranges[0].setPoint(2, sf::Vector2f(transform_into_window_x(coordinates::P1.x()), transform_into_window_y(coordinates::P1.y())));
-    pom_ranges[0].setPoint(3, sf::Vector2f(transform_into_window_x(coordinates::Q1.x()), transform_into_window_y(coordinates::Q1.y())));
+    pom_ranges[0].setPoint(0, sf::Vector2f(transform_into_window_x(CAD_coordinates::N1.x()), transform_into_window_y(CAD_coordinates::N1.y())));
+    pom_ranges[0].setPoint(1, sf::Vector2f(transform_into_window_x(CAD_coordinates::O1.x()), transform_into_window_y(CAD_coordinates::O1.y())));
+    pom_ranges[0].setPoint(2, sf::Vector2f(transform_into_window_x(CAD_coordinates::P1.x()), transform_into_window_y(CAD_coordinates::P1.y())));
+    pom_ranges[0].setPoint(3, sf::Vector2f(transform_into_window_x(CAD_coordinates::Q1.x()), transform_into_window_y(CAD_coordinates::Q1.y())));
     pom_ranges[0].setOutlineThickness(0.);
     pom_ranges[0].setFillColor(sf::Color(255, 0, 0, CONVEX_SHAPES_TRANSPARENCY));
 
-    pom_ranges[1].setPoint(0, sf::Vector2f(transform_into_window_x(coordinates::N2.x()), transform_into_window_y(coordinates::N2.y())));
-    pom_ranges[1].setPoint(1, sf::Vector2f(transform_into_window_x(coordinates::O2.x()), transform_into_window_y(coordinates::O2.y())));
-    pom_ranges[1].setPoint(2, sf::Vector2f(transform_into_window_x(coordinates::P2.x()), transform_into_window_y(coordinates::P2.y())));
-    pom_ranges[1].setPoint(3, sf::Vector2f(transform_into_window_x(coordinates::Q2.x()), transform_into_window_y(coordinates::Q2.y())));
+    pom_ranges[1].setPoint(0, sf::Vector2f(transform_into_window_x(CAD_coordinates::N2.x()), transform_into_window_y(CAD_coordinates::N2.y())));
+    pom_ranges[1].setPoint(1, sf::Vector2f(transform_into_window_x(CAD_coordinates::O2.x()), transform_into_window_y(CAD_coordinates::O2.y())));
+    pom_ranges[1].setPoint(2, sf::Vector2f(transform_into_window_x(CAD_coordinates::P2.x()), transform_into_window_y(CAD_coordinates::P2.y())));
+    pom_ranges[1].setPoint(3, sf::Vector2f(transform_into_window_x(CAD_coordinates::Q2.x()), transform_into_window_y(CAD_coordinates::Q2.y())));
     pom_ranges[1].setOutlineThickness(0.);
     pom_ranges[1].setFillColor(sf::Color(0, 255, 0, CONVEX_SHAPES_TRANSPARENCY));
 
-    pom_ranges[2].setPoint(0, sf::Vector2f(transform_into_window_x(coordinates::N3.x()), transform_into_window_y(coordinates::N3.y())));
-    pom_ranges[2].setPoint(1, sf::Vector2f(transform_into_window_x(coordinates::O3.x()), transform_into_window_y(coordinates::O3.y())));
-    pom_ranges[2].setPoint(2, sf::Vector2f(transform_into_window_x(coordinates::P3.x()), transform_into_window_y(coordinates::P3.y())));
-    pom_ranges[2].setPoint(3, sf::Vector2f(transform_into_window_x(coordinates::Q3.x()), transform_into_window_y(coordinates::Q3.y())));
+    pom_ranges[2].setPoint(0, sf::Vector2f(transform_into_window_x(CAD_coordinates::N3.x()), transform_into_window_y(CAD_coordinates::N3.y())));
+    pom_ranges[2].setPoint(1, sf::Vector2f(transform_into_window_x(CAD_coordinates::O3.x()), transform_into_window_y(CAD_coordinates::O3.y())));
+    pom_ranges[2].setPoint(2, sf::Vector2f(transform_into_window_x(CAD_coordinates::P3.x()), transform_into_window_y(CAD_coordinates::P3.y())));
+    pom_ranges[2].setPoint(3, sf::Vector2f(transform_into_window_x(CAD_coordinates::Q3.x()), transform_into_window_y(CAD_coordinates::Q3.y())));
     pom_ranges[2].setOutlineThickness(0.);
     pom_ranges[2].setFillColor(sf::Color(0, 0, 255, CONVEX_SHAPES_TRANSPARENCY));
 
@@ -59,20 +59,20 @@ void Graphic_viewer::setup_pom_ranges () {
 
 void Graphic_viewer::setup_fov_large () {
     fov_large.setPointCount(4);
-    fov_large.setPoint(0, sf::Vector2f(transform_into_window_x(coordinates::R.x()), transform_into_window_y(coordinates::R.y())));
-    fov_large.setPoint(1, sf::Vector2f(transform_into_window_x(coordinates::S.x()), transform_into_window_y(coordinates::S.y())));
-    fov_large.setPoint(2, sf::Vector2f(transform_into_window_x(coordinates::T.x()), transform_into_window_y(coordinates::T.y())));
-    fov_large.setPoint(3, sf::Vector2f(transform_into_window_x(coordinates::U.x()), transform_into_window_y(coordinates::U.y())));
+    fov_large.setPoint(0, sf::Vector2f(transform_into_window_x(CAD_coordinates::R.x()), transform_into_window_y(CAD_coordinates::R.y())));
+    fov_large.setPoint(1, sf::Vector2f(transform_into_window_x(CAD_coordinates::S.x()), transform_into_window_y(CAD_coordinates::S.y())));
+    fov_large.setPoint(2, sf::Vector2f(transform_into_window_x(CAD_coordinates::T.x()), transform_into_window_y(CAD_coordinates::T.y())));
+    fov_large.setPoint(3, sf::Vector2f(transform_into_window_x(CAD_coordinates::U.x()), transform_into_window_y(CAD_coordinates::U.y())));
     fov_large.setOutlineThickness(0.);
     fov_large.setFillColor(sf::Color(255, 255, 255, CONVEX_SHAPES_TRANSPARENCY));
 }
 
 void Graphic_viewer::setup_fov_small () {
     fov_small.setPointCount(4);
-    fov_small.setPoint(0, sf::Vector2f(transform_into_window_x(coordinates::V.x()), transform_into_window_y(coordinates::V.y())));
-    fov_small.setPoint(1, sf::Vector2f(transform_into_window_x(coordinates::W.x()), transform_into_window_y(coordinates::W.y())));
-    fov_small.setPoint(2, sf::Vector2f(transform_into_window_x(coordinates::X.x()), transform_into_window_y(coordinates::X.y())));
-    fov_small.setPoint(3, sf::Vector2f(transform_into_window_x(coordinates::Y.x()), transform_into_window_y(coordinates::Y.y())));
+    fov_small.setPoint(0, sf::Vector2f(transform_into_window_x(CAD_coordinates::V.x()), transform_into_window_y(CAD_coordinates::V.y())));
+    fov_small.setPoint(1, sf::Vector2f(transform_into_window_x(CAD_coordinates::W.x()), transform_into_window_y(CAD_coordinates::W.y())));
+    fov_small.setPoint(2, sf::Vector2f(transform_into_window_x(CAD_coordinates::X.x()), transform_into_window_y(CAD_coordinates::X.y())));
+    fov_small.setPoint(3, sf::Vector2f(transform_into_window_x(CAD_coordinates::Y.x()), transform_into_window_y(CAD_coordinates::Y.y())));
     fov_small.setOutlineThickness(0.);
     fov_small.setFillColor(sf::Color(255, 255, 255, CONVEX_SHAPES_TRANSPARENCY));
 }
@@ -105,7 +105,7 @@ void Graphic_viewer::setup_start_asterism (const Asterism& asterism) {
     for (int j = 0; j < BOARDS_COUNT; j++) {
         start_asterism[j].setPointCount(100);
         start_asterism[j].setOrigin(ASTERISM_CIRCLE_RADIUS, ASTERISM_CIRCLE_RADIUS);
-        start_asterism[j].setPosition(transform_into_window_x(asterism.get_ngs(j).x()), transform_into_window_y(asterism.get_ngs(j).y()));
+        start_asterism[j].setPosition(transform_into_window_x(asterism[j].x()), transform_into_window_y(asterism[j].y()));
         start_asterism[j].setOutlineThickness(2);
         start_asterism[j].setOutlineColor(sf::Color::Black);
         start_asterism[j].setFillColor(sf::Color::Green);
@@ -116,7 +116,7 @@ void Graphic_viewer::setup_destination_asterism (const Asterism& asterism) {
     for (int j = 0; j < BOARDS_COUNT; j++) {
         destination_asterism[j].setPointCount(100);
         destination_asterism[j].setOrigin(ASTERISM_CIRCLE_RADIUS, ASTERISM_CIRCLE_RADIUS);
-        destination_asterism[j].setPosition(transform_into_window_x(asterism.get_ngs(j).x()), transform_into_window_y(asterism.get_ngs(j).y()));
+        destination_asterism[j].setPosition(transform_into_window_x(asterism[j].x()), transform_into_window_y(asterism[j].y()));
         destination_asterism[j].setOutlineThickness(2);
         destination_asterism[j].setOutlineColor(sf::Color::Black);
         destination_asterism[j].setFillColor(sf::Color::Red);
@@ -582,10 +582,10 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
 
 void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& destination) {
 
-    State state_start = transform_into_state (start);
-    State state_goal =  transform_into_state (destination);
+    State s = start;
+    State g =  destination;
 
-    const std::vector<State>& path = A_star::search_debug (state_start, state_goal);
+    const std::vector<State>& path = A_star::search (s, g);
 
     if (path.empty()) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
@@ -620,7 +620,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     setup_destination_asterism(destination);
 
     Asterism current_destination;
-    const std::vector<int>& targets = A_star::assign_targets(state_goal);
+    const std::vector<int>& targets = A_star::assign_targets(g);
 
     while (window.isOpen()) {
 
@@ -638,7 +638,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                 if (collision_detected)
                     break;
 
-                current_destination = transform_into_asterism (path[i]);
+                current_destination = path[i];
 
                 while ( ! temporary.is_destination_reached(current_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 

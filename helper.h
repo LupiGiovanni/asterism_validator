@@ -30,23 +30,18 @@ constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STE
 constexpr double TOLERANCE = SIMULATION_DISTANCE_STEP; // mm
 
 // A* search parameters
-constexpr std::array<int, 9> DX_OCTILE= {0, 0, 0, 1, -1, 1, 1, -1, -1};
-constexpr std::array<int, 9> DY_OCTILE = {0, 1, -1, 0, 0, 1, -1, 1, -1};
-constexpr std::array<int, 5> DX_MANHATTAN = {0, 0, 0, 1, -1};
-constexpr std::array<int, 5> DY_MANHATTAN = {0, 1, -1, 0, 0};
-constexpr std::array<int, 9> DX_EUCLIDEAN = DX_OCTILE;
-constexpr std::array<int, 9> DY_EUCLIDEAN = DY_OCTILE;
-constexpr int NUM_DIRECTIONS_OCTILE = 9;
-constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
-constexpr int NUM_DIRECTIONS_EUCLIDEAN = NUM_DIRECTIONS_OCTILE;
-constexpr int SCALE_FACTOR = 1000;
-constexpr float HEURISTIC_WEIGHT = 1.2;
-constexpr int ORTHOGONAL_COST = 1 * SCALE_FACTOR;
-constexpr int ORTHOGONAL_COST_WEIGHTED = ORTHOGONAL_COST * HEURISTIC_WEIGHT;
-constexpr int DIAGONAL_COST = 1.414 * SCALE_FACTOR;
-constexpr int DIAGONAL_COST_WEIGHTED = DIAGONAL_COST * HEURISTIC_WEIGHT;
-constexpr int SEARCH_GRID_SIZE = 30; // mm
+constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
+constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
+constexpr int NUM_DIRECTIONS = 9;
+constexpr double SEARCH_GRID_SIZE = 30; // mm
+constexpr double HEURISTIC_WEIGHT = 1.2;
+constexpr double ORTHOGONAL_COST = 1.;
+constexpr double DIAGONAL_COST = 1.41421356237;
+constexpr double ORTHOGONAL_COST_WEIGHTED = ORTHOGONAL_COST * HEURISTIC_WEIGHT;
+constexpr double DIAGONAL_COST_WEIGHTED = DIAGONAL_COST * HEURISTIC_WEIGHT;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
+constexpr double GOAL_REACHED_TOLERANCE = SEARCH_GRID_SIZE * 2; // mm
+constexpr double EPSILON = std::numeric_limits<double>::epsilon();
 
 // Graphic rendering parameters
 constexpr int WINDOW_HEIGHT = 1000;
@@ -64,7 +59,7 @@ constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
 constexpr int BOARDS_COUNT = 3;
 constexpr int HISTOGRAM_INTERVALS_COUNT = 15; // default = 15
 constexpr int HISTOGRAM_FONT_SIZE = 12; // default = 12
-constexpr int GENERATED_DATASET_SIZE = 1000;
+constexpr int GENERATED_DATASET_SIZE = 100;
 
 // Helper functions
 inline void rotate (Polygon& polygon, double angle_radians) {
@@ -97,5 +92,11 @@ inline Polygon enlarge (const Polygon& polygon, double offset) {
     return enlarged_poly;
 }
 
+inline bool is_equal_double (double a, double b, double epsilon = EPSILON) {
+    if (a == b)
+        return true;
+    double diff = std::abs(a - b);
+    return diff < epsilon * std::max(std::abs(a), std::abs(b));
+}
 
 #endif //ASTERISM_VALIDATOR_HELPER_H

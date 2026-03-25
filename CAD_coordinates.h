@@ -2,13 +2,13 @@
 // Created by gionimbus on 1/27/26.
 //
 
-#ifndef ASTERISM_VALIDATOR_COORDINATES_H
-#define ASTERISM_VALIDATOR_COORDINATES_H
+#ifndef ASTERISM_VALIDATOR_CAD_COORDINATES_H
+#define ASTERISM_VALIDATOR_CAD_COORDINATES_H
 
 #include "helper.h"
 
 // TODO: use std::vector<Point>
-namespace coordinates {
+namespace CAD_coordinates {
     inline Point A1(-304.000000, 465.000000);
     inline Point B1(-304.000000, 354.085880);
     inline Point C1(-186.071797, 286.000000);
@@ -84,4 +84,4 @@ namespace coordinates {
 }
 
 
-#endif //ASTERISM_VALIDATOR_COORDINATES_H
+#endif //ASTERISM_VALIDATOR_CAD_COORDINATES_H

@@ -10,17 +10,20 @@
 class Asterism {
 public:
     Asterism ();
-    Asterism (double ngs0_x, double ngs1_x, double ngs2_x, double ngs0_y, double ngs1_y, double ngs2_y);
-    explicit Asterism (const std::vector<Point>& ngs_vector);
+    Asterism (double point0_x, double point1_x, double point2_x, double point0_y, double point1_y, double point2_y);
+    explicit Asterism (const std::vector<Point>& points);
 
-    std::vector<Point> get_ngs_vector () const;
-    Point get_ngs (int index) const;
+    std::vector<Point> get_points () const;
+    void set_points (const std::vector<Point>& new_points);
+    const Point& operator[] (int index) const;
+    Point& operator[] (int index);
+    bool operator== (const Asterism& other) const;
 
     void print () const;
-    void print_with_labels () const;
+    void print_xy () const;
 
 private:
-    std::vector<Point> ngs;
+    std::vector<Point> points;
 };
 
 

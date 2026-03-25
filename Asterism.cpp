@@ -4,35 +4,46 @@
 
 #include "Asterism.h"
 
-#include "State.h"
+Asterism::Asterism(): points ( { Point(0.,0.), Point(0.,0.), Point(0.,0.) } ) {}
 
-Asterism::Asterism(): ngs ( { Point(0.,0.), Point(0.,0.), Point(0.,0.) } ) {}
+Asterism::Asterism(double point0_x, double point1_x, double point2_x, double point0_y, double point1_y, double point2_y):
+    points{ Point(point0_x, point0_y), Point(point1_x, point1_y), Point(point2_x, point2_y) } {}
 
-Asterism::Asterism(double ngs0_x, double ngs1_x, double ngs2_x, double ngs0_y, double ngs1_y, double ngs2_y):
-    ngs{ Point(ngs0_x, ngs0_y), Point(ngs1_x, ngs1_y), Point(ngs2_x, ngs2_y) } {}
+Asterism::Asterism(const std::vector<Point>& points): points (points) {}
 
-Asterism::Asterism(const std::vector<Point>& ngs_vector): ngs (ngs_vector) {}
-
-std::vector<Point> Asterism::get_ngs_vector() const {
-    return ngs;
+std::vector<Point> Asterism::get_points() const {
+    return points;
 }
 
-//TODO: implement exception handling
-Point Asterism::get_ngs(int index) const {
-    return ngs[index];
+void Asterism::set_points(const std::vector<Point>& new_points) {
+    if (new_points.size() == BOARDS_COUNT)
+        points = new_points;
+    else
+        std::cout << "Warning: attempted to run Asterism::set_points but 'new_points' vector has size != 3" << std::endl;
+}
+
+const Point& Asterism::operator[] (int index) const {
+    return points[index];
+}
+
+Point& Asterism::operator[] (int index) {
+    return points[index];
+}
+
+bool Asterism::operator== (const Asterism& other) const {
+    for (int i = 0; i < 3; i++) {
+        if ( ! is_equal_double(points[i].x(), other.points[i].x()) || ! is_equal_double(points[i].y(), other.points[i].y()) )
+            return false;
+    }
+    return true;
 }
 
 void Asterism::print () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
-    std::cout << "{" << ngs[0].x() << ", " << ngs[1].x() << ", " << ngs[2].x() << ", " << ngs[0].y() << ", " << ngs[1].y() << ", " << ngs[2].y() << "}";
+    std::cout << "{" << points[0].x() << ", " << points[1].x() << ", " << points[2].x() << ", " << points[0].y() << ", " << points[1].y() << ", " << points[2].y() << "}";
 }
 
-void Asterism::print_with_labels() const {
+void Asterism::print_xy () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
-    std::cout << std::endl;
-    std::cout << "ngs0_x\t\t\tngs1_x\t\t\tngs2_x\t\t\tngs0_y\t\t\tngs1_y\t\t\tngs2_y" << std::endl;
-    std::cout << "------\t\t\t------\t\t\t------\t\t\t------\t\t\t------\t\t\t------" << std::endl;
-    std::cout << ngs[0].x() << "\t\t" << ngs[1].x() << "\t\t" << ngs[2].x() << "\t\t" << ngs[0].y() << "\t\t" << ngs[1].y() << "\t\t" << ngs[2].y();
-    std::cout << std::endl;
+    std::cout << "(" << points[0].x() << ", " << points[0].y() << "), (" << points[1].x() << ", " << points[1].y() << "), (" << points[2].x() << ", " << points[2].y() << ")";
 }
-

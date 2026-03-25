@@ -233,23 +233,21 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
         destination_valid = true;
 
     if (start_valid && destination_valid) {
-        State state_start = transform_into_state (movement_start);
-        State state_goal = transform_into_state (movement_destination);
+        State s = movement_start;
+        State g = movement_destination;
 
-        const std::vector<State>& path = A_star::search_octile (state_start, state_goal);
+        const std::vector<State>& path = A_star::search (s, g);
 
         if (path.empty()) {
             std::cout << "Warning: attempted to run Simulation::run_A_star but no path was found" << std::endl;
             return;
         }
 
-        Asterism current_destination;
+        State current_destination;
 
         for (int i = 0; i < path.size(); ++i) {
             if (collision_detected)
                 break;
-
-            current_destination = transform_into_asterism (path[i]);
 
             while ( ! board_set.is_destination_reached(current_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
                 board_set.move(current_destination, SIMULATION_DISTANCE_STEP);

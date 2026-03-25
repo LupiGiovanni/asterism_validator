@@ -6,7 +6,6 @@
 #define ASTERISM_VALIDATOR_SIMULATION_H
 
 #include "helper.h"
-#include "transformations.h"
 #include "Asterism.h"
 #include "Board_set.h"
 #include "A_star.h"
