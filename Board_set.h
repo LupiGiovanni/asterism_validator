@@ -18,6 +18,7 @@ public:
     const std::vector<Board>& get_boards () const;
     std::vector<int> get_targets () const;
     void set_targets (const std::vector<int>& new_targets);
+
     void assign_targets (const Asterism& destination_asterism);
 
     bool detect_collision () const;

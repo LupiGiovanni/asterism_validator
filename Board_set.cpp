@@ -95,8 +95,9 @@ void Board_set::assign_targets (const Asterism& destination_asterism) {
                  temporary.boards[2].teleport( destination_asterism[ permutations[i][2] ] ) &&
                  ! temporary.detect_collision() )
                 {
-                temporary.targets = permutations[i];
-                target_distance_vector.push_back( std::make_pair( permutations[i], temporary.calculate_distance( destination_asterism ) ) );
+                    temporary = *this;
+                    temporary.targets = permutations[i];
+                    target_distance_vector.push_back( std::make_pair( permutations[i], temporary.calculate_distance( destination_asterism ) ) );
                 }
 
     if (target_distance_vector.empty())

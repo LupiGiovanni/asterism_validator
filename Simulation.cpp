@@ -233,21 +233,24 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
         destination_valid = true;
 
     if (start_valid && destination_valid) {
-        State s = movement_start;
-        State g = movement_destination;
+        State s = start;
+        State d = destination;
 
-        const std::vector<State>& path = A_star::search (s, g);
+        const std::vector<State>& path = A_star::search (s, d);
 
         if (path.empty()) {
             std::cout << "Warning: attempted to run Simulation::run_A_star but no path was found" << std::endl;
             return;
         }
 
+        board_set.assign_targets(d);
         State current_destination;
 
-        for (int i = 0; i < path.size(); ++i) {
+        for (int i = 1; i < path.size(); ++i) {
             if (collision_detected)
                 break;
+
+            current_destination = path[i];
 
             while ( ! board_set.is_destination_reached(current_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
                 board_set.move(current_destination, SIMULATION_DISTANCE_STEP);
@@ -263,8 +266,8 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
             }
         }
 
-        while ( ! board_set.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-            board_set.move(destination, SIMULATION_DISTANCE_STEP);
+        while ( ! board_set.is_destination_reached(d) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            board_set.move(d, SIMULATION_DISTANCE_STEP);
 
             if ( board_set.detect_collision() )
                 collision_detected = true;
@@ -278,9 +281,9 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
 
         duration = SIMULATION_TIME_STEP * iterations;
 
-        if ( board_set.is_destination_reached(destination) )
+        if ( board_set.is_destination_reached(d) )
             destination_reached = true;
-        distance_from_destination = board_set.calculate_distance(destination);
+        distance_from_destination = board_set.calculate_distance(d);
 
         if (iterations > MAX_ITERATION_INDEX)
             max_iterations_exceeded = true;
@@ -313,12 +316,10 @@ void Simulation::print_results () const {
 
     std::cout << "> Start asterism\t\t\t";
     start.print();
-    std::cout << std::endl;
     std::cout << "> Start valid\t\t\t\t" << (start_valid? "true":"false") << std::endl;
 
     std::cout << "> Destination asterism\t\t";
     destination.print();
-    std::cout << std::endl;
     std::cout << "> Destination valid\t\t\t" << (destination_valid? "true":"false") << std::endl;
 
     std::cout << std::endl;

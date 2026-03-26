@@ -16,7 +16,6 @@ public:
     std::vector<Point> get_points () const;
     void set_points (const std::vector<Point>& new_points);
     const Point& operator[] (int index) const;
-    Point& operator[] (int index);
     bool operator== (const Asterism& other) const;
 
     void print () const;

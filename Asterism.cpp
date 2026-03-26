@@ -26,12 +26,9 @@ const Point& Asterism::operator[] (int index) const {
     return points[index];
 }
 
-Point& Asterism::operator[] (int index) {
-    return points[index];
-}
-
 bool Asterism::operator== (const Asterism& other) const {
-    for (int i = 0; i < 3; i++) {
+    constexpr int points_count = 3;
+    for (int i = 0; i < points_count; i++) {
         if ( ! is_equal_double(points[i].x(), other.points[i].x()) || ! is_equal_double(points[i].y(), other.points[i].y()) )
             return false;
     }
@@ -41,9 +38,11 @@ bool Asterism::operator== (const Asterism& other) const {
 void Asterism::print () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
     std::cout << "{" << points[0].x() << ", " << points[1].x() << ", " << points[2].x() << ", " << points[0].y() << ", " << points[1].y() << ", " << points[2].y() << "}";
+    std::cout << std::endl;
 }
 
 void Asterism::print_xy () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
     std::cout << "(" << points[0].x() << ", " << points[0].y() << "), (" << points[1].x() << ", " << points[1].y() << "), (" << points[2].x() << ", " << points[2].y() << ")";
+    std::cout << std::endl;
 }

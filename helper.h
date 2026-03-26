@@ -33,12 +33,10 @@ constexpr double TOLERANCE = SIMULATION_DISTANCE_STEP; // mm
 constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
 constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
 constexpr int NUM_DIRECTIONS = 9;
-constexpr double SEARCH_GRID_SIZE = 30; // mm
-constexpr double HEURISTIC_WEIGHT = 1.2;
+constexpr double SEARCH_GRID_SIZE = 20; // mm
 constexpr double ORTHOGONAL_COST = 1.;
 constexpr double DIAGONAL_COST = 1.41421356237;
-constexpr double ORTHOGONAL_COST_WEIGHTED = ORTHOGONAL_COST * HEURISTIC_WEIGHT;
-constexpr double DIAGONAL_COST_WEIGHTED = DIAGONAL_COST * HEURISTIC_WEIGHT;
+constexpr double HEURISTIC_WEIGHT = 1.2;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double GOAL_REACHED_TOLERANCE = SEARCH_GRID_SIZE * 2; // mm
 constexpr double EPSILON = std::numeric_limits<double>::epsilon();
@@ -59,7 +57,7 @@ constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
 constexpr int BOARDS_COUNT = 3;
 constexpr int HISTOGRAM_INTERVALS_COUNT = 15; // default = 15
 constexpr int HISTOGRAM_FONT_SIZE = 12; // default = 12
-constexpr int GENERATED_DATASET_SIZE = 100;
+constexpr int GENERATED_DATASET_SIZE = 10;
 
 // Helper functions
 inline void rotate (Polygon& polygon, double angle_radians) {

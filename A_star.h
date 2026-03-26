@@ -14,23 +14,23 @@ typedef Asterism State;
 class A_star {
 public:
     static std::vector<State> search (const State& start, State& goal);
-    // static std::vector<State> search_debug (const State& start, State& goal);
-
-    // TODO: make it private ? is it necessary ?
-    static std::vector<int> assign_targets (const State& state);
+    static std::vector<State> search_fov_excluded (const State& start, State& goal);
 
 private:
     struct State_hasher;
     struct State_comparator;
 
-    static inline double calculate_octile_distance_weighted_global (const State& current, const State& goal);
-    static inline double calculate_octile_distance_weighted (const Point& current, const Point& goal);
+    static double calculate_octile_distance (const State& current, const State& goal);
+    static double calculate_octile_distance (const Point& current, const Point& goal);
 
-    static inline double calculate_move_cost (const State& current, const State& neighbor);
+    static double calculate_move_cost (const State& current, const State& neighbor);
 
-    static inline bool is_valid_state (Board_set& board_set, const State& state, const std::vector<int>& targets);
-    static inline bool is_goal_reached (const State& current, const State& goal);
-    static inline std::vector<State> get_next_states (Board_set& board_set, const State& state, const std::vector<int>& targets);
+    static bool is_valid_state (Board_set& board_set, const State& state);
+    static bool is_valid_state_fov_excluded (Board_set& board_set, const State& state);
+    static bool is_goal_reached (const State& current, const State& goal);
+
+    static std::vector<State> get_next_states (Board_set& board_set, const State& state);
+    static std::vector<State> get_next_states_fov_excluded (Board_set& board_set, const State& state);
 
     static void align_states (const State& start, State& goal);
 

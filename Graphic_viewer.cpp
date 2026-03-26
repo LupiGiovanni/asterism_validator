@@ -363,8 +363,8 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
 
     bool start_valid = false;
     bool destination_valid = false;
-
     Board_set temporary;
+
     temporary.assign_targets(start);
     if ( ! temporary.get_targets().empty() ) {
         start_valid = true;
@@ -583,9 +583,9 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
 void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& destination) {
 
     State s = start;
-    State g =  destination;
+    State d =  destination;
 
-    const std::vector<State>& path = A_star::search (s, g);
+    const std::vector<State>& path = A_star::search (s, d);
 
     if (path.empty()) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
@@ -599,13 +599,12 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     bool destination_valid = false;
 
     Board_set temporary;
-    temporary.assign_targets(start);
+    temporary.assign_targets(s);
     if ( ! temporary.get_targets().empty() ) {
         start_valid = true;
-        temporary.teleport(start);
     }
 
-    temporary.assign_targets(destination);
+    temporary.assign_targets(d);
     if ( ! temporary.get_targets().empty() ) {
         destination_valid = true;
     }
@@ -616,11 +615,10 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
         return;
     }
 
-    setup_start_asterism(start);
-    setup_destination_asterism(destination);
+    setup_start_asterism(s);
+    setup_destination_asterism(d);
 
-    Asterism current_destination;
-    const std::vector<int>& targets = A_star::assign_targets(g);
+    State current_destination;
 
     while (window.isOpen()) {
 
@@ -630,11 +628,11 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
             int iterations = 0;
             bool collision_detected = false;
             clear_trajectories();
-            temporary.assign_targets(start);
-            temporary.teleport(start);
-            temporary.set_targets(targets);
+            temporary.assign_targets(s);
+            temporary.teleport(s);
+            temporary.assign_targets(d);
 
-            for (int i = 0; i < path.size(); i++) {
+            for (int i = 1; i < path.size(); i++) {
                 if (collision_detected)
                     break;
 
@@ -673,6 +671,40 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                         movement_clock.restart();
                     } else sf::sleep(sf::milliseconds(1));
                 }
+            }
+
+            while ( ! temporary.is_destination_reached(d) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+
+                while (window.pollEvent(event)) {
+                    if (event.type == sf::Event::Closed) {
+                        window.close();
+                        return;
+                    }
+                }
+
+                if (movement_clock.getElapsedTime() >= movement_delay) {
+                    update_trajectories(temporary);
+                    setup_boards(temporary);
+                    window.clear(sf::Color::Black);
+                    window.draw(technical_field);
+                    window.draw(fov_large);
+                    window.draw(fov_small);
+                    for (int j = 0; j < BOARDS_COUNT; j++) {
+                        window.draw(pom_ranges[j]);
+                        window.draw(trajectories[j]);
+                        window.draw(boards[j]);
+                        window.draw(start_asterism[j]);
+                        window.draw(destination_asterism[j]);
+                    }
+                    window.display();
+
+                    temporary.move(d, SIMULATION_DISTANCE_STEP);
+                    if ( temporary.detect_collision() ) {
+                        collision_detected = true;
+                    }
+                    iterations += 1;
+                    movement_clock.restart();
+                } else sf::sleep(sf::milliseconds(1));
             }
             animation_clock.restart();
         } else sf::sleep(sf::milliseconds(10));
