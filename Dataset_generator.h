@@ -5,10 +5,7 @@
 #ifndef ASTERISM_VALIDATOR_DATASET_GENERATOR_H
 #define ASTERISM_VALIDATOR_DATASET_GENERATOR_H
 
-#include "helper.h"
 #include "Asterism.h"
-#include "Board_set.h"
-#include <random>
 
 class Dataset_generator {
 public:

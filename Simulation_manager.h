@@ -5,13 +5,7 @@
 #ifndef ASTERISM_VALIDATOR_SIMULATION_MANAGER_H
 #define ASTERISM_VALIDATOR_SIMULATION_MANAGER_H
 
-#include "Asterism.h"
 #include "Simulation.h"
-#include "Dataset_generator.h"
-#include "helper.h"
-
-// For debugging visualization TODO: remove later
-#include "Graphic_viewer.h"
 
 class Simulation_manager {
 public:

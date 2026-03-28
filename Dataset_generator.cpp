@@ -2,6 +2,8 @@
 // Created by gionimbus on 1/20/26.
 //
 
+#include <random>
+#include "Board_set.h"
 #include "Dataset_generator.h"
 
 const std::vector<Asterism>& Dataset_generator::get_dataset() const {

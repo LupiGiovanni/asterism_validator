@@ -3,6 +3,7 @@
 //
 
 #include "Graphic_viewer.h"
+#include "CAD_coordinates.h"
 
 Graphic_viewer::Graphic_viewer () {
     for (int j = 0; j < BOARDS_COUNT; j++) {

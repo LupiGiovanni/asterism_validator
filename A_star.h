@@ -7,7 +7,6 @@
 
 #include <vector>
 #include "Board_set.h"
-#include "helper.h"
 
 typedef Asterism State;
 

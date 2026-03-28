@@ -3,6 +3,8 @@
 //
 
 #include "Simulation_manager.h"
+#include "Dataset_generator.h"
+#include "Graphic_viewer.h"
 
 void Simulation_manager::simulate_dataset (Movement movement_type, const std::vector<Asterism>& dataset) {
     switch ( movement_type ) {

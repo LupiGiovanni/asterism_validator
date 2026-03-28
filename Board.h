@@ -6,7 +6,6 @@
 #define ASTERISM_VALIDATOR_BOARD_H
 
 #include "helper.h"
-#include "CAD_coordinates.h"
 
 enum class Board_type {type0, type1, type2};
 

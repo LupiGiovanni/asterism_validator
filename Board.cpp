@@ -3,6 +3,7 @@
 //
 
 #include "Board.h"
+#include "CAD_coordinates.h"
 
 Board::Board (Board_type type) {
     if (type == Board_type::type0)

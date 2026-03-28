@@ -3,6 +3,7 @@
 //
 
 #include "Board_set.h"
+#include "CAD_coordinates.h"
 
 Board_set::Board_set (): boards{Board(Board_type::type0), Board(Board_type::type1), Board(Board_type::type2)}, targets{} {
     fov_large.push_back(CAD_coordinates::R);

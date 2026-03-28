@@ -5,9 +5,6 @@
 #ifndef ASTERISM_VALIDATOR_SIMULATION_H
 #define ASTERISM_VALIDATOR_SIMULATION_H
 
-#include "helper.h"
-#include "Asterism.h"
-#include "Board_set.h"
 #include "A_star.h"
 
 enum class Movement {linear, outside_technical_field, safe_basic, A_star, none};
