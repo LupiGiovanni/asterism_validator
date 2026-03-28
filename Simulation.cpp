@@ -45,19 +45,19 @@ double Simulation::get_duration() const {
     return duration;
 }
 
-void Simulation::run (Movement movement_type, Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination) {
+void Simulation::run (Movement movement_type, const Asterism& movement_start, const Asterism& movement_destination) {
     switch (movement_type) {
         case Movement::linear:
-            run_linear (board_set, movement_start, movement_destination);
+            run_linear (movement_start, movement_destination);
             break;
         case Movement::safe_basic:
-            run_safe_basic(board_set, movement_start, movement_destination);
+            run_safe_basic(movement_start, movement_destination);
             break;
         case Movement::outside_technical_field:
-            run_outside_tech_field (board_set, movement_start);
+            run_outside_tech_field (movement_start);
             break;
         case Movement::A_star:
-            run_A_star(board_set, movement_start, movement_destination);
+            run_A_star(movement_start, movement_destination);
             break;
         case Movement::none:
             std::cout << "Warning: attempted to run Simulation::run but movement type is 'none'" << std::endl;
@@ -65,31 +65,30 @@ void Simulation::run (Movement movement_type, Board_set& board_set, const Asteri
     }
 }
 
-void Simulation::run_linear (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination) {
+void Simulation::run_linear (const Asterism& movement_start, const Asterism& movement_destination) {
     reset_fields();
     type = Movement::linear;
     start = movement_start;
     destination = movement_destination;
 
-    board_set.assign_targets(start);
-    if ( ! board_set.get_targets().empty() ) {
-        start_valid = true;
-        board_set.teleport(start);
-    }
-
-    board_set.assign_targets(destination);
-    if ( ! board_set.get_targets().empty() )
-        destination_valid = true;
+    start_valid = start.is_valid();
+    destination_valid = destination.is_valid();
 
     if ( start_valid && destination_valid ) {
-        while ( ! board_set.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-            board_set.move(destination, SIMULATION_DISTANCE_STEP);
+        Board_set bs;
+        bs.teleport_home();
+        bs.assign_targets(start);
+        bs.teleport(start);
+        bs.assign_targets(destination);
 
-            if ( board_set.detect_collision() )
+        while ( ! bs.is_destination_reached(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            bs.move(destination, SIMULATION_DISTANCE_STEP);
+
+            if ( bs.detect_collision() )
                 collision_detected = true;
-            if ( board_set.detect_vignette_fov_small() )
+            if ( bs.detect_vignette_fov_small() )
                 fov_small_vignette_detected = true;
-            if ( board_set.detect_vignette_fov_large() )
+            if ( bs.detect_vignette_fov_large() )
                 fov_large_vignette_detected = true;
 
             iterations += 1;
@@ -97,9 +96,9 @@ void Simulation::run_linear (Board_set& board_set, const Asterism& movement_star
 
         duration = SIMULATION_TIME_STEP * iterations;
 
-        if ( board_set.is_destination_reached(destination) )
+        if ( bs.is_destination_reached(destination) )
             destination_reached = true;
-        distance_from_destination = board_set.calculate_distance(destination);
+        distance_from_destination = bs.calculate_distance(destination);
 
         if (iterations > MAX_ITERATION_INDEX)
             max_iterations_exceeded = true;
@@ -108,67 +107,66 @@ void Simulation::run_linear (Board_set& board_set, const Asterism& movement_star
         std::cout << "Warning: attempted to run Simulation::run_linear but start or destination asterism are not valid" << std::endl;
 }
 
-void Simulation::run_safe_basic (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination) {
+void Simulation::run_safe_basic (const Asterism& movement_start, const Asterism& movement_destination) {
     reset_fields();
     type = Movement::safe_basic;
     start = movement_start;
     destination = movement_destination;
 
-    board_set.assign_targets(start);
-    if ( ! board_set.get_targets().empty() ) {
-        start_valid = true;
-        board_set.teleport(start);
-    }
-
-    board_set.assign_targets(destination);
-    if ( ! board_set.get_targets().empty() )
-        destination_valid = true;
+    start_valid = start.is_valid();
+    destination_valid = destination.is_valid();
 
     if ( start_valid && destination_valid ) {
-            while ( ! board_set.is_in_safe_zone() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-                board_set.move_to_safe_zone(SIMULATION_DISTANCE_STEP);
+        Board_set bs;
+        bs.teleport_home();
+        bs.assign_targets(start);
+        bs.teleport(start);
+        bs.assign_targets(destination);
 
-                if ( board_set.detect_collision() )
-                    collision_detected = true;
-                if ( board_set.detect_vignette_fov_small() )
-                    fov_small_vignette_detected = true;
-                if ( board_set.detect_vignette_fov_large() )
-                    fov_large_vignette_detected = true;
+        while ( ! bs.is_in_safe_zone() && !collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            bs.move_to_safe_zone(SIMULATION_DISTANCE_STEP);
 
-                iterations += 1;
-            }
+            if (bs.detect_collision())
+                collision_detected = true;
+            if (bs.detect_vignette_fov_small())
+                fov_small_vignette_detected = true;
+            if (bs.detect_vignette_fov_large())
+                fov_large_vignette_detected = true;
 
-            while ( ! board_set.is_destination_aligned_x(destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-                board_set.move_along_x(destination, SIMULATION_DISTANCE_STEP);
+            iterations += 1;
+        }
 
-                if ( board_set.detect_collision() )
-                    collision_detected = true;
-                if ( board_set.detect_vignette_fov_small() )
-                    fov_small_vignette_detected = true;
-                if ( board_set.detect_vignette_fov_large() )
-                    fov_large_vignette_detected = true;
+        while ( ! bs.is_destination_aligned_x(destination) && !collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            bs.move_along_x(destination, SIMULATION_DISTANCE_STEP);
 
-                iterations += 1;
-            }
+            if (bs.detect_collision())
+                collision_detected = true;
+            if (bs.detect_vignette_fov_small())
+                fov_small_vignette_detected = true;
+            if (bs.detect_vignette_fov_large())
+                fov_large_vignette_detected = true;
 
-            while ( ! board_set.is_destination_reached(destination, TOLERANCE * sqrt(2.)) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-                board_set.move_along_y(destination, SIMULATION_DISTANCE_STEP);
+            iterations += 1;
+        }
 
-                if ( board_set.detect_collision() )
-                    collision_detected = true;
-                if ( board_set.detect_vignette_fov_small() )
-                    fov_small_vignette_detected = true;
-                if ( board_set.detect_vignette_fov_large() )
-                    fov_large_vignette_detected = true;
+        while ( ! bs.is_destination_reached(destination, TOLERANCE * sqrt(2.)) && !collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            bs.move_along_y(destination, SIMULATION_DISTANCE_STEP);
 
-                iterations += 1;
-            }
+            if (bs.detect_collision())
+                collision_detected = true;
+            if (bs.detect_vignette_fov_small())
+                fov_small_vignette_detected = true;
+            if (bs.detect_vignette_fov_large())
+                fov_large_vignette_detected = true;
+
+            iterations += 1;
+        }
 
         duration = SIMULATION_TIME_STEP * iterations;
 
-        if (board_set.is_destination_reached(destination, TOLERANCE * sqrt(2.)) )
+        if (bs.is_destination_reached(destination, TOLERANCE * sqrt(2.)) )
             destination_reached = true;
-        distance_from_destination = board_set.calculate_distance(destination);
+        distance_from_destination = bs.calculate_distance(destination);
 
         if (iterations > MAX_ITERATION_INDEX)
             max_iterations_exceeded = true;
@@ -177,26 +175,27 @@ void Simulation::run_safe_basic (Board_set& board_set, const Asterism& movement_
         std::cout << "Warning: attempted to run Simulation::run_safe_basic but start or destination asterism are not valid" << std::endl;
 }
 
-void Simulation::run_outside_tech_field (Board_set& board_set, const Asterism& movement_start) {
+void Simulation::run_outside_tech_field (const Asterism& movement_start) {
     reset_fields();
     type = Movement::outside_technical_field;
     start = movement_start;
 
-    board_set.assign_targets(start);
-    if ( ! board_set.get_targets().empty() ) {
-        start_valid = true;
-        board_set.teleport(start);
-    }
+    start_valid = start.is_valid();
 
     if ( start_valid ) {
-        while ( board_set.is_in_technical_field() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-            board_set.move_outside_tech_field(SIMULATION_DISTANCE_STEP);
+        Board_set bs;
+        bs.teleport_home();
+        bs.assign_targets(start);
+        bs.teleport(start);
 
-            if ( board_set.detect_collision() )
+        while ( bs.is_in_technical_field() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            bs.move_outside_tech_field(SIMULATION_DISTANCE_STEP);
+
+            if ( bs.detect_collision() )
                 collision_detected = true;
-            if ( board_set.detect_vignette_fov_small() )
+            if ( bs.detect_vignette_fov_small() )
                 fov_small_vignette_detected = true;
-            if ( board_set.detect_vignette_fov_large() )
+            if ( bs.detect_vignette_fov_large() )
                 fov_large_vignette_detected = true;
 
             iterations += 1;
@@ -204,7 +203,7 @@ void Simulation::run_outside_tech_field (Board_set& board_set, const Asterism& m
 
         duration = SIMULATION_TIME_STEP * iterations;
 
-        if ( ! board_set.is_in_technical_field() ) {
+        if ( ! bs.is_in_technical_field() ) {
             destination_reached = true;
             distance_from_destination = 0.;
         }
@@ -216,21 +215,14 @@ void Simulation::run_outside_tech_field (Board_set& board_set, const Asterism& m
         std::cout << "Warning: attempted to run Simulation::run_outside_tech_field but start asterism is not valid" << std::endl;
 }
 
-void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination) {
+void Simulation::run_A_star (const Asterism& movement_start, const Asterism& movement_destination) {
     reset_fields();
     type = Movement::A_star;
     start = movement_start;
     destination = movement_destination;
 
-    board_set.assign_targets(start);
-    if ( ! board_set.get_targets().empty() ) {
-        start_valid = true;
-        board_set.teleport(start);
-    }
-
-    board_set.assign_targets(destination);
-    if ( ! board_set.get_targets().empty() )
-        destination_valid = true;
+    start_valid = start.is_valid();
+    destination_valid = destination.is_valid();
 
     if (start_valid && destination_valid) {
         State s = start;
@@ -243,7 +235,12 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
             return;
         }
 
-        board_set.assign_targets(d);
+        Board_set bs;
+        bs.teleport_home();
+        bs.assign_targets(s);
+        bs.teleport(s);
+        bs.assign_targets(d);
+
         State current_destination;
 
         for (int i = 1; i < path.size(); ++i) {
@@ -252,28 +249,28 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
 
             current_destination = path[i];
 
-            while ( ! board_set.is_destination_reached(current_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-                board_set.move(current_destination, SIMULATION_DISTANCE_STEP);
+            while ( ! bs.is_destination_reached(current_destination) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+                bs.move(current_destination, SIMULATION_DISTANCE_STEP);
 
-                if ( board_set.detect_collision() )
+                if ( bs.detect_collision() )
                     collision_detected = true;
-                if ( board_set.detect_vignette_fov_small() )
+                if ( bs.detect_vignette_fov_small() )
                     fov_small_vignette_detected = true;
-                if ( board_set.detect_vignette_fov_large() )
+                if ( bs.detect_vignette_fov_large() )
                     fov_large_vignette_detected = true;
 
                 iterations += 1;
             }
         }
 
-        while ( ! board_set.is_destination_reached(d) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
-            board_set.move(d, SIMULATION_DISTANCE_STEP);
+        while ( ! bs.is_destination_reached(d) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            bs.move(d, SIMULATION_DISTANCE_STEP);
 
-            if ( board_set.detect_collision() )
+            if ( bs.detect_collision() )
                 collision_detected = true;
-            if ( board_set.detect_vignette_fov_small() )
+            if ( bs.detect_vignette_fov_small() )
                 fov_small_vignette_detected = true;
-            if ( board_set.detect_vignette_fov_large() )
+            if ( bs.detect_vignette_fov_large() )
                 fov_large_vignette_detected = true;
 
             iterations += 1;
@@ -281,9 +278,9 @@ void Simulation::run_A_star (Board_set& board_set, const Asterism& movement_star
 
         duration = SIMULATION_TIME_STEP * iterations;
 
-        if ( board_set.is_destination_reached(d) )
+        if ( bs.is_destination_reached(d) )
             destination_reached = true;
-        distance_from_destination = board_set.calculate_distance(d);
+        distance_from_destination = bs.calculate_distance(d);
 
         if (iterations > MAX_ITERATION_INDEX)
             max_iterations_exceeded = true;

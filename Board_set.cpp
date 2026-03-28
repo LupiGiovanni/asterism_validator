@@ -4,7 +4,7 @@
 
 #include "Board_set.h"
 
-Board_set::Board_set(): boards{Board(Board_type::type0), Board(Board_type::type1), Board(Board_type::type2)}, targets{} {
+Board_set::Board_set (): boards{Board(Board_type::type0), Board(Board_type::type1), Board(Board_type::type2)}, targets{} {
     fov_large.push_back(CAD_coordinates::R);
     fov_large.push_back(CAD_coordinates::S);
     fov_large.push_back(CAD_coordinates::T);
@@ -22,15 +22,23 @@ Board_set::Board_set(): boards{Board(Board_type::type0), Board(Board_type::type1
     // with our reference system
 }
 
-const std::vector<Board>& Board_set::get_boards() const {
+const std::vector<Board>& Board_set::get_boards () const {
     return boards;
 }
 
-std::vector<int> Board_set::get_targets() const {
+std::vector<int> Board_set::get_targets () const {
     return targets;
 }
 
-bool Board_set::detect_collision() const {
+const Polygon& Board_set::get_fov_small () const {
+    return fov_small;
+}
+
+const Polygon& Board_set::get_fov_large () const {
+    return fov_large;
+}
+
+bool Board_set::detect_collision () const {
     if ( CGAL::do_intersect(boards[0].profile, boards[1].profile) ||
          CGAL::do_intersect(boards[1].profile, boards[2].profile) ||
          CGAL::do_intersect(boards[0].profile, boards[2].profile) )
@@ -39,7 +47,7 @@ bool Board_set::detect_collision() const {
     return false;
 }
 
-bool Board_set::detect_vignette_fov_small() const {
+bool Board_set::detect_vignette_fov_small () const {
     for (const auto& board : boards)
         if (CGAL::do_intersect(board.profile, fov_small))
             return true;
@@ -47,7 +55,7 @@ bool Board_set::detect_vignette_fov_small() const {
     return false;
 }
 
-bool Board_set::detect_vignette_fov_large() const {
+bool Board_set::detect_vignette_fov_large () const {
     for (const auto& board : boards)
         if (CGAL::do_intersect(board.profile, fov_large))
             return true;
@@ -108,6 +116,15 @@ void Board_set::assign_targets (const Asterism& destination_asterism) {
 
         targets = min_element->first;
     }
+}
+
+void Board_set::assign_targets (const Asterism& start_asterism, const Asterism& destination_asterism) {
+    Board_set temporary;
+    temporary.teleport_home();
+    temporary.assign_targets(start_asterism);
+    temporary.teleport(start_asterism);
+    temporary.assign_targets(destination_asterism);
+    targets = temporary.get_targets();
 }
 
 void Board_set::set_targets (const std::vector<int>& new_targets) {

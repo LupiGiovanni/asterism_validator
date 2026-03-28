@@ -295,18 +295,19 @@ void Graphic_viewer::animate (Movement movement_type, const Asterism& start, con
     }
 }
 
-void Graphic_viewer::animate_outside_tech_field (const Asterism &start) {
+void Graphic_viewer::animate_outside_tech_field (const Asterism& start) {
     sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
-    Board_set temporary;
-    temporary.assign_targets(start);
-
-    if ( temporary.get_targets().empty() ) {
+    if ( ! start.is_valid() ) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_outside_tech_field but start asterism is invalid" << std::endl;
         window.close();
         return;
     }
+
+    Board_set temporary;
+    temporary.teleport_home();
+    temporary.assign_targets(start);
 
     setup_start_asterism(start);
 
@@ -361,19 +362,8 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
     sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
-    bool start_valid = false;
-    bool destination_valid = false;
-    Board_set temporary;
-
-    temporary.assign_targets(start);
-    if ( ! temporary.get_targets().empty() ) {
-        start_valid = true;
-    }
-
-    temporary.assign_targets(destination);
-    if ( ! temporary.get_targets().empty() ) {
-        destination_valid = true;
-    }
+    bool start_valid = start.is_valid();
+    bool destination_valid = destination.is_valid();
 
     if ( ! start_valid || ! destination_valid ) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_linear but start or destination asterism are invalid" << std::endl;
@@ -381,6 +371,7 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
         return;
     }
 
+    Board_set temporary;
     setup_start_asterism(start);
     setup_destination_asterism(destination);
 
@@ -438,20 +429,8 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
     sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
-    bool start_valid = false;
-    bool destination_valid = false;
-
-    Board_set temporary;
-    temporary.assign_targets(start);
-    if ( ! temporary.get_targets().empty() ) {
-        start_valid = true;
-        temporary.teleport(start);
-    }
-
-    temporary.assign_targets(destination);
-    if ( ! temporary.get_targets().empty() ) {
-        destination_valid = true;
-    }
+    bool start_valid = start.is_valid();
+    bool destination_valid = destination.is_valid();
 
     if ( ! start_valid || ! destination_valid ) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_safe_basic but start or destination asterism are invalid" << std::endl;
@@ -459,6 +438,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
         return;
     }
 
+    Board_set temporary;
     setup_start_asterism(start);
     setup_destination_asterism(destination);
 
@@ -470,6 +450,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
             int iterations = 0;
             bool collision_detected = false;
             clear_trajectories();
+            temporary.teleport_home();
             temporary.assign_targets(start);
             temporary.teleport(start);
             temporary.assign_targets(destination);
@@ -581,6 +562,15 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
 }
 
 void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& destination) {
+    bool start_valid = start.is_valid();
+    bool destination_valid = destination.is_valid();
+
+    if (!start_valid || !destination_valid) {
+        std::cout <<
+            "Warning: attempted to run Graphic_viewer::animate_A_star but start or destination asterism are invalid" <<
+            std::endl;
+        return;
+    }
 
     State s = start;
     State d =  destination;
@@ -595,30 +585,10 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
 
-    bool start_valid = false;
-    bool destination_valid = false;
-
     Board_set temporary;
-    temporary.assign_targets(s);
-    if ( ! temporary.get_targets().empty() ) {
-        start_valid = true;
-    }
-
-    temporary.assign_targets(d);
-    if ( ! temporary.get_targets().empty() ) {
-        destination_valid = true;
-    }
-
-    if ( ! start_valid || ! destination_valid ) {
-        std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but start or destination asterism are invalid" << std::endl;
-        window.close();
-        return;
-    }
-
+    State current_destination;
     setup_start_asterism(s);
     setup_destination_asterism(d);
-
-    State current_destination;
 
     while (window.isOpen()) {
 

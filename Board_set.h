@@ -17,9 +17,12 @@ public:
 
     const std::vector<Board>& get_boards () const;
     std::vector<int> get_targets () const;
+    const Polygon& get_fov_small () const;
+    const Polygon& get_fov_large () const;
     void set_targets (const std::vector<int>& new_targets);
 
     void assign_targets (const Asterism& destination_asterism);
+    void assign_targets (const Asterism& start_asterism, const Asterism& destination_asterism);
 
     bool detect_collision () const;
     bool detect_collision_buffers () const;

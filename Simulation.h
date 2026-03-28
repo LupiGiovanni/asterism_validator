@@ -16,7 +16,7 @@ class Simulation {
 public:
     Simulation ();
 
-    void run (Movement movement_type, Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination = Asterism());
+    void run (Movement movement_type, const Asterism& movement_start, const Asterism& movement_destination = Asterism());
 
     bool is_start_valid () const;
     bool is_destination_valid () const;
@@ -46,10 +46,10 @@ private:
 
     void reset_fields ();
 
-    void run_linear (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
-    void run_safe_basic (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
-    void run_outside_tech_field (Board_set& board_set, const Asterism& movement_start);
-    void run_A_star (Board_set& board_set, const Asterism& movement_start, const Asterism& movement_destination);
+    void run_linear (const Asterism& movement_start, const Asterism& movement_destination);
+    void run_safe_basic (const Asterism& movement_start, const Asterism& movement_destination);
+    void run_outside_tech_field (const Asterism& movement_start);
+    void run_A_star (const Asterism& movement_start, const Asterism& movement_destination);
 };
 
 

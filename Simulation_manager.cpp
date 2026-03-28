@@ -32,17 +32,16 @@ void Simulation_manager::simulate_dataset_other_movements (Movement movement_typ
         return;
     }
 
-    Board_set boards;
     Simulation simulation;
-
     int total_simulations = 0;
     int successful_simulations = 0;
     double durations_sum = 0.;
     std::array<int, HISTOGRAM_INTERVALS_COUNT> y_values = {0};
 
     for (int i = 1; i < dataset.size(); ++i) {
-        simulation.run(movement_type,boards, dataset[i-1], dataset[i]);
+        simulation.run(movement_type, dataset[i-1], dataset[i]);
         total_simulations++;
+
         if (simulation.is_destination_reached() && !simulation.is_collision_detected()) {
             successful_simulations++;
             durations_sum += simulation.get_duration();
@@ -66,39 +65,26 @@ void Simulation_manager::simulate_dataset_outside_tech_field (const std::vector<
         return;
     }
 
-    Board_set boards;
     Simulation simulation;
-
     int total_simulations = 0;
     int successful_simulations = 0;
     double durations_sum = 0.;
     std::array<int, HISTOGRAM_INTERVALS_COUNT> y_values = {0};
 
     for (int i = 0; i < dataset.size(); ++i) {
-        simulation.run(Movement::outside_technical_field, boards, dataset[i]);
+        simulation.run(Movement::outside_technical_field, dataset[i]);
         total_simulations++;
+
         if (simulation.is_destination_reached() && !simulation.is_collision_detected()) {
             successful_simulations++;
             durations_sum += simulation.get_duration();
             insert_into_histogram(y_values, simulation.get_duration());
-
-            //============================================================================================
-            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
-            // Graphic_viewer gv;
-            // gv.animate(Movement::outside_technical_field, dataset[i]);
-            //============================================================================================
         }
         else {
             std::cout << std::endl;
             std::cout << "Simulation from asterism " << i << " of the dataset failed. Detailed info below: " ;
             std::cout << std::endl;
             simulation.print_results();
-
-            //============================================================================================
-            // VISUALIZATION FOR DEBUGGING TODO: REMOVE LATER
-            // Graphic_viewer gv;
-            // gv.animate(Movement::outside_technical_field, dataset[i]);
-            //============================================================================================
         }
     }
 
@@ -107,10 +93,8 @@ void Simulation_manager::simulate_dataset_outside_tech_field (const std::vector<
 }
 
 void Simulation_manager::simulate(Movement movement_type, const Asterism& start, const Asterism& destination) {
-    Board_set boards;
     Simulation simulation;
-
-    simulation.run(movement_type, boards, start, destination);
+    simulation.run(movement_type, start, destination);
     simulation.print_results();
 }
 

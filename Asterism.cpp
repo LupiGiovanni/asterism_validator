@@ -3,6 +3,7 @@
 //
 
 #include "Asterism.h"
+#include "Board_set.h"
 
 Asterism::Asterism(): points ( { Point(0.,0.), Point(0.,0.), Point(0.,0.) } ) {}
 
@@ -33,6 +34,36 @@ bool Asterism::operator== (const Asterism& other) const {
             return false;
     }
     return true;
+}
+
+bool Asterism::is_valid () const {
+    Board_set temporary;
+    temporary.teleport_home();
+    temporary.assign_targets(*this);
+
+    if (temporary.get_targets().empty())
+        return false;
+    return true;
+}
+
+bool Asterism::is_in_fov_large () const {
+    Board_set temporary;
+
+    for (const auto& p : points)
+        if ( temporary.get_fov_large().bounded_side(p) == CGAL::ON_BOUNDED_SIDE || temporary.get_fov_large().bounded_side(p) == CGAL::ON_BOUNDARY )
+            return true;
+
+    return false;
+}
+
+bool Asterism::is_in_fov_small () const {
+    Board_set temporary;
+
+    for (const auto& p : points)
+        if ( temporary.get_fov_small().bounded_side(p) == CGAL::ON_BOUNDED_SIDE || temporary.get_fov_small().bounded_side(p) == CGAL::ON_BOUNDARY )
+            return true;
+
+    return false;
 }
 
 void Asterism::print () const {

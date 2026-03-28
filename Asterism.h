@@ -5,7 +5,7 @@
 #ifndef ASTERISM_VALIDATOR_ASTERISM_H
 #define ASTERISM_VALIDATOR_ASTERISM_H
 
-#include "Board.h"
+#include "helper.h"
 
 class Asterism {
 public:
@@ -17,6 +17,9 @@ public:
     void set_points (const std::vector<Point>& new_points);
     const Point& operator[] (int index) const;
     bool operator== (const Asterism& other) const;
+    bool is_valid () const;
+    bool is_in_fov_large () const;
+    bool is_in_fov_small () const;
 
     void print () const;
     void print_xy () const;
