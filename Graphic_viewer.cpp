@@ -628,6 +628,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
             int iterations = 0;
             bool collision_detected = false;
             clear_trajectories();
+            temporary.teleport_home();
             temporary.assign_targets(s);
             temporary.teleport(s);
             temporary.assign_targets(d);

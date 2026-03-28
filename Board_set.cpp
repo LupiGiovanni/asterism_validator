@@ -129,6 +129,11 @@ void Board_set::teleport (const Asterism& destination_asterism) {
             boards[j].teleport(destination_asterism[ targets[j] ]);
 }
 
+void Board_set::teleport_home () {
+    for (int j = 0; j < BOARDS_COUNT; j++)
+        boards[j].teleport_home();
+}
+
 bool Board_set::is_destination_in_range (const Asterism& destination_asterism) const {
     if (targets.empty())
         std::cout << "Warning: attempted to run Board_set::is_destination_in_range but 'targets' field is empty" << std::endl;

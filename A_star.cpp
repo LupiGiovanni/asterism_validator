@@ -33,7 +33,10 @@ std::vector<State> A_star::search (const State& start, State& goal) {
     open_set.push({calculate_octile_distance(start, goal), start});
 
     Board_set temporary;
+    temporary.assign_targets(start);
+    temporary.teleport(start);
     temporary.assign_targets(goal);
+
     State current;
     double move_cost;
     double candidate_g;
@@ -104,6 +107,7 @@ std::vector<State> A_star::search_fov_excluded (const State& start, State& goal)
 void A_star::align_states (const State& start, State& goal) {
     Board_set temporary;
     temporary.assign_targets(start);
+    temporary.teleport(start);
     std::vector<int> s_targets = temporary.get_targets();
     temporary.assign_targets(goal);
     std::vector<int> g_targets = temporary.get_targets();
@@ -133,7 +137,7 @@ std::vector<State> A_star::get_next_states (Board_set& board_set, const State& s
 
                 //------------------------------------------------------------------------------
                 // TODO: debug remove later
-                // std::cout << "Considering possible next state" << std::endl;
+                //std::cout << "Considering possible next state" << std::endl;
                 //------------------------------------------------------------------------------
 
                 next.set_points({ Point( state[0].x() + DX[i] * SEARCH_GRID_SIZE, state[0].y() + DY[i] * SEARCH_GRID_SIZE ),
@@ -144,8 +148,8 @@ std::vector<State> A_star::get_next_states (Board_set& board_set, const State& s
 
                     //------------------------------------------------------------------------------
                     // TODO: debug remove later
-                    // std::cout << "Adding valid state to next states" << std::endl;
-                    // next.print();
+                    //std::cout << "Adding valid state to next states" << std::endl;
+                    //next.print();
                     //------------------------------------------------------------------------------
 
                     next_vector.push_back(next);

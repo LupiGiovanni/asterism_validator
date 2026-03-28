@@ -29,6 +29,7 @@ public:
     double calculate_distance (const Asterism& destination_asterism) const;
 
     void teleport (const Asterism& destination_asterism);
+    void teleport_home ();
 
     bool move (const Asterism& destination_asterism, double distance_step);
     bool move_outside_tech_field (double distance_step);
