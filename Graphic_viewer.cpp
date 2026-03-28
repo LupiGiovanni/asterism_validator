@@ -306,9 +306,6 @@ void Graphic_viewer::animate_outside_tech_field (const Asterism& start) {
     }
 
     Board_set temporary;
-    temporary.teleport_home();
-    temporary.assign_targets(start);
-
     setup_start_asterism(start);
 
     while (window.isOpen()) {
@@ -319,6 +316,8 @@ void Graphic_viewer::animate_outside_tech_field (const Asterism& start) {
             int iterations = 0;
             bool collision_detected = false;
             clear_trajectories();
+            temporary.teleport_home();
+            temporary.assign_targets(start);
             temporary.teleport(start);
 
             while ( temporary.is_in_technical_field() && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
@@ -383,6 +382,7 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
             int iterations = 0;
             bool collision_detected = false;
             clear_trajectories();
+            temporary.teleport_home();
             temporary.assign_targets(start);
             temporary.teleport(start);
             temporary.assign_targets(destination);
