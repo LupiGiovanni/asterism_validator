@@ -575,12 +575,34 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
 
     State s = start;
     State d =  destination;
+    std::vector<State> path;
 
-    const std::vector<State>& path = A_star::search (s, d);
+    if constexpr (HEURISTIC == Heuristic::octile) {
+        if constexpr (FOV_OPTIONS == Fov_options::none)
+            path = A_star::search_octile (s, d, A_star::is_valid_state);
+        else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)
+            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_small_excluded);
+        else if constexpr (FOV_OPTIONS == Fov_options::fov_large_excluded)
+            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_large_excluded);
+    }
+
+    if constexpr (HEURISTIC == Heuristic::manhattan) {
+        if constexpr (FOV_OPTIONS == Fov_options::none)
+            path = A_star::search_manhattan (s, d, A_star::is_valid_state);
+        else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)
+            path = A_star::search_manhattan (s, d, A_star::is_valid_state_fov_small_excluded);
+        else if constexpr (FOV_OPTIONS == Fov_options::fov_large_excluded)
+            path = A_star::search_manhattan (s, d, A_star::is_valid_state_fov_large_excluded);
+    }
 
     if (path.empty()) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
         return;
+    }
+
+    for (int i = 0; i < path.size(); i++) {
+        std::cout << "State " << i << ":\t";
+        path[i].print_xy();
     }
 
     sf::RenderWindow window;

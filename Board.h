@@ -14,7 +14,7 @@ class Board {
 
 private:
     Polygon profile;
-    Polygon profile_buffer_zone;
+    Polygon profile_buffer;
     Point pom;
     Point pom_home;
     Polygon pom_range;

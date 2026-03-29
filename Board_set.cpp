@@ -267,9 +267,9 @@ bool Board_set::move_along_y (const Asterism& destination_asterism, double dista
 }
 
 bool Board_set::detect_collision_buffers () const {
-    if ( CGAL::do_intersect(boards[0].profile_buffer_zone, boards[1].profile_buffer_zone) ||
-         CGAL::do_intersect(boards[1].profile_buffer_zone, boards[2].profile_buffer_zone) ||
-         CGAL::do_intersect(boards[0].profile_buffer_zone, boards[2].profile_buffer_zone) )
+    if ( CGAL::do_intersect(boards[0].profile_buffer, boards[1].profile_buffer) ||
+         CGAL::do_intersect(boards[1].profile_buffer, boards[2].profile_buffer) ||
+         CGAL::do_intersect(boards[0].profile_buffer, boards[2].profile_buffer) )
         return true;
 
     return false;

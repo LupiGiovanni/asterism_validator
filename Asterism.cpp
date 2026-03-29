@@ -74,6 +74,6 @@ void Asterism::print () const {
 
 void Asterism::print_xy () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
-    std::cout << "(" << points[0].x() << ", " << points[0].y() << "), (" << points[1].x() << ", " << points[1].y() << "), (" << points[2].x() << ", " << points[2].y() << ")";
+    std::cout << "(" << points[0].x() << ", " << points[0].y() << "),\t(" << points[1].x() << ", " << points[1].y() << "),\t(" << points[2].x() << ", " << points[2].y() << ")";
     std::cout << std::endl;
 }

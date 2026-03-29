@@ -30,9 +30,15 @@ constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STE
 constexpr double TOLERANCE = SIMULATION_DISTANCE_STEP; // mm
 
 // A* search parameters
-constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
-constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
-constexpr int NUM_DIRECTIONS = 9;
+enum class Heuristic {octile, manhattan};
+enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
+
+constexpr std::array<int, 9> DX_octile = {0, 0, 0, 1, -1, 1, 1, -1, -1};
+constexpr std::array<int, 9> DY_octile = {0, 1, -1, 0, 0, 1, -1, 1, -1};
+constexpr std::array<int, 5> DX_manhattan = {0, 0, 0, 1, -1};
+constexpr std::array<int, 5> DY_manhattan = {0, 1, -1, 0, 0};
+constexpr int NUM_DIRECTIONS_OCTILE = 9;
+constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
 constexpr double SEARCH_GRID_SIZE = 20; // mm
 constexpr double ORTHOGONAL_COST = 1.;
 constexpr double DIAGONAL_COST = 1.41421356237;
@@ -40,6 +46,8 @@ constexpr double HEURISTIC_WEIGHT = 1.2;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double GOAL_REACHED_TOLERANCE = SEARCH_GRID_SIZE * 2; // mm
 constexpr double EPSILON = std::numeric_limits<double>::epsilon();
+constexpr auto HEURISTIC = Heuristic::octile;
+constexpr auto FOV_OPTIONS = Fov_options::none;
 
 // Graphic rendering parameters
 constexpr int WINDOW_HEIGHT = 1000;

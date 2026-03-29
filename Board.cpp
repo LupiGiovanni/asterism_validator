@@ -91,11 +91,11 @@ Board::Board (Board_type type) {
         pom_safe_zone.push_back(CAD_coordinates::Q3);
     }
 
-    profile_buffer_zone = enlarge(profile, BOARD_BUFFER_WIDTH);
+    profile_buffer = enlarge(profile, BOARD_BUFFER_WIDTH);
 
     // Rotation is needed to align the CAD reference system with ours
     rotate(profile, M_PI / 2.);
-    rotate(profile_buffer_zone, M_PI / 2.);
+    rotate(profile_buffer, M_PI / 2.);
     rotate(pom, M_PI / 2.);
     rotate(pom_home, M_PI / 2.);
     rotate(pom_range, M_PI / 2.);
@@ -125,7 +125,7 @@ bool Board::teleport (double delta_x, double delta_y) {
 
     for (auto& point : profile)
         point += displacement;
-    for (auto& point : profile_buffer_zone)
+    for (auto& point : profile_buffer)
         point += displacement;
 
     pom = destination;
