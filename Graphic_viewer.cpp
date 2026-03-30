@@ -604,6 +604,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
         std::cout << "State " << i << ":\t";
         path[i].print_xy();
     }
+    std::cout << std::endl;
 
     sf::RenderWindow window;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "", sf::Style::Close | sf::Style::Titlebar);
