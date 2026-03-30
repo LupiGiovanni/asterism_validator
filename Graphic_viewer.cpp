@@ -348,6 +348,7 @@ void Graphic_viewer::animate_outside_tech_field (const Asterism& start) {
                     temporary.move_outside_tech_field(SIMULATION_DISTANCE_STEP);
                     if (temporary.detect_collision()) {
                         collision_detected = true;
+                        std::cout << "Collision detected during Graphic_viewer::animate_outside_tech_field" << std::endl;
                     }
                     iterations += 1;
                     movement_clock.restart();
@@ -416,6 +417,7 @@ void Graphic_viewer::animate_linear (const Asterism& start, const Asterism& dest
                     temporary.move(destination, SIMULATION_DISTANCE_STEP);
                     if (temporary.detect_collision()) {
                         collision_detected = true;
+                        std::cout << "Collision detected during Graphic_viewer::animate_linear" << std::endl;
                     }
                     iterations += 1;
                     movement_clock.restart();
@@ -484,6 +486,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                     temporary.move_to_safe_zone(SIMULATION_DISTANCE_STEP);
                     if (temporary.detect_collision()) {
                         collision_detected = true;
+                        std::cout << "Collision detected during Graphic_viewer::animate_safe_basic" << std::endl;
                     }
                     iterations += 1;
                     movement_clock.restart();
@@ -518,6 +521,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                     temporary.move_along_x(destination, SIMULATION_DISTANCE_STEP);
                     if (temporary.detect_collision()) {
                         collision_detected = true;
+                        std::cout << "Collision detected during Graphic_viewer::animate_safe_basic" << std::endl;
                     }
                     iterations += 1;
                     movement_clock.restart();
@@ -552,6 +556,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                     temporary.move_along_y(destination, SIMULATION_DISTANCE_STEP);
                     if (temporary.detect_collision()) {
                         collision_detected = true;
+                        std::cout << "Collision detected during Graphic_viewer::animate_safe_basic" << std::endl;
                     }
                     iterations += 1;
                     movement_clock.restart();
@@ -661,6 +666,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                         temporary.move(current_destination, SIMULATION_DISTANCE_STEP);
                         if ( temporary.detect_collision() ) {
                             collision_detected = true;
+                            std::cout << "Collision detected during Graphic_viewer::animate_A_star" << std::endl;
                         }
                         iterations += 1;
                         movement_clock.restart();
@@ -696,6 +702,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
                     temporary.move(d, SIMULATION_DISTANCE_STEP);
                     if ( temporary.detect_collision() ) {
                         collision_detected = true;
+                        std::cout << "Collision detected during Graphic_viewer::animate_A_star" << std::endl;
                     }
                     iterations += 1;
                     movement_clock.restart();
