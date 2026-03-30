@@ -23,6 +23,7 @@ typedef CGAL::Circle_2<Kernel> Circle;
 typedef CGAL::Aff_transformation_2<Kernel> Transformation;
 
 // Simulation parameters
+constexpr int BOARDS_COUNT = 3;
 constexpr int MAX_ITERATION_INDEX = 10000;
 constexpr double BOARD_VELOCITY = 10.; // mm/s
 constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
@@ -59,13 +60,15 @@ constexpr int CONVEX_SHAPES_TRANSPARENCY = 60;
 constexpr int MOVEMENT_DELAY = 15; // milliseconds
 constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 
+// Dataset generation parameters
+constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
+constexpr double GENERATION_AREA_RADIUS = 265.2; // mm
+constexpr int GENERATED_DATASET_SIZE = 100;
+
 // Other parameters
 constexpr int DECIMAL_PLACES_PRINTED = 6;
-constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
-constexpr int BOARDS_COUNT = 3;
 constexpr int HISTOGRAM_INTERVALS_COUNT = 15; // default = 15
 constexpr int HISTOGRAM_FONT_SIZE = 12; // default = 12
-constexpr int GENERATED_DATASET_SIZE = 100;
 
 // Helper functions
 inline void rotate (Polygon& polygon, double angle_radians) {
