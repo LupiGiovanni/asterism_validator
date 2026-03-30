@@ -14,7 +14,7 @@ Asterism Dataset_generator::generate_asterism_random () {
     static std::random_device rd;
     static std::mt19937 gen(rd());
 
-    double radius = TECHNICAL_FIELD_RADIUS;
+    double radius = GENERATED_DATASET_SIZE;
     double radius_squared = radius * radius;
     std::uniform_real_distribution<> dis(-radius, radius);
 

@@ -62,7 +62,7 @@ constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 
 // Dataset generation parameters
 constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
-constexpr double GENERATION_AREA_RADIUS = 265.2; // mm
+constexpr double GENERATION_AREA_RADIUS = 150; // mm
 constexpr int GENERATED_DATASET_SIZE = 100;
 
 // Other parameters
