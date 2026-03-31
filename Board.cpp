@@ -100,6 +100,9 @@ Board::Board (Board_type type) {
     rotate(pom_home, M_PI / 2.);
     rotate(pom_range, M_PI / 2.);
     rotate(pom_safe_zone, M_PI / 2.);
+
+    // TODO: add acceleration and relative simulation
+    velocity = BOARDS_CRUISE_VELOCITY;
 }
 
 const Polygon& Board::get_profile () const {
@@ -108,6 +111,16 @@ const Polygon& Board::get_profile () const {
 
 const Point& Board::get_pom_position () const {
     return pom;
+}
+
+double Board::get_velocity () const {
+    return velocity;
+}
+
+void Board::set_velocity (double new_velocity) {
+    if (is_greater_double(new_velocity, BOARDS_CRUISE_VELOCITY))
+        std::cout << "Warning: attempted to run Board::set_velocity but 'new_velocity' is greater than BOARD_MAX_VELOCITY" << std::endl;
+    velocity = new_velocity;
 }
 
 bool Board::is_in_range (const Point& point) const {
@@ -183,10 +196,11 @@ double Board::calculate_distance (const Point& pom_destination) const {
     return std::sqrt(displacement.squared_length());
 }
 
-bool Board::move (const Point& pom_destination, double distance_step) {
+bool Board::step_move (const Point& pom_destination) {
     if (is_destination_reached(pom_destination))
         return false;
 
+    double distance_step = velocity * SIMULATION_TIME_STEP;
     Vector displacement (pom_destination - pom);
     double displacement_length = std::sqrt(displacement.squared_length());
     Vector step_vector = (displacement / displacement_length) * distance_step;
@@ -195,13 +209,14 @@ bool Board::move (const Point& pom_destination, double distance_step) {
     return true;
 }
 
-bool Board::move_outside_tech_field (const Circle& tech_field, double distance_step) {
+bool Board::step_move_outside_tech_field (const Circle& tech_field) {
     if (!is_in_technical_field(tech_field))
         return false;
 
     Point bottom_left_corner = *pom_range.begin();
     Point bottom_right_corner = *(pom_range.end() - 1);
 
+    double distance_step = velocity * SIMULATION_TIME_STEP;
     Vector displacement;
     if ( calculate_distance(bottom_left_corner) < calculate_distance(bottom_right_corner) )
         displacement = bottom_left_corner - pom;
@@ -215,20 +230,21 @@ bool Board::move_outside_tech_field (const Circle& tech_field, double distance_s
     return true;
 }
 
-bool Board::move_along_x (const Point& pom_destination, double distance_step) {
+bool Board::step_move_along_x (const Point& pom_destination) {
     Point aligned_point_x = find_aligned_point_x(pom_destination);
-    return move(aligned_point_x, distance_step);
+    return step_move(aligned_point_x);
 }
 
-bool Board::move_along_y (const Point& pom_destination, double distance_step) {
+bool Board::step_move_along_y (const Point& pom_destination) {
     Point aligned_point_y = find_aligned_point_y(pom_destination);
-    return move(aligned_point_y, distance_step);
+    return step_move(aligned_point_y);
 }
 
-bool Board::move_to_safe_zone (double distance_step) {
+bool Board::step_move_to_safe_zone () {
     if (is_in_safe_zone())
         return false;
 
+    double distance_step = velocity * SIMULATION_TIME_STEP;
     Point centre (0., 0.);
     Vector v = pom_home - centre;
     double v_length = std::sqrt(v.squared_length());

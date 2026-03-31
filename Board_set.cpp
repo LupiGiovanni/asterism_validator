@@ -214,7 +214,7 @@ bool Board_set::is_in_safe_zone () const {
     return true;
 }
 
-bool Board_set::move (const Asterism& destination_asterism, double distance_step) {
+bool Board_set::step_move (const Asterism& destination_asterism) {
     if (targets.empty())
         std::cout << "Warning: attempted to run Board_set::move but 'targets' field is empty" << std::endl;
 
@@ -223,45 +223,45 @@ bool Board_set::move (const Asterism& destination_asterism, double distance_step
 
     else
         for (int j = 0; j < BOARDS_COUNT; j++)
-            boards[j].move(destination_asterism[ targets[j] ], distance_step);
+            boards[j].step_move(destination_asterism[ targets[j] ]);
 
     return detect_collision();
 }
 
-bool Board_set::move_outside_tech_field (double distance_step) {
+bool Board_set::step_move_outside_tech_field () {
     for (int j = 0; j < BOARDS_COUNT; j++)
-        boards[j].move_outside_tech_field(technical_field, distance_step);
+        boards[j].step_move_outside_tech_field(technical_field);
 
     return detect_collision();
 }
 
-bool Board_set::move_to_safe_zone (double distance_step) {
+bool Board_set::step_move_to_safe_zone () {
     for (int j = 0; j < BOARDS_COUNT; j++)
-        boards[j].move_to_safe_zone(distance_step);
+        boards[j].step_move_to_safe_zone();
 
     return detect_collision();
 }
 
-bool Board_set::move_along_x (const Asterism& destination_asterism, double distance_step) {
+bool Board_set::step_move_along_x (const Asterism& destination_asterism) {
     if (targets.empty()) {
         std::cout << "Warning: attempted to run Board_set::move_along_x but 'targets' field is empty" << std::endl;
         return false;
     }
 
     for (int j = 0; j < BOARDS_COUNT; j++)
-        boards[j].move_along_x(destination_asterism[ targets[j] ], distance_step);
+        boards[j].step_move_along_x(destination_asterism[ targets[j] ]);
 
     return detect_collision();
 }
 
-bool Board_set::move_along_y (const Asterism& destination_asterism, double distance_step) {
+bool Board_set::step_move_along_y (const Asterism& destination_asterism) {
     if (targets.empty()) {
         std::cout << "Warning: attempted to run Board_set::move_along_y but 'targets' field is empty" << std::endl;
         return false;
     }
 
     for (int j = 0; j < BOARDS_COUNT; j++)
-        boards[j].move_along_y(destination_asterism[ targets[j] ], distance_step);
+        boards[j].step_move_along_y(destination_asterism[ targets[j] ]);
 
     return detect_collision();
 }

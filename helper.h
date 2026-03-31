@@ -25,10 +25,9 @@ typedef CGAL::Aff_transformation_2<Kernel> Transformation;
 // Simulation parameters
 constexpr int BOARDS_COUNT = 3;
 constexpr int MAX_ITERATION_INDEX = 10000;
-constexpr double BOARD_VELOCITY = 10.; // mm/s
+constexpr double BOARDS_CRUISE_VELOCITY = 10.; // mm/s
 constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
-constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STEP; // mm
-constexpr double TOLERANCE = SIMULATION_DISTANCE_STEP; // mm
+constexpr double TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULATION_TIME_STEP; // mm
 
 // A* search parameters
 enum class Heuristic {octile, manhattan};
@@ -47,7 +46,7 @@ constexpr double HEURISTIC_WEIGHT = 1.1;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double GOAL_REACHED_TOLERANCE = SEARCH_GRID_SIZE * 1.5; // mm
 constexpr double EPSILON = std::numeric_limits<double>::epsilon();
-constexpr auto HEURISTIC = Heuristic::manhattan;
+constexpr auto HEURISTIC = Heuristic::octile;
 constexpr auto FOV_OPTIONS = Fov_options::none;
 
 // Graphic rendering parameters
@@ -101,11 +100,16 @@ inline Polygon enlarge (const Polygon& polygon, double offset) {
     return enlarged_poly;
 }
 
-inline bool is_equal_double (double a, double b, double epsilon = EPSILON) {
+inline bool is_equal_double (double a, double b, double epsilon = std::numeric_limits<double>::epsilon()) {
     if (a == b)
         return true;
     double diff = std::abs(a - b);
-    return diff < epsilon * std::max(std::abs(a), std::abs(b));
+    return diff < epsilon || diff < epsilon * std::max(std::abs(a), std::abs(b));
+}
+
+inline bool is_greater_double (double a, double b, double epsilon = std::numeric_limits<double>::epsilon()) {
+    double diff = a - b;
+    return diff > epsilon && diff > epsilon * std::max(std::abs(a), std::abs(b));
 }
 
 #endif //ASTERISM_VALIDATOR_HELPER_H

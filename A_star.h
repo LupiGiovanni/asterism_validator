@@ -54,6 +54,7 @@ struct A_star::State_hasher {
     }
 };
 
+// TODO: maybe implement safe way to compare doubles (but will it be slower?)
 struct A_star::State_comparator {
     inline bool operator() (const std::pair<double, State>& a, const std::pair<double, State>& b) const {
         return a.first > b.first;
