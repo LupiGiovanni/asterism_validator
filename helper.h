@@ -27,27 +27,26 @@ constexpr int BOARDS_COUNT = 3;
 constexpr int MAX_ITERATION_INDEX = 10000;
 constexpr double BOARDS_CRUISE_VELOCITY = 10.; // mm/s
 constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
-constexpr double TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULATION_TIME_STEP; // mm
+constexpr double DESTINATION_REACHED_TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULATION_TIME_STEP; // mm
 
 // A* search parameters
-enum class Heuristic {octile, manhattan};
+enum class Grid_type {isometric, manhattan};
 enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 
-constexpr std::array<int, 9> DX_octile = {0, 0, 0, 1, -1, 1, 1, -1, -1};
-constexpr std::array<int, 9> DY_octile = {0, 1, -1, 0, 0, 1, -1, 1, -1};
+constexpr auto GRID_TYPE = Grid_type::isometric;
+constexpr auto FOV_OPTIONS = Fov_options::none;
+constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
+constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
 constexpr std::array<int, 5> DX_manhattan = {0, 0, 0, 1, -1};
 constexpr std::array<int, 5> DY_manhattan = {0, 1, -1, 0, 0};
-constexpr int NUM_DIRECTIONS_OCTILE = 9;
+constexpr int NUM_DIRECTIONS = 9;
+constexpr int DIAGONAL_DIRECTIONS_START_INDEX = 5;
 constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
-constexpr double SEARCH_GRID_SIZE = 30; // mm
-constexpr double ORTHOGONAL_COST = 1.;
-constexpr double DIAGONAL_COST = 1.41421356237;
-constexpr double HEURISTIC_WEIGHT = 1.1;
+constexpr double GRID_SIZE = 20; // mm
+constexpr double HEURISTIC_WEIGHT = 1.3;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
-constexpr double GOAL_REACHED_TOLERANCE = SEARCH_GRID_SIZE * 1.5; // mm
-constexpr double EPSILON = std::numeric_limits<double>::epsilon();
-constexpr auto HEURISTIC = Heuristic::octile;
-constexpr auto FOV_OPTIONS = Fov_options::none;
+constexpr double SIN45 = 0.70710678118;
+constexpr double GOAL_REACHED_TOLERANCE = GRID_SIZE * 1.5; // mm
 
 // Graphic rendering parameters
 constexpr int WINDOW_HEIGHT = 1000;
@@ -65,6 +64,7 @@ constexpr double GENERATION_AREA_RADIUS = 100; // mm
 constexpr int GENERATED_DATASET_SIZE = 100;
 
 // Other parameters
+constexpr double EPSILON = std::numeric_limits<double>::epsilon();
 constexpr int DECIMAL_PLACES_PRINTED = 6;
 constexpr int HISTOGRAM_INTERVALS_COUNT = 15; // default = 15
 constexpr int HISTOGRAM_FONT_SIZE = 12; // default = 12

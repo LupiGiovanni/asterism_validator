@@ -155,7 +155,7 @@ void Simulation::run_safe_basic (const Asterism& movement_start, const Asterism&
         iterations += 1;
     }
 
-    while (!bs.is_destination_reached(destination, TOLERANCE * sqrt(2.)) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
+    while (!bs.is_destination_reached(destination, DESTINATION_REACHED_TOLERANCE * sqrt(2.)) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
         bs.step_move_along_y(destination);
 
         if (bs.detect_collision())
@@ -170,7 +170,7 @@ void Simulation::run_safe_basic (const Asterism& movement_start, const Asterism&
 
     duration = SIMULATION_TIME_STEP * iterations;
 
-    if (bs.is_destination_reached(destination, TOLERANCE * sqrt(2.)))
+    if (bs.is_destination_reached(destination, DESTINATION_REACHED_TOLERANCE * sqrt(2.)))
         destination_reached = true;
     distance_from_destination = bs.calculate_distance(destination);
 
@@ -237,16 +237,16 @@ void Simulation::run_A_star (const Asterism& movement_start, const Asterism& mov
     State d = destination;
     std::vector<State> path;
 
-    if constexpr (HEURISTIC == Heuristic::octile) {
+    if constexpr (GRID_TYPE == Grid_type::isometric) {
         if constexpr (FOV_OPTIONS == Fov_options::none)
-            path = A_star::search_octile (s, d, A_star::is_valid_state);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)
-            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_small_excluded);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state_fov_small_excluded);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_large_excluded)
-            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_large_excluded);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state_fov_large_excluded);
     }
 
-    if constexpr (HEURISTIC == Heuristic::manhattan) {
+    if constexpr (GRID_TYPE == Grid_type::manhattan) {
         if constexpr (FOV_OPTIONS == Fov_options::none)
             path = A_star::search_manhattan (s, d, A_star::is_valid_state);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)

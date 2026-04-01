@@ -25,6 +25,12 @@ void A_star::align_states (const State& start, State& goal) {
     goal.set_points(swapped_goal_pos);
 }
 
+double A_star::isometric_diagonal_correction (int index) {
+    if (index < DIAGONAL_DIRECTIONS_START_INDEX)
+        return 1.;
+    return SIN45;
+}
+
 bool A_star::is_valid_state (Board_set& board_set, const State& state) {
     if ( ! board_set.is_destination_in_range(state) )
         return false;
@@ -61,10 +67,10 @@ bool A_star::is_goal_reached (const State& current, const State& goal) {
     return true;
 }
 
-double A_star::octile_distance (const State& current, const State& goal) {
+double A_star::euclidean_distance (const State& current, const State& goal) {
     double h = 0;
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += octile_distance_helper(current[i], goal[i]);
+        h += euclidean_distance_helper(current[i], goal[i]);
     }
 
     return h;
@@ -79,23 +85,21 @@ double A_star::manhattan_distance (const State& current, const State& goal) {
     return h;
 }
 
-double A_star::octile_distance_helper (const Point& current, const Point& goal) {
+double A_star::euclidean_distance_helper (const Point& current, const Point& goal) {
     double dx = std::abs(current.x() - goal.x());
     double dy = std::abs(current.y() - goal.y());
 
-    if (dx < dy)
-        return DIAGONAL_COST * HEURISTIC_WEIGHT * dx + ORTHOGONAL_COST * HEURISTIC_WEIGHT * (dy - dx);
-
-    return DIAGONAL_COST * HEURISTIC_WEIGHT * dy + ORTHOGONAL_COST * HEURISTIC_WEIGHT * (dx - dy);
+    return std::sqrt(dx * dx + dy * dy) * HEURISTIC_WEIGHT;
 }
 
 double A_star::manhattan_distance_helper (const Point& current, const Point& goal) {
     double dx = std::abs(current.x() - goal.x());
     double dy = std::abs(current.y() - goal.y());
 
-    return (dx + dy) * HEURISTIC_WEIGHT * ORTHOGONAL_COST;
+    return (dx + dy) * HEURISTIC_WEIGHT;
 }
 
+// TODO: review
 double A_star::move_cost (const State& current, const State& neighbor) {
     double total_cost = 0;
 
@@ -105,11 +109,8 @@ double A_star::move_cost (const State& current, const State& neighbor) {
 
         if (dx == 0 && dy == 0)
             continue;
-
-        if (dx != 0 && dy != 0)
-            total_cost += DIAGONAL_COST;
         else
-            total_cost += ORTHOGONAL_COST;
+            total_cost += 1;
     }
     return total_cost;
 }

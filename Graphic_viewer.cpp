@@ -528,7 +528,7 @@ void Graphic_viewer::animate_safe_basic (const Asterism& start, const Asterism& 
                 } else sf::sleep(sf::milliseconds(1));
             }
 
-            while ( ! temporary.is_destination_reached(destination, TOLERANCE * sqrt(2.)) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
+            while ( ! temporary.is_destination_reached(destination, DESTINATION_REACHED_TOLERANCE * sqrt(2.)) && ! collision_detected && iterations <= MAX_ITERATION_INDEX ) {
 
                 while (window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed) {
@@ -582,16 +582,16 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     State d =  destination;
     std::vector<State> path;
 
-    if constexpr (HEURISTIC == Heuristic::octile) {
+    if constexpr (GRID_TYPE == Grid_type::isometric) {
         if constexpr (FOV_OPTIONS == Fov_options::none)
-            path = A_star::search_octile (s, d, A_star::is_valid_state);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)
-            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_small_excluded);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state_fov_small_excluded);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_large_excluded)
-            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_large_excluded);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state_fov_large_excluded);
     }
 
-    if constexpr (HEURISTIC == Heuristic::manhattan) {
+    if constexpr (GRID_TYPE == Grid_type::manhattan) {
         if constexpr (FOV_OPTIONS == Fov_options::none)
             path = A_star::search_manhattan (s, d, A_star::is_valid_state);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)

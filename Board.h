@@ -41,7 +41,7 @@ private:
     bool step_move_along_y (const Point& pom_destination); // y in board local reference system
 
     bool is_in_range (const Point& point) const;
-    bool is_destination_reached (const Point& pom_destination, double tolerance = TOLERANCE) const;
+    bool is_destination_reached (const Point& pom_destination, double tolerance = DESTINATION_REACHED_TOLERANCE) const;
     bool is_in_technical_field (const Circle& technical_field) const;
     bool is_in_safe_zone () const;
     bool is_destination_aligned_x (const Point& pom_destination) const; // x in board local reference system
