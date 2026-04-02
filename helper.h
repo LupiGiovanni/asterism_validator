@@ -33,7 +33,7 @@ constexpr double DESTINATION_REACHED_TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULA
 enum class Grid_type {isometric, manhattan};
 enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 
-constexpr auto GRID_TYPE = Grid_type::isometric;
+constexpr auto GRID_TYPE = Grid_type::manhattan;
 constexpr auto FOV_OPTIONS = Fov_options::none;
 constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
 constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
