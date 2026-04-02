@@ -47,7 +47,7 @@ constexpr double HEURISTIC_WEIGHT = 1.1;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double GOAL_REACHED_TOLERANCE = SEARCH_GRID_SIZE * 1.5; // mm
 constexpr double EPSILON = std::numeric_limits<double>::epsilon();
-constexpr auto HEURISTIC = Heuristic::manhattan;
+constexpr auto HEURISTIC = Heuristic::octile;
 constexpr auto FOV_OPTIONS = Fov_options::none;
 
 // Graphic rendering parameters
