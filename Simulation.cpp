@@ -86,7 +86,7 @@ void Simulation::run_linear (const Asterism& movement_start, const Asterism& mov
     bs.assign_targets(destination);
 
     while (!bs.is_destination_reached(destination) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        bs.move(destination, SIMULATION_DISTANCE_STEP);
+        bs.step_move(destination);
 
         if (bs.detect_collision())
             collision_detected = true;
@@ -130,7 +130,7 @@ void Simulation::run_safe_basic (const Asterism& movement_start, const Asterism&
     bs.assign_targets(destination);
 
     while (!bs.is_in_safe_zone() && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        bs.move_to_safe_zone(SIMULATION_DISTANCE_STEP);
+        bs.step_move_to_safe_zone();
 
         if (bs.detect_collision())
             collision_detected = true;
@@ -143,7 +143,7 @@ void Simulation::run_safe_basic (const Asterism& movement_start, const Asterism&
     }
 
     while (!bs.is_destination_aligned_x(destination) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        bs.move_along_x(destination, SIMULATION_DISTANCE_STEP);
+        bs.step_move_along_x(destination);
 
         if (bs.detect_collision())
             collision_detected = true;
@@ -155,8 +155,8 @@ void Simulation::run_safe_basic (const Asterism& movement_start, const Asterism&
         iterations += 1;
     }
 
-    while (!bs.is_destination_reached(destination, TOLERANCE * sqrt(2.)) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        bs.move_along_y(destination, SIMULATION_DISTANCE_STEP);
+    while (!bs.is_destination_reached(destination, DESTINATION_REACHED_TOLERANCE * sqrt(2.)) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
+        bs.step_move_along_y(destination);
 
         if (bs.detect_collision())
             collision_detected = true;
@@ -170,7 +170,7 @@ void Simulation::run_safe_basic (const Asterism& movement_start, const Asterism&
 
     duration = SIMULATION_TIME_STEP * iterations;
 
-    if (bs.is_destination_reached(destination, TOLERANCE * sqrt(2.)))
+    if (bs.is_destination_reached(destination, DESTINATION_REACHED_TOLERANCE * sqrt(2.)))
         destination_reached = true;
     distance_from_destination = bs.calculate_distance(destination);
 
@@ -196,7 +196,7 @@ void Simulation::run_outside_tech_field (const Asterism& movement_start) {
     bs.teleport(start);
 
     while (bs.is_in_technical_field() && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        bs.move_outside_tech_field(SIMULATION_DISTANCE_STEP);
+        bs.step_move_outside_tech_field();
 
         if (bs.detect_collision())
             collision_detected = true;
@@ -237,16 +237,16 @@ void Simulation::run_A_star (const Asterism& movement_start, const Asterism& mov
     State d = destination;
     std::vector<State> path;
 
-    if constexpr (HEURISTIC == Heuristic::octile) {
+    if constexpr (GRID_TYPE == Grid_type::isometric) {
         if constexpr (FOV_OPTIONS == Fov_options::none)
-            path = A_star::search_octile (s, d, A_star::is_valid_state);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)
-            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_small_excluded);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state_fov_small_excluded);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_large_excluded)
-            path = A_star::search_octile (s, d, A_star::is_valid_state_fov_large_excluded);
+            path = A_star::search_isometric (s, d, A_star::is_valid_state_fov_large_excluded);
     }
 
-    if constexpr (HEURISTIC == Heuristic::manhattan) {
+    if constexpr (GRID_TYPE == Grid_type::manhattan) {
         if constexpr (FOV_OPTIONS == Fov_options::none)
             path = A_star::search_manhattan (s, d, A_star::is_valid_state);
         else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)
@@ -275,7 +275,7 @@ void Simulation::run_A_star (const Asterism& movement_start, const Asterism& mov
         current_destination = path[i];
 
         while (!bs.is_destination_reached(current_destination) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-            bs.move(current_destination, SIMULATION_DISTANCE_STEP);
+            bs.step_move(current_destination);
 
             if (bs.detect_collision())
                 collision_detected = true;
@@ -289,7 +289,7 @@ void Simulation::run_A_star (const Asterism& movement_start, const Asterism& mov
     }
 
     while (!bs.is_destination_reached(d) && !collision_detected && iterations <= MAX_ITERATION_INDEX) {
-        bs.move(d, SIMULATION_DISTANCE_STEP);
+        bs.step_move(d);
 
         if (bs.detect_collision())
             collision_detected = true;
@@ -342,12 +342,11 @@ void Simulation::print_results () const {
     std::cout << "> Destination valid\t\t\t" << (destination_valid? "true":"false") << std::endl;
 
     std::cout << std::endl;
-    std::cout << "> Boards cruise velocity\t" << BOARD_VELOCITY << " mm/s" << std::endl;
+    std::cout << "> Boards cruise velocity\t" << BOARDS_CRUISE_VELOCITY << " mm/s" << std::endl;
     std::cout << "> Movement duration\t\t\t" << duration << " s" << std::endl;
     std::cout << "> Simulation iterations\t\t" << iterations << std::endl;
     std::cout << "> Max iterations exceeded\t" << (max_iterations_exceeded? "true":"false") << std::endl;
     std::cout << "> Simulation time step\t\t" << SIMULATION_TIME_STEP << " s" << std::endl;
-    std::cout << "> Simulation distance step\t" << SIMULATION_DISTANCE_STEP << " mm" << std::endl;
     std::cout << "> Destination reached\t\t" << (destination_reached? "true":"false") << std::endl;
     std::cout << "> Distance from dest\t\t" << distance_from_destination << " mm" << std::endl;
     std::cout << "> Collision detected\t\t" << (collision_detected? "true":"false") << std::endl;

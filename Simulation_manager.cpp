@@ -127,7 +127,7 @@ void Simulation_manager::print_results(Movement movement_type, int dataset_size,
     std::cout << "                                      Dataset simulations results                                       " << std::endl;
     std::cout << std::endl;
     std::cout << "> Movement type\t\t\t\t" << movement_type_str << std::endl;
-    std::cout << "> Boards cruise velocity\t"<< BOARD_VELOCITY << " mm/s" << std::endl;
+    std::cout << "> Boards cruise velocity\t"<< BOARDS_CRUISE_VELOCITY << " mm/s" << std::endl;
     std::cout << "> Dataset size\t\t\t\t" << dataset_size << " asterisms" << std::endl;
     std::cout << "> Total simulations\t\t\t" << total_simulations << std::endl;
     std::cout << "> Successful simulations\t" << successful_simulations << std::endl;

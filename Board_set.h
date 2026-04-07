@@ -30,19 +30,21 @@ public:
 
     double calculate_distance (const Asterism& destination_asterism) const;
 
+    Board& operator[] (int index);
+
     void teleport (const Asterism& destination_asterism);
     void teleport_home ();
 
-    bool move (const Asterism& destination_asterism, double distance_step);
-    bool move_outside_tech_field (double distance_step);
-    bool move_to_safe_zone (double distance_step);
-    bool move_along_x (const Asterism& destination_asterism, double distance_step); // x in board local reference system
-    bool move_along_y (const Asterism& destination_asterism, double distance_step); // y in board local reference system
+    bool step_move (const Asterism& destination_asterism);
+    bool step_move_outside_tech_field ();
+    bool step_move_to_safe_zone ();
+    bool step_move_along_x (const Asterism& destination_asterism); // x in board local reference system
+    bool step_move_along_y (const Asterism& destination_asterism); // y in board local reference system
 
     bool is_destination_in_range (const Asterism& destination_asterism) const;
-    bool is_destination_reached (const Asterism& destination_asterism, double tolerance = TOLERANCE) const;
-    bool is_destination_aligned_x (const Asterism& destination_asterism) const;
-    bool is_destination_aligned_y (const Asterism& destination_asterism) const;
+    bool is_destination_reached (const Asterism& destination_asterism, double tolerance = DESTINATION_REACHED_TOLERANCE) const;
+    bool is_destination_aligned_x (const Asterism& destination_asterism) const; // x in board local reference system
+    bool is_destination_aligned_y (const Asterism& destination_asterism) const; // y in board local reference system
     bool is_in_technical_field () const;
     bool is_in_safe_zone () const;
 

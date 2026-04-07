@@ -24,48 +24,51 @@ typedef CGAL::Aff_transformation_2<Kernel> Transformation;
 
 // Simulation parameters
 constexpr int BOARDS_COUNT = 3;
+constexpr int BOARD_VERTICES_COUNT = 12;
+constexpr int POM_RANGE_VERTICES_COUNT = 4;
+constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
 constexpr int MAX_ITERATION_INDEX = 10000;
-constexpr double BOARD_VELOCITY = 10.; // mm/s
+constexpr double BOARDS_CRUISE_VELOCITY = 10.; // mm/s
 constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
-constexpr double SIMULATION_DISTANCE_STEP = BOARD_VELOCITY * SIMULATION_TIME_STEP; // mm
-constexpr double TOLERANCE = SIMULATION_DISTANCE_STEP; // mm
+constexpr double DESTINATION_REACHED_TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULATION_TIME_STEP; // mm
 
 // A* search parameters
-enum class Heuristic {octile, manhattan};
+enum class Grid_type {isometric, manhattan};
 enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 
-constexpr std::array<int, 9> DX_octile = {0, 0, 0, 1, -1, 1, 1, -1, -1};
-constexpr std::array<int, 9> DY_octile = {0, 1, -1, 0, 0, 1, -1, 1, -1};
-constexpr std::array<int, 5> DX_manhattan = {0, 0, 0, 1, -1};
-constexpr std::array<int, 5> DY_manhattan = {0, 1, -1, 0, 0};
-constexpr int NUM_DIRECTIONS_OCTILE = 9;
-constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
-constexpr double SEARCH_GRID_SIZE = 30; // mm
-constexpr double ORTHOGONAL_COST = 1.;
-constexpr double DIAGONAL_COST = 1.41421356237;
-constexpr double HEURISTIC_WEIGHT = 1.1;
+constexpr auto GRID_TYPE = Grid_type::isometric;
+constexpr auto FOV_OPTIONS = Fov_options::fov_large_excluded;
+constexpr double GRID_SIZE = 30; // mm
+constexpr double HEURISTIC_WEIGHT = 1.5;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
-constexpr double GOAL_REACHED_TOLERANCE = SEARCH_GRID_SIZE * 1.5; // mm
-constexpr double EPSILON = std::numeric_limits<double>::epsilon();
-constexpr auto HEURISTIC = Heuristic::octile;
-constexpr auto FOV_OPTIONS = Fov_options::none;
+constexpr double GOAL_REACHED_TOLERANCE = GRID_SIZE * 1.5; // mm
+constexpr double SIN45 = 0.70710678118;
+constexpr double SIN60 = 0.86602540378;
+constexpr double COS60 = 0.5;
+constexpr std::array<double, 9> DX_isometric = {0., 0., 0., 1., -1., SIN45, SIN45, -SIN45, -SIN45};
+constexpr std::array<double, 9> DY_isometric = {0., 1., -1., 0., 0., SIN45, -SIN45, SIN45, -SIN45};
+constexpr std::array<double, 5> DX_manhattan = {0., 0., 0., 1., -1.};
+constexpr std::array<double, 5> DY_manhattan = {0., 1., -1., 0., 0.};
+constexpr std::array<double, 7> DX_triangular = {0., 1., -1., COS60, COS60, -COS60, -COS60};
+constexpr std::array<double, 7> DY_triangular = {0., 0, 0., SIN60, -SIN60, SIN60, -SIN60};
+constexpr int NUM_DIRECTIONS_ISOMETRIC = 9;
+constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
+constexpr int NUM_DIRECTIONS_TRIANGULAR = 7;
 
 // Graphic rendering parameters
 constexpr int WINDOW_HEIGHT = 1000;
 constexpr int WINDOW_WIDTH = 1000;
-constexpr int BOARD_VERTICES_COUNT = 12;
-constexpr int POM_RANGE_VERTICES_COUNT = 4;
 constexpr double ASTERISM_CIRCLE_RADIUS = 8.;
 constexpr int CONVEX_SHAPES_TRANSPARENCY = 60;
 constexpr int MOVEMENT_DELAY = 15; // milliseconds
 constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 
 // Dataset generation parameters
-constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
 constexpr double GENERATION_AREA_RADIUS = 100; // mm
 constexpr int GENERATED_DATASET_SIZE = 100;
 
 // Other parameters
+constexpr double EPSILON = std::numeric_limits<double>::epsilon();
 constexpr int DECIMAL_PLACES_PRINTED = 6;
 constexpr int HISTOGRAM_INTERVALS_COUNT = 15; // default = 15
 constexpr int HISTOGRAM_FONT_SIZE = 12; // default = 12
@@ -101,11 +104,16 @@ inline Polygon enlarge (const Polygon& polygon, double offset) {
     return enlarged_poly;
 }
 
-inline bool is_equal_double (double a, double b, double epsilon = EPSILON) {
+inline bool is_equal_double (double a, double b, double epsilon = std::numeric_limits<double>::epsilon()) {
     if (a == b)
         return true;
     double diff = std::abs(a - b);
-    return diff < epsilon * std::max(std::abs(a), std::abs(b));
+    return diff < epsilon || diff < epsilon * std::max(std::abs(a), std::abs(b));
+}
+
+inline bool is_greater_double (double a, double b, double epsilon = std::numeric_limits<double>::epsilon()) {
+    double diff = a - b;
+    return diff > epsilon && diff > epsilon * std::max(std::abs(a), std::abs(b));
 }
 
 #endif //ASTERISM_VALIDATOR_HELPER_H

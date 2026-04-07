@@ -61,57 +61,34 @@ bool A_star::is_goal_reached (const State& current, const State& goal) {
     return true;
 }
 
-double A_star::octile_distance (const State& current, const State& goal) {
+double A_star::euclidean_distance_sum (const State& current, const State& goal) {
     double h = 0;
-    for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += octile_distance_helper(current[i], goal[i]);
-    }
+    for (int i = 0; i < BOARDS_COUNT; i++)
+        h += euclidean_distance(current[i], goal[i]);
 
-    return h;
+    return h * HEURISTIC_WEIGHT;
 }
 
-double A_star::manhattan_distance (const State& current, const State& goal) {
+double A_star::manhattan_distance_sum (const State& current, const State& goal) {
     double h = 0;
-    for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += manhattan_distance_helper(current[i], goal[i]);
-    }
+    for (int i = 0; i < BOARDS_COUNT; i++)
+        h += manhattan_distance(current[i], goal[i]);
 
-    return h;
+    return h * HEURISTIC_WEIGHT;
 }
 
-double A_star::octile_distance_helper (const Point& current, const Point& goal) {
+double A_star::euclidean_distance (const Point& current, const Point& goal) {
+    double dx = current.x() - goal.x();
+    double dy = current.y() - goal.y();
+
+    return std::sqrt(dx * dx + dy * dy);
+}
+
+double A_star::manhattan_distance (const Point& current, const Point& goal) {
     double dx = std::abs(current.x() - goal.x());
     double dy = std::abs(current.y() - goal.y());
 
-    if (dx < dy)
-        return DIAGONAL_COST * HEURISTIC_WEIGHT * dx + ORTHOGONAL_COST * HEURISTIC_WEIGHT * (dy - dx);
-
-    return DIAGONAL_COST * HEURISTIC_WEIGHT * dy + ORTHOGONAL_COST * HEURISTIC_WEIGHT * (dx - dy);
-}
-
-double A_star::manhattan_distance_helper (const Point& current, const Point& goal) {
-    double dx = std::abs(current.x() - goal.x());
-    double dy = std::abs(current.y() - goal.y());
-
-    return (dx + dy) * HEURISTIC_WEIGHT * ORTHOGONAL_COST;
-}
-
-double A_star::move_cost (const State& current, const State& neighbor) {
-    double total_cost = 0;
-
-    for (int i = 0; i < BOARDS_COUNT; ++i) {
-        double dx = (neighbor[i].x() > current[i].x()) ? neighbor[i].x() - current[i].x() : current[i].x() - neighbor[i].x();
-        double dy = (neighbor[i].y() > current[i].y()) ? neighbor[i].y() - current[i].y() : current[i].y() - neighbor[i].y();
-
-        if (dx == 0 && dy == 0)
-            continue;
-
-        if (dx != 0 && dy != 0)
-            total_cost += DIAGONAL_COST;
-        else
-            total_cost += ORTHOGONAL_COST;
-    }
-    return total_cost;
+    return dx + dy;
 }
 
 std::vector<State> A_star::reconstruct_path (std::unordered_map<State, State, State_hasher>& came_from, State current) {
