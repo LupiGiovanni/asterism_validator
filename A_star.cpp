@@ -25,12 +25,6 @@ void A_star::align_states (const State& start, State& goal) {
     goal.set_points(swapped_goal_pos);
 }
 
-double A_star::isometric_diagonal_correction (int index) {
-    if (index < DIAGONAL_DIRECTIONS_START_INDEX)
-        return 1.;
-    return SIN45;
-}
-
 bool A_star::is_valid_state (Board_set& board_set, const State& state) {
     if ( ! board_set.is_destination_in_range(state) )
         return false;
@@ -67,27 +61,41 @@ bool A_star::is_goal_reached (const State& current, const State& goal) {
     return true;
 }
 
-double A_star::euclidean_distance_total (const State& current, const State& goal) {
+double A_star::euclidean_distance_sum (const State& current, const State& goal) {
     double h = 0;
-    for (int i = 0; i < BOARDS_COUNT; i++) {
+    for (int i = 0; i < BOARDS_COUNT; i++)
         h += euclidean_distance(current[i], goal[i]);
-    }
 
     return h * HEURISTIC_WEIGHT;
 }
 
-double A_star::manhattan_distance_total (const State& current, const State& goal) {
+double A_star::manhattan_distance_sum (const State& current, const State& goal) {
     double h = 0;
-    for (int i = 0; i < BOARDS_COUNT; i++) {
+    for (int i = 0; i < BOARDS_COUNT; i++)
         h += manhattan_distance(current[i], goal[i]);
-    }
+
+    return h * HEURISTIC_WEIGHT;
+}
+
+double A_star::euclidean_distance_max (const State& current, const State& goal) {
+    double h = 0;
+    for (int i = 0; i < BOARDS_COUNT; i++)
+        h = std::max(h, euclidean_distance(current[i], goal[i]));
+
+    return h * HEURISTIC_WEIGHT;
+}
+
+double A_star::manhattan_distance_max (const State& current, const State& goal) {
+    double h = 0;
+    for (int i = 0; i < BOARDS_COUNT; i++)
+        h = std::max(h, manhattan_distance(current[i], goal[i]));
 
     return h * HEURISTIC_WEIGHT;
 }
 
 double A_star::euclidean_distance (const Point& current, const Point& goal) {
-    double dx = std::abs(current.x() - goal.x());
-    double dy = std::abs(current.y() - goal.y());
+    double dx = current.x() - goal.x();
+    double dy = current.y() - goal.y();
 
     return std::sqrt(dx * dx + dy * dy);
 }

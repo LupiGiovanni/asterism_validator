@@ -35,14 +35,13 @@ enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 
 constexpr auto GRID_TYPE = Grid_type::isometric;
 constexpr auto FOV_OPTIONS = Fov_options::none;
-constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
-constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
-constexpr std::array<int, 5> DX_manhattan = {0, 0, 0, 1, -1};
-constexpr std::array<int, 5> DY_manhattan = {0, 1, -1, 0, 0};
-constexpr int NUM_DIRECTIONS = 9;
-constexpr int DIAGONAL_DIRECTIONS_START_INDEX = 5;
-constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
 constexpr double SIN45 = 0.70710678118;
+constexpr std::array<double, 9> DX_isometric = {0., 0., 0., 1., -1., SIN45, SIN45, -SIN45, -SIN45};
+constexpr std::array<double, 9> DY_isometric = {0., 1., -1., 0., 0., SIN45, -SIN45, SIN45, -SIN45};
+constexpr std::array<double, 5> DX_manhattan = {0., 0., 0., 1., -1.};
+constexpr std::array<double, 5> DY_manhattan = {0., 1., -1., 0., 0.};
+constexpr int NUM_DIRECTIONS_ISOMETRIC = 9;
+constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
 constexpr double GRID_SIZE = 30; // mm
 constexpr double HEURISTIC_WEIGHT = 1.3;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
