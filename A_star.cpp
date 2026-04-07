@@ -77,22 +77,6 @@ double A_star::manhattan_distance_sum (const State& current, const State& goal) 
     return h * HEURISTIC_WEIGHT;
 }
 
-double A_star::euclidean_distance_max (const State& current, const State& goal) {
-    double h = 0;
-    for (int i = 0; i < BOARDS_COUNT; i++)
-        h = std::max(h, euclidean_distance(current[i], goal[i]));
-
-    return h * HEURISTIC_WEIGHT;
-}
-
-double A_star::manhattan_distance_max (const State& current, const State& goal) {
-    double h = 0;
-    for (int i = 0; i < BOARDS_COUNT; i++)
-        h = std::max(h, manhattan_distance(current[i], goal[i]));
-
-    return h * HEURISTIC_WEIGHT;
-}
-
 double A_star::euclidean_distance (const Point& current, const Point& goal) {
     double dx = current.x() - goal.x();
     double dy = current.y() - goal.y();

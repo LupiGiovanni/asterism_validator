@@ -255,15 +255,6 @@ void Simulation::run_A_star (const Asterism& movement_start, const Asterism& mov
             path = A_star::search_manhattan (s, d, A_star::is_valid_state_fov_large_excluded);
     }
 
-    if constexpr (GRID_TYPE == Grid_type::triangular) {
-        if constexpr (FOV_OPTIONS == Fov_options::none)
-            path = A_star::search_triangular (s, d, A_star::is_valid_state);
-        else if constexpr (FOV_OPTIONS == Fov_options::fov_small_excluded)
-            path = A_star::search_triangular (s, d, A_star::is_valid_state_fov_small_excluded);
-        else if constexpr (FOV_OPTIONS == Fov_options::fov_large_excluded)
-            path = A_star::search_triangular (s, d, A_star::is_valid_state_fov_large_excluded);
-    }
-
     if (path.empty()) {
         std::cout << "Warning: attempted to run Simulation::run_A_star but no path was found" << std::endl;
         return;

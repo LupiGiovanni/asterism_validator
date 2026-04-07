@@ -14,7 +14,6 @@ class A_star {
 public:
     static std::vector<State> search_isometric (const State& start, State& goal, auto valid_state_function);
     static std::vector<State> search_manhattan (const State& start, State& goal, auto valid_state_function);
-    static std::vector<State> search_triangular (const State& start, State& goal, auto valid_state_function);
 
     static bool is_valid_state (Board_set& board_set, const State& state);
     static bool is_valid_state_fov_large_excluded (Board_set& board_set, const State& state);
@@ -28,8 +27,6 @@ private:
     static double manhattan_distance (const Point& current, const Point& goal);
     static double euclidean_distance_sum (const State& current, const State& goal);
     static double manhattan_distance_sum (const State& current, const State& goal);
-    static double euclidean_distance_max (const State& current, const State& goal);
-    static double manhattan_distance_max (const State& current, const State& goal);
 
     static void align_states (const State& start, State& goal);
     static std::vector<State> get_next_states_isometric (Board_set& board_set, const State& state, auto valid_state_function);
@@ -70,7 +67,7 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
 
     align_states (start, goal);
     g_score[start] = 0;
-    open_set.push({euclidean_distance_max(start, goal), start});
+    open_set.push({euclidean_distance_sum(start, goal), start});
 
     Board_set temporary;
     temporary.assign_targets(start);
@@ -97,7 +94,7 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
                 came_from[neighbor] = current;
                 g_score[neighbor] = candidate_g;
 
-                h = euclidean_distance_max(neighbor, goal);
+                h = euclidean_distance_sum(neighbor, goal);
                 f_score = candidate_g + h;
 
                 open_set.push({f_score, neighbor});
@@ -115,7 +112,7 @@ std::vector<State> A_star::search_manhattan (const State& start, State& goal, au
 
     align_states (start, goal);
     g_score[start] = 0;
-    open_set.push({manhattan_distance_max(start, goal), start});
+    open_set.push({manhattan_distance_sum(start, goal), start});
 
     Board_set temporary;
     temporary.assign_targets(start);
@@ -142,52 +139,7 @@ std::vector<State> A_star::search_manhattan (const State& start, State& goal, au
                 came_from[neighbor] = current;
                 g_score[neighbor] = candidate_g;
 
-                h = manhattan_distance_max(neighbor, goal);
-                f_score = candidate_g + h;
-
-                open_set.push({f_score, neighbor});
-            }
-        }
-    }
-
-    return {};
-}
-
-std::vector <State> A_star::search_triangular (const State& start, State& goal, auto valid_state_function) {
-    std::priority_queue<std::pair<double, State>, std::vector<std::pair<double, State>>, State_comparator> open_set;
-    std::unordered_map<State, State, State_hasher> came_from;
-    std::unordered_map<State, double, State_hasher> g_score;
-
-    align_states (start, goal);
-    g_score[start] = 0;
-    open_set.push({euclidean_distance_max(start, goal), start});
-
-    Board_set temporary;
-    temporary.assign_targets(start);
-    temporary.teleport(start);
-    temporary.assign_targets(goal);
-
-    State current;
-    constexpr double cost = GRID_SIZE;
-    double candidate_g;
-    double f_score;
-    double h;
-
-    while (!open_set.empty()) {
-        current = open_set.top().second;
-        open_set.pop();
-
-        if ( is_goal_reached(current, goal) )
-            return reconstruct_path(came_from, current);
-
-        for ( const auto& neighbor : get_next_states_triangular(temporary, current, valid_state_function) ) {
-            candidate_g = g_score[current] + cost;
-
-            if (g_score.find(neighbor) == g_score.end() || candidate_g < g_score[neighbor]) {
-                came_from[neighbor] = current;
-                g_score[neighbor] = candidate_g;
-
-                h = euclidean_distance_max(neighbor, goal);
+                h = manhattan_distance_sum(neighbor, goal);
                 f_score = candidate_g + h;
 
                 open_set.push({f_score, neighbor});

@@ -24,17 +24,24 @@ typedef CGAL::Aff_transformation_2<Kernel> Transformation;
 
 // Simulation parameters
 constexpr int BOARDS_COUNT = 3;
+constexpr int BOARD_VERTICES_COUNT = 12;
+constexpr int POM_RANGE_VERTICES_COUNT = 4;
+constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
 constexpr int MAX_ITERATION_INDEX = 10000;
 constexpr double BOARDS_CRUISE_VELOCITY = 10.; // mm/s
 constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
 constexpr double DESTINATION_REACHED_TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULATION_TIME_STEP; // mm
 
 // A* search parameters
-enum class Grid_type {isometric, manhattan, triangular};
+enum class Grid_type {isometric, manhattan};
 enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 
-constexpr auto GRID_TYPE = Grid_type::triangular;
-constexpr auto FOV_OPTIONS = Fov_options::none;
+constexpr auto GRID_TYPE = Grid_type::isometric;
+constexpr auto FOV_OPTIONS = Fov_options::fov_large_excluded;
+constexpr double GRID_SIZE = 30; // mm
+constexpr double HEURISTIC_WEIGHT = 1.5;
+constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
+constexpr double GOAL_REACHED_TOLERANCE = GRID_SIZE * 1.5; // mm
 constexpr double SIN45 = 0.70710678118;
 constexpr double SIN60 = 0.86602540378;
 constexpr double COS60 = 0.5;
@@ -47,23 +54,16 @@ constexpr std::array<double, 7> DY_triangular = {0., 0, 0., SIN60, -SIN60, SIN60
 constexpr int NUM_DIRECTIONS_ISOMETRIC = 9;
 constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
 constexpr int NUM_DIRECTIONS_TRIANGULAR = 7;
-constexpr double GRID_SIZE = 30; // mm
-constexpr double HEURISTIC_WEIGHT = 1.3;
-constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
-constexpr double GOAL_REACHED_TOLERANCE = GRID_SIZE * 1.5; // mm
 
 // Graphic rendering parameters
 constexpr int WINDOW_HEIGHT = 1000;
 constexpr int WINDOW_WIDTH = 1000;
-constexpr int BOARD_VERTICES_COUNT = 12;
-constexpr int POM_RANGE_VERTICES_COUNT = 4;
 constexpr double ASTERISM_CIRCLE_RADIUS = 8.;
 constexpr int CONVEX_SHAPES_TRANSPARENCY = 60;
 constexpr int MOVEMENT_DELAY = 15; // milliseconds
 constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 
 // Dataset generation parameters
-constexpr double TECHNICAL_FIELD_RADIUS = 265.2; // mm
 constexpr double GENERATION_AREA_RADIUS = 100; // mm
 constexpr int GENERATED_DATASET_SIZE = 100;
 
