@@ -44,7 +44,7 @@ constexpr int DIAGONAL_DIRECTIONS_START_INDEX = 5;
 constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
 constexpr double SIN45 = 0.70710678118;
 constexpr double GRID_SIZE = 30; // mm
-constexpr double HEURISTIC_WEIGHT = 1.;
+constexpr double HEURISTIC_WEIGHT = 1.3;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double GOAL_REACHED_TOLERANCE = GRID_SIZE * 1.5; // mm
 

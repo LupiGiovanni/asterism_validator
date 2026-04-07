@@ -111,21 +111,3 @@ std::vector<State> A_star::reconstruct_path (std::unordered_map<State, State, St
 
     return total_path;
 }
-
-double A_star::cross_product (const Point& start, const Point& current, const Point& goal) {
-    double dx1 = current.x() - goal.x();
-    double dy1 = current.y() - goal.y();
-    double dx2 = start.x() - goal.x();
-    double dy2 = start.y() - goal.y();
-
-    return std::abs(dx1 * dy2 - dx2 * dy1);
-}
-
-double A_star::cross_product_total (const State& start, const State& current, const State& goal) {
-    double total_cross = 0;
-
-    for (int i = 0; i < BOARDS_COUNT; i++)
-        total_cross += cross_product(start[i], current[i], goal[i]);
-
-    return total_cross;
-}
