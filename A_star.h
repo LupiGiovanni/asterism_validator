@@ -14,6 +14,7 @@ class A_star {
 public:
     static std::vector<State> search_isometric (const State& start, State& goal, auto valid_state_function);
     static std::vector<State> search_manhattan (const State& start, State& goal, auto valid_state_function);
+    static std::vector<State> search_triangular (const State& start, State& goal, auto valid_state_function);
 
     static bool is_valid_state (Board_set& board_set, const State& state);
     static bool is_valid_state_fov_large_excluded (Board_set& board_set, const State& state);
@@ -33,6 +34,7 @@ private:
     static void align_states (const State& start, State& goal);
     static std::vector<State> get_next_states_isometric (Board_set& board_set, const State& state, auto valid_state_function);
     static std::vector<State> get_next_states_manhattan (Board_set& board_set, const State& state, auto valid_state_function);
+    static std::vector<State> get_next_states_triangular (Board_set& board_set, const State& state, auto valid_state_function);
 
     static bool is_goal_reached (const State& current, const State& goal);
 
@@ -60,6 +62,7 @@ struct A_star::State_comparator {
     }
 };
 
+// TODO: implement max iteration index to prevent infinite loops
 std::vector<State> A_star::search_isometric (const State& start, State& goal, auto valid_state_function) {
     std::priority_queue<std::pair<double, State>, std::vector<std::pair<double, State>>, State_comparator> open_set;
     std::unordered_map<State, State, State_hasher> came_from;
@@ -150,6 +153,51 @@ std::vector<State> A_star::search_manhattan (const State& start, State& goal, au
     return {};
 }
 
+std::vector <State> A_star::search_triangular (const State& start, State& goal, auto valid_state_function) {
+    std::priority_queue<std::pair<double, State>, std::vector<std::pair<double, State>>, State_comparator> open_set;
+    std::unordered_map<State, State, State_hasher> came_from;
+    std::unordered_map<State, double, State_hasher> g_score;
+
+    align_states (start, goal);
+    g_score[start] = 0;
+    open_set.push({euclidean_distance_max(start, goal), start});
+
+    Board_set temporary;
+    temporary.assign_targets(start);
+    temporary.teleport(start);
+    temporary.assign_targets(goal);
+
+    State current;
+    constexpr double cost = GRID_SIZE;
+    double candidate_g;
+    double f_score;
+    double h;
+
+    while (!open_set.empty()) {
+        current = open_set.top().second;
+        open_set.pop();
+
+        if ( is_goal_reached(current, goal) )
+            return reconstruct_path(came_from, current);
+
+        for ( const auto& neighbor : get_next_states_triangular(temporary, current, valid_state_function) ) {
+            candidate_g = g_score[current] + cost;
+
+            if (g_score.find(neighbor) == g_score.end() || candidate_g < g_score[neighbor]) {
+                came_from[neighbor] = current;
+                g_score[neighbor] = candidate_g;
+
+                h = euclidean_distance_max(neighbor, goal);
+                f_score = candidate_g + h;
+
+                open_set.push({f_score, neighbor});
+            }
+        }
+    }
+
+    return {};
+}
+
 std::vector<State> A_star::get_next_states_isometric (Board_set& board_set, const State& state, auto valid_state_function) {
     State next;
     std::vector<State> next_vector;
@@ -183,6 +231,26 @@ std::vector<State> A_star::get_next_states_manhattan (Board_set& board_set, cons
                 next.set_points({ Point( state[0].x() + DX_manhattan[i] * GRID_SIZE, state[0].y() + DY_manhattan[i] * GRID_SIZE ),
                                      Point( state[1].x() + DX_manhattan[j] * GRID_SIZE, state[1].y() + DY_manhattan[j] * GRID_SIZE ),
                                      Point( state[2].x() + DX_manhattan[k] * GRID_SIZE, state[2].y() + DY_manhattan[k] * GRID_SIZE ) });
+
+                if ( valid_state_function(board_set, next) )
+                    next_vector.push_back(next);
+            }
+    return next_vector;
+}
+
+std::vector<State> A_star::get_next_states_triangular (Board_set& board_set, const State& state, auto valid_state_function) {
+    State next;
+    std::vector<State> next_vector;
+
+    for (int i = 0; i < NUM_DIRECTIONS_TRIANGULAR; ++i)
+        for (int j = 0; j < NUM_DIRECTIONS_TRIANGULAR; ++j)
+            for (int k = 0; k < NUM_DIRECTIONS_TRIANGULAR; ++k) {
+                if (i == 0 && j == 0 && k == 0)
+                    continue;
+
+                next.set_points({ Point( state[0].x() + DX_triangular[i] * GRID_SIZE, state[0].y() + DY_triangular[i] * GRID_SIZE ),
+                                     Point( state[1].x() + DX_triangular[j] * GRID_SIZE, state[1].y() + DY_triangular[j] * GRID_SIZE ),
+                                     Point( state[2].x() + DX_triangular[k] * GRID_SIZE, state[2].y() + DY_triangular[k] * GRID_SIZE ) });
 
                 if ( valid_state_function(board_set, next) )
                     next_vector.push_back(next);

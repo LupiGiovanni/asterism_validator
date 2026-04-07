@@ -30,18 +30,23 @@ constexpr double SIMULATION_TIME_STEP = 0.05; // seconds
 constexpr double DESTINATION_REACHED_TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULATION_TIME_STEP; // mm
 
 // A* search parameters
-enum class Grid_type {isometric, manhattan};
+enum class Grid_type {isometric, manhattan, triangular};
 enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 
-constexpr auto GRID_TYPE = Grid_type::isometric;
+constexpr auto GRID_TYPE = Grid_type::triangular;
 constexpr auto FOV_OPTIONS = Fov_options::none;
 constexpr double SIN45 = 0.70710678118;
+constexpr double SIN60 = 0.86602540378;
+constexpr double COS60 = 0.5;
 constexpr std::array<double, 9> DX_isometric = {0., 0., 0., 1., -1., SIN45, SIN45, -SIN45, -SIN45};
 constexpr std::array<double, 9> DY_isometric = {0., 1., -1., 0., 0., SIN45, -SIN45, SIN45, -SIN45};
 constexpr std::array<double, 5> DX_manhattan = {0., 0., 0., 1., -1.};
 constexpr std::array<double, 5> DY_manhattan = {0., 1., -1., 0., 0.};
+constexpr std::array<double, 7> DX_triangular = {0., 1., -1., COS60, COS60, -COS60, -COS60};
+constexpr std::array<double, 7> DY_triangular = {0., 0, 0., SIN60, -SIN60, SIN60, -SIN60};
 constexpr int NUM_DIRECTIONS_ISOMETRIC = 9;
 constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
+constexpr int NUM_DIRECTIONS_TRIANGULAR = 7;
 constexpr double GRID_SIZE = 30; // mm
 constexpr double HEURISTIC_WEIGHT = 1.3;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
