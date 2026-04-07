@@ -33,7 +33,7 @@ constexpr double DESTINATION_REACHED_TOLERANCE = BOARDS_CRUISE_VELOCITY * SIMULA
 enum class Grid_type {isometric, manhattan};
 enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 
-constexpr auto GRID_TYPE = Grid_type::manhattan;
+constexpr auto GRID_TYPE = Grid_type::isometric;
 constexpr auto FOV_OPTIONS = Fov_options::none;
 constexpr std::array<int, 9> DX = {0, 0, 0, 1, -1, 1, 1, -1, -1};
 constexpr std::array<int, 9> DY = {0, 1, -1, 0, 0, 1, -1, 1, -1};
@@ -42,10 +42,10 @@ constexpr std::array<int, 5> DY_manhattan = {0, 1, -1, 0, 0};
 constexpr int NUM_DIRECTIONS = 9;
 constexpr int DIAGONAL_DIRECTIONS_START_INDEX = 5;
 constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
-constexpr double GRID_SIZE = 20; // mm
-constexpr double HEURISTIC_WEIGHT = 1.3;
-constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double SIN45 = 0.70710678118;
+constexpr double GRID_SIZE = 30; // mm
+constexpr double HEURISTIC_WEIGHT = 1.;
+constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double GOAL_REACHED_TOLERANCE = GRID_SIZE * 1.5; // mm
 
 // Graphic rendering parameters

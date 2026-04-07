@@ -14,12 +14,7 @@ class A_star {
 public:
     static std::vector<State> search_isometric (const State& start, State& goal, auto valid_state_function);
     static std::vector<State> search_manhattan (const State& start, State& goal, auto valid_state_function);
-
-    static double euclidean_distance (const State& current, const State& goal);
-    static double manhattan_distance (const State& current, const State& goal);
-
-    static std::vector<State> get_next_states_isometric (Board_set& board_set, const State& state, auto valid_state_function);
-    static std::vector<State> get_next_states_manhattan (Board_set& board_set, const State& state, auto valid_state_function);
+    static std::vector<State> search_isometric_debug (const State& start, State& goal);
 
     static bool is_valid_state (Board_set& board_set, const State& state);
     static bool is_valid_state_fov_large_excluded (Board_set& board_set, const State& state);
@@ -29,20 +24,23 @@ private:
     struct State_hasher;
     struct State_comparator;
 
-    static double euclidean_distance_helper (const Point& current, const Point& goal);
-    static double manhattan_distance_helper (const Point& current, const Point& goal);
-
-    static double move_cost (const State& current, const State& neighbor);
-
-    static bool is_goal_reached (const State& current, const State& goal);
+    static double euclidean_distance (const Point& current, const Point& goal);
+    static double manhattan_distance (const Point& current, const Point& goal);
+    static double euclidean_distance_total (const State& current, const State& goal);
+    static double manhattan_distance_total (const State& current, const State& goal);
 
     static void align_states (const State& start, State& goal);
+    static std::vector<State> get_next_states_isometric (Board_set& board_set, const State& state, auto valid_state_function);
+    static std::vector<State> get_next_states_manhattan (Board_set& board_set, const State& state, auto valid_state_function);
 
     static double isometric_diagonal_correction (int index);
+
+    static bool is_goal_reached (const State& current, const State& goal);
 
     static std::vector<State> reconstruct_path (std::unordered_map<State, State, State_hasher>& came_from, State current);
 };
 
+// TODO: maybe hash with long long values
 struct A_star::State_hasher {
     inline std::size_t operator() (const State& state) const {
         std::size_t seed = 0;
@@ -70,7 +68,7 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
 
     align_states (start, goal);
     g_score[start] = 0;
-    open_set.push({euclidean_distance(start, goal), start});
+    open_set.push({euclidean_distance_total(start, goal), start});
 
     Board_set temporary;
     temporary.assign_targets(start);
@@ -78,9 +76,10 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
     temporary.assign_targets(goal);
 
     State current;
-    double cost;
+    constexpr double cost = GRID_SIZE;
     double candidate_g;
     double f_score;
+    double h;
 
     while (!open_set.empty()) {
         current = open_set.top().second;
@@ -90,13 +89,15 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
             return reconstruct_path(came_from, current);
 
         for ( const auto& neighbor : get_next_states_isometric(temporary, current, valid_state_function) ) {
-            cost = move_cost(current, neighbor);
             candidate_g = g_score[current] + cost;
 
             if (g_score.find(neighbor) == g_score.end() || candidate_g < g_score[neighbor]) {
                 came_from[neighbor] = current;
                 g_score[neighbor] = candidate_g;
-                f_score = candidate_g + euclidean_distance(neighbor, goal);
+
+                h = euclidean_distance_total(neighbor, goal);
+                f_score = candidate_g + h;
+
                 open_set.push({f_score, neighbor});
             }
         }
@@ -112,7 +113,7 @@ std::vector<State> A_star::search_manhattan (const State& start, State& goal, au
 
     align_states (start, goal);
     g_score[start] = 0;
-    open_set.push({manhattan_distance(start, goal), start});
+    open_set.push({manhattan_distance_total(start, goal), start});
 
     Board_set temporary;
     temporary.assign_targets(start);
@@ -120,9 +121,10 @@ std::vector<State> A_star::search_manhattan (const State& start, State& goal, au
     temporary.assign_targets(goal);
 
     State current;
-    double cost;
+    constexpr double cost = GRID_SIZE;
     double candidate_g;
     double f_score;
+    double h;
 
     while (!open_set.empty()) {
         current = open_set.top().second;
@@ -132,19 +134,67 @@ std::vector<State> A_star::search_manhattan (const State& start, State& goal, au
             return reconstruct_path(came_from, current);
 
         for ( const auto& neighbor : get_next_states_manhattan(temporary, current, valid_state_function) ) {
-            cost = move_cost(current, neighbor);
             candidate_g = g_score[current] + cost;
 
             if (g_score.find(neighbor) == g_score.end() || candidate_g < g_score[neighbor]) {
                 came_from[neighbor] = current;
                 g_score[neighbor] = candidate_g;
-                f_score = candidate_g + manhattan_distance(neighbor, goal);
+
+                h = manhattan_distance_total(neighbor, goal);
+                f_score = candidate_g + h;
+
                 open_set.push({f_score, neighbor});
             }
         }
     }
 
     return {};
+}
+
+inline std::vector<State> A_star::search_isometric_debug (const State& start, State& goal) {
+    std::priority_queue<std::pair<double, State>, std::vector<std::pair<double, State>>, State_comparator> open_set;
+    std::unordered_map<State, State, State_hasher> came_from;
+    std::unordered_map<State, double, State_hasher> g_score;
+
+    align_states (start, goal);
+    g_score[start] = 0;
+    open_set.push({euclidean_distance_total(start, goal), start});
+
+    int iterations = 0;
+    int max_iterations = 30;
+
+    Board_set temporary;
+    temporary.assign_targets(start);
+    temporary.teleport(start);
+    temporary.assign_targets(goal);
+
+    State current;
+    constexpr double cost = GRID_SIZE;
+    double candidate_g;
+    double f_score;
+
+    while (!open_set.empty() && iterations < max_iterations) {
+        current = open_set.top().second;
+        open_set.pop();
+
+        if ( is_goal_reached(current, goal))
+            return reconstruct_path(came_from, current);
+
+        for (const auto& neighbor : get_next_states_isometric(temporary, current, is_valid_state)) {
+            candidate_g = g_score[current] + cost;
+
+            if (g_score.find(neighbor) == g_score.end() || candidate_g < g_score[neighbor]) {
+                came_from[neighbor] = current;
+                g_score[neighbor] = candidate_g;
+                f_score = candidate_g + euclidean_distance_total(neighbor, goal);
+                open_set.push({f_score, neighbor});
+            }
+        }
+
+        iterations++;
+    }
+
+    return reconstruct_path(came_from, current);
 }
 
 std::vector<State> A_star::get_next_states_isometric (Board_set& board_set, const State& state, auto valid_state_function) {
@@ -157,12 +207,24 @@ std::vector<State> A_star::get_next_states_isometric (Board_set& board_set, cons
                 if (i == 0 && j == 0 && k == 0)
                     continue;
 
+                //------------------------------------------------------------------------------
+                // TODO: debug remove later
+                std::cout << "Considering possible next state" << std::endl;
+                //------------------------------------------------------------------------------
+
                 next.set_points({ Point( state[0].x() + DX[i] * GRID_SIZE * isometric_diagonal_correction(i), state[0].y() + DY[i] * GRID_SIZE * isometric_diagonal_correction(i) ),
                                      Point( state[1].x() + DX[j] * GRID_SIZE * isometric_diagonal_correction(j), state[1].y() + DY[j] * GRID_SIZE * isometric_diagonal_correction(j) ),
                                      Point( state[2].x() + DX[k] * GRID_SIZE * isometric_diagonal_correction(k), state[2].y() + DY[k] * GRID_SIZE * isometric_diagonal_correction(k) ) });
 
-                if ( valid_state_function(board_set, next) )
+                if ( valid_state_function(board_set, next) ) {
                     next_vector.push_back(next);
+
+                    //------------------------------------------------------------------------------
+                    // TODO: debug remove later
+                    std::cout << "Adding valid state to next states" << std::endl;
+                    next.print();
+                    //------------------------------------------------------------------------------
+                }
             }
     return next_vector;
 }

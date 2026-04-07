@@ -67,52 +67,36 @@ bool A_star::is_goal_reached (const State& current, const State& goal) {
     return true;
 }
 
-double A_star::euclidean_distance (const State& current, const State& goal) {
+double A_star::euclidean_distance_total (const State& current, const State& goal) {
     double h = 0;
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += euclidean_distance_helper(current[i], goal[i]);
+        h += euclidean_distance(current[i], goal[i]);
     }
 
-    return h;
+    return h * HEURISTIC_WEIGHT;
 }
 
-double A_star::manhattan_distance (const State& current, const State& goal) {
+double A_star::manhattan_distance_total (const State& current, const State& goal) {
     double h = 0;
     for (int i = 0; i < BOARDS_COUNT; i++) {
-        h += manhattan_distance_helper(current[i], goal[i]);
+        h += manhattan_distance(current[i], goal[i]);
     }
 
-    return h;
+    return h * HEURISTIC_WEIGHT;
 }
 
-double A_star::euclidean_distance_helper (const Point& current, const Point& goal) {
+double A_star::euclidean_distance (const Point& current, const Point& goal) {
     double dx = std::abs(current.x() - goal.x());
     double dy = std::abs(current.y() - goal.y());
 
-    return std::sqrt(dx * dx + dy * dy) * HEURISTIC_WEIGHT;
+    return std::sqrt(dx * dx + dy * dy);
 }
 
-double A_star::manhattan_distance_helper (const Point& current, const Point& goal) {
+double A_star::manhattan_distance (const Point& current, const Point& goal) {
     double dx = std::abs(current.x() - goal.x());
     double dy = std::abs(current.y() - goal.y());
 
-    return (dx + dy) * HEURISTIC_WEIGHT;
-}
-
-// TODO: review
-double A_star::move_cost (const State& current, const State& neighbor) {
-    double total_cost = 0;
-
-    for (int i = 0; i < BOARDS_COUNT; ++i) {
-        double dx = (neighbor[i].x() > current[i].x()) ? neighbor[i].x() - current[i].x() : current[i].x() - neighbor[i].x();
-        double dy = (neighbor[i].y() > current[i].y()) ? neighbor[i].y() - current[i].y() : current[i].y() - neighbor[i].y();
-
-        if (dx == 0 && dy == 0)
-            continue;
-        else
-            total_cost += 1;
-    }
-    return total_cost;
+    return dx + dy;
 }
 
 std::vector<State> A_star::reconstruct_path (std::unordered_map<State, State, State_hasher>& came_from, State current) {
@@ -126,4 +110,22 @@ std::vector<State> A_star::reconstruct_path (std::unordered_map<State, State, St
     std::reverse(total_path.begin(), total_path.end());
 
     return total_path;
+}
+
+double A_star::cross_product (const Point& start, const Point& current, const Point& goal) {
+    double dx1 = current.x() - goal.x();
+    double dy1 = current.y() - goal.y();
+    double dx2 = start.x() - goal.x();
+    double dy2 = start.y() - goal.y();
+
+    return std::abs(dx1 * dy2 - dx2 * dy1);
+}
+
+double A_star::cross_product_total (const State& start, const State& current, const State& goal) {
+    double total_cross = 0;
+
+    for (int i = 0; i < BOARDS_COUNT; i++)
+        total_cross += cross_product(start[i], current[i], goal[i]);
+
+    return total_cross;
 }
