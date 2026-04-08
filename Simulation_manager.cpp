@@ -41,6 +41,9 @@ void Simulation_manager::simulate_dataset_other_movements (Movement movement_typ
     std::array<int, HISTOGRAM_INTERVALS_COUNT> y_values = {0};
 
     for (int i = 1; i < dataset.size(); ++i) {
+        if ( i % 100 == 0 )
+            std::cout << "Running simulation " << i << " of " << dataset.size() - 1 << std::endl;
+
         simulation.run(movement_type, dataset[i-1], dataset[i]);
         total_simulations++;
 
@@ -74,6 +77,9 @@ void Simulation_manager::simulate_dataset_outside_tech_field (const std::vector<
     std::array<int, HISTOGRAM_INTERVALS_COUNT> y_values = {0};
 
     for (int i = 0; i < dataset.size(); ++i) {
+        if ( i % 100 == 0 )
+            std::cout << "Running simulation " << i << " of " << dataset.size() << std::endl;
+
         simulation.run(Movement::outside_technical_field, dataset[i]);
         total_simulations++;
 
