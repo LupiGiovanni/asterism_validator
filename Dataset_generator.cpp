@@ -7,7 +7,22 @@
 #include "Dataset_generator.h"
 
 const std::vector<Asterism>& Dataset_generator::get_dataset () const {
+    if (dataset.empty())
+        std::cout << "Warning: attempted to run Dataset_generator::get_dataset but 'dataset' vector is empty" << std::endl;
     return dataset;
+}
+
+void Dataset_generator::print_dataset () const {
+    if (dataset.empty())
+        std::cout << "Warning: attempted to run Dataset_generator::print_dataset but 'dataset' vector is empty" << std::endl;
+    else {
+        for (int i = 0; i < dataset.size() - 1; ++i) {
+            dataset[i].print();
+            std::cout << "," << std::endl;
+        }
+        dataset[dataset.size() - 1].print();
+        std::cout << std::endl;
+    }
 }
 
 Asterism Dataset_generator::generate_asterism_random () {

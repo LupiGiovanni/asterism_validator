@@ -335,10 +335,12 @@ void Simulation::print_results () const {
 
     std::cout << "> Start asterism\t\t\t";
     start.print();
+    std::cout << std::endl;
     std::cout << "> Start valid\t\t\t\t" << (start_valid? "true":"false") << std::endl;
 
     std::cout << "> Destination asterism\t\t";
     destination.print();
+    std::cout << std::endl;
     std::cout << "> Destination valid\t\t\t" << (destination_valid? "true":"false") << std::endl;
 
     std::cout << std::endl;
@@ -353,6 +355,6 @@ void Simulation::print_results () const {
     std::cout << "> FoV small vignetting\t\t" << (fov_small_vignette_detected? "true":"false") << std::endl;
     std::cout << "> FoV large vignetting\t\t" << (fov_large_vignette_detected? "true":"false") << std::endl;
     std::cout << "---------------------------------------------------------------------------------------------------------" << std::endl;
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl;
 }
 

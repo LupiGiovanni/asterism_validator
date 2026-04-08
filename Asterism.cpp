@@ -69,11 +69,9 @@ bool Asterism::is_in_fov_small () const {
 void Asterism::print () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
     std::cout << "{" << points[0].x() << ", " << points[1].x() << ", " << points[2].x() << ", " << points[0].y() << ", " << points[1].y() << ", " << points[2].y() << "}";
-    std::cout << std::endl;
 }
 
 void Asterism::print_xy () const {
     std::cout << std::fixed << std::setprecision(DECIMAL_PLACES_PRINTED);
     std::cout << "(" << points[0].x() << ", " << points[0].y() << "), (" << points[1].x() << ", " << points[1].y() << "), (" << points[2].x() << ", " << points[2].y() << ")";
-    std::cout << std::endl;
 }

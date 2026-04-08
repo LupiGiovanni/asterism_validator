@@ -55,7 +55,6 @@ void Simulation_manager::simulate_dataset_other_movements (Movement movement_typ
         else {
             std::cout << std::endl;
             std::cout << "Simulation from asterism " << i-1 << " to asterism " << i << " of the dataset failed. Detailed info below: ";
-            std::cout << std::endl;
             simulation.print_results();
         }
     }

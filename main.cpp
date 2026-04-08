@@ -6,7 +6,7 @@
 #include "dataset.h"
 
 int main () {
-    Simulation_manager::simulate_dataset(Movement::linear, cedric_dataset_extended);
+    Simulation_manager::simulate_dataset(Movement::linear, cedric_dataset);
 
     return 0;
 }
