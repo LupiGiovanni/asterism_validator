@@ -44,8 +44,11 @@ struct A_star::State_hasher {
         std::size_t seed = 0;
 
         for (const auto& p : state.get_points()) {
-            seed ^= std::hash<double>{}(p.x()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-            seed ^= std::hash<double>{}(p.y()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            long long x = static_cast<long long>(std::round(p.x() * HASH_PRECISION_FACTOR));
+            long long y = static_cast<long long>(std::round(p.y() * HASH_PRECISION_FACTOR));
+
+            seed ^= std::hash<long long>{}(x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= std::hash<long long>{}(y) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         }
 
         return seed;
@@ -79,13 +82,17 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
     double candidate_g;
     double f_score;
     double h;
+    int states_explored = 0;
 
     while (!open_set.empty()) {
         current = open_set.top().second;
         open_set.pop();
+        states_explored++;
 
-        if ( is_goal_reached(current, goal) )
+        if ( is_goal_reached(current, goal) ) {
+            std::cout << "A* search (isometric) explored " << states_explored << " states." << std::endl;
             return reconstruct_path(came_from, current);
+        }
 
         for ( const auto& neighbor : get_next_states_isometric(temporary, current, valid_state_function) ) {
             candidate_g = g_score[current] + cost;

@@ -54,6 +54,7 @@ constexpr std::array<double, 7> DY_triangular = {0., 0, 0., SIN60, -SIN60, SIN60
 constexpr int NUM_DIRECTIONS_ISOMETRIC = 9;
 constexpr int NUM_DIRECTIONS_MANHATTAN = 5;
 constexpr int NUM_DIRECTIONS_TRIANGULAR = 7;
+constexpr double HASH_PRECISION_FACTOR = 1000.; // 1000 -> 10^-3 mm precision
 
 // Graphic rendering parameters
 constexpr int WINDOW_HEIGHT = 1000;
