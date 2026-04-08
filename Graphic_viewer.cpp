@@ -608,6 +608,7 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     for (int i = 0; i < path.size(); i++) {
         std::cout << "State " << i << ":\t";
         path[i].print_xy();
+        std::cout << std::endl;
     }
     std::cout << std::endl;
 

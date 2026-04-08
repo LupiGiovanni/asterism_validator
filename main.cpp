@@ -6,7 +6,11 @@
 #include "dataset.h"
 
 int main () {
-    Simulation_manager::simulate_dataset(Movement::linear, cedric_dataset);
+    Graphic_viewer gv;
+
+    for (int i = 1; i < cedric_dataset.size() - 1; ++i) {
+        gv.animate(Movement::A_star, cedric_dataset[i-1], cedric_dataset[i]);
+    }
 
     return 0;
 }
