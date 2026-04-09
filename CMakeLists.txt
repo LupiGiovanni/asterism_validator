@@ -29,7 +29,7 @@ add_executable (    asterism_validator
                     A_star.cpp
                     A_star.h
                     helper.h
-                    dataset.h
+                    datasets.h
                     CAD_coordinates.h    )
 
 target_link_libraries (    asterism_validator

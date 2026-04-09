@@ -233,6 +233,16 @@ void Simulation::run_A_star (const Asterism& movement_start, const Asterism& mov
         return;
     }
 
+    if ( FOV_OPTIONS == Fov_options::fov_small_excluded && ( movement_start.is_in_fov_small() || movement_destination.is_in_fov_small() ) ) {
+        std::cout << "Warning: attempted to run Simulation::run_A_star with FOV_OPTIONS set to 'fov_small_excluded' but start and/or destination asterisms are in small FoV" << std::endl;
+        return;
+    }
+
+    if ( FOV_OPTIONS == Fov_options::fov_large_excluded && ( movement_start.is_in_fov_large() || movement_destination.is_in_fov_large() ) ) {
+        std::cout << "Warning: attempted to run Simulation::run_A_star with FOV_OPTIONS set to 'fov_large_excluded' but start and/or destination asterisms are in large FoV" << std::endl;
+        return;
+    }
+
     State s = start;
     State d = destination;
     std::vector<State> path;

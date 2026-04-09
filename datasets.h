@@ -2,8 +2,8 @@
 // Created by gionimbus on 12/16/25.
 //
 
-#ifndef ASTERISM_VALIDATOR_DATASET_H
-#define ASTERISM_VALIDATOR_DATASET_H
+#ifndef ASTERISM_VALIDATOR_DATASETS_H
+#define ASTERISM_VALIDATOR_DATASETS_H
 
 #include <vector>
 #include "Asterism.h"
@@ -4045,4 +4045,4 @@ inline std::vector<Asterism> cedric_dataset_extended = {
 };
 
 
-#endif //ASTERISM_VALIDATOR_DATASET_H
+#endif //ASTERISM_VALIDATOR_DATASETS_H

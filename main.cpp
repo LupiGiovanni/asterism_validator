@@ -3,7 +3,7 @@
 #include "Simulation_manager.h"
 #include "Graphic_viewer.h"
 #include "Dataset_generator.h"
-#include "dataset.h"
+#include "datasets.h"
 
 int main () {
     Graphic_viewer gv;

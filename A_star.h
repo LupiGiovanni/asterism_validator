@@ -82,15 +82,14 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
     double candidate_g;
     double f_score;
     double h;
-    int states_explored = 0;
+    int states_pushed = 0;
 
     while (!open_set.empty()) {
         current = open_set.top().second;
         open_set.pop();
-        states_explored++;
 
         if ( is_goal_reached(current, goal) ) {
-            std::cout << "A* search (isometric) explored " << states_explored << " states." << std::endl;
+            std::cout << "Pushed " << states_pushed << " states." << std::endl;
             return reconstruct_path(came_from, current);
         }
 
@@ -105,6 +104,7 @@ std::vector<State> A_star::search_isometric (const State& start, State& goal, au
                 f_score = candidate_g + h;
 
                 open_set.push({f_score, neighbor});
+                states_pushed++;
             }
         }
     }

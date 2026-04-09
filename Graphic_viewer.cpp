@@ -572,9 +572,17 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     bool destination_valid = destination.is_valid();
 
     if (!start_valid || !destination_valid) {
-        std::cout <<
-            "Warning: attempted to run Graphic_viewer::animate_A_star but start or destination asterism are invalid" <<
-            std::endl;
+        std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but start or destination asterism are invalid" << std::endl;
+        return;
+    }
+
+    if ( FOV_OPTIONS == Fov_options::fov_small_excluded && ( start.is_in_fov_small() || destination.is_in_fov_small() ) ) {
+        std::cout << "Warning: attempted to run Simulation::run_A_star with FOV_OPTIONS set to 'fov_small_excluded' but start and/or destination asterisms are in small FoV" << std::endl;
+        return;
+    }
+
+    if ( FOV_OPTIONS == Fov_options::fov_large_excluded && ( start.is_in_fov_large() || destination.is_in_fov_large() ) ) {
+        std::cout << "Warning: attempted to run Simulation::run_A_star with FOV_OPTIONS set to 'fov_large_excluded' but start and/or destination asterisms are in large FoV" << std::endl;
         return;
     }
 
