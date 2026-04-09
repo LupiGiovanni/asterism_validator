@@ -39,7 +39,7 @@ enum class Fov_options {fov_small_excluded, fov_large_excluded, none};
 constexpr auto GRID_TYPE = Grid_type::isometric;
 constexpr auto FOV_OPTIONS = Fov_options::none;
 constexpr double GRID_SIZE = 30; // mm
-constexpr double HEURISTIC_WEIGHT = 1.3;
+constexpr double HEURISTIC_WEIGHT = 2;
 constexpr double BOARD_BUFFER_WIDTH = 10.; // mm
 constexpr double GOAL_REACHED_TOLERANCE = GRID_SIZE * 1.5; // mm
 constexpr double SIN45 = 0.70710678118;
