@@ -2,12 +2,13 @@
 
 Given XY coordinates of 3 Natural Guide Stars the program can establish if they are reachable by the LOR boards.
 
-Given a start asterism and a destination asterism, the program also simulates various movements of the LOR boards to reach the NGSs:
-* Linear movement
+Given a start asterism and a destination asterism, the program simulates various movements that can be performed by the LOR boards to reach the destination asterism:
+* Linear movements
 * Safe-basic movements 
 * Outside-technical-field movements
 
-**The program detects if a collision between the boards occurs at any moment.** <br>
+**The program detects if a collision between the boards occurs at any moment.**
+
 **The program can also generate collision-free trajectories for the boards with A-star search algorithm. Trajectories generated with A-star can also selectively avoid the scientific FoVs.**
 
 Examples of these and other features are shown below.
@@ -18,6 +19,8 @@ Libraries used are:
 * sciplot for plotting histograms of dataset simulations
 
 The program can be normally built with ```cmake``` and ```make```.
+<br>
+<br>
 
 #### Example of linear movement:
 ![](include/10.gif)
@@ -32,8 +35,7 @@ The program can be normally built with ```cmake``` and ```make```.
 ![](include/6.gif)
 ![](include/8.gif)
 
-
-### Example of main:
+#### Example of main:
 ```c++
 int main () {
     Simulation_manager::simulate_dataset(Movement::linear_trajectory, cedric_dataset);
@@ -45,7 +47,7 @@ int main () {
 }
 ```
 
-### Example of command line output:
+#### Example of command line output:
 ```c++
 Simulation from asterism 73 to asterism 74 of the dataset failed. Detailed info below: 
 ---------------------------------------------------------------------------------------------------------
@@ -81,5 +83,5 @@ Simulation from asterism 73 to asterism 74 of the dataset failed. Detailed info 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 ```
 
-### Example of histogram output:
+#### Example of histogram output:
 ![](include/histogram_output.png)
