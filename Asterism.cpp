@@ -27,11 +27,15 @@ const Point& Asterism::operator[] (int index) const {
     return points[index];
 }
 
-bool Asterism::operator== (const Asterism& other) const {
-    constexpr int points_count = 3;
-    for (int i = 0; i < points_count; i++) {
-        if ( ! is_equal_double(points[i].x(), other.points[i].x()) || ! is_equal_double(points[i].y(), other.points[i].y()) )
-            return false;
+// Used in A_star for hashing and comparing States (which are typedef-ed as Asterisms)
+bool Asterism::operator==(const Asterism& other) const {
+    for (int i = 0; i < BOARDS_COUNT; ++i) {
+        long long x = static_cast<long long>(std::round(this->points[i].x() * HASH_PRECISION_FACTOR));
+        long long y = static_cast<long long>(std::round(this->points[i].y() * HASH_PRECISION_FACTOR));
+        long long x_other = static_cast<long long>(std::round(other.points[i].x() * HASH_PRECISION_FACTOR));
+        long long y_other = static_cast<long long>(std::round(other.points[i].y() * HASH_PRECISION_FACTOR));
+
+        if (x != x_other || y != y_other) return false;
     }
     return true;
 }

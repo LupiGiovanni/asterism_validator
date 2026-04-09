@@ -44,8 +44,11 @@ struct A_star::State_hasher {
         std::size_t seed = 0;
 
         for (const auto& p : state.get_points()) {
-            seed ^= std::hash<double>{}(p.x()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-            seed ^= std::hash<double>{}(p.y()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            long long x = static_cast<long long>(std::round(p.x() * HASH_PRECISION_FACTOR));
+            long long y = static_cast<long long>(std::round(p.y() * HASH_PRECISION_FACTOR));
+
+            seed ^= std::hash<long long>{}(x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= std::hash<long long>{}(y) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         }
 
         return seed;
