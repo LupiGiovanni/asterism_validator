@@ -65,7 +65,7 @@ constexpr int MOVEMENT_DELAY = 15; // milliseconds
 constexpr int ANIMATION_START_DELAY = 1000; // milliseconds
 
 // Dataset generation parameters
-constexpr double GENERATION_AREA_RADIUS = 100; // mm
+constexpr double GENERATION_AREA_RADIUS = 150; // mm
 constexpr int GENERATED_DATASET_SIZE = 100;
 
 // Other parameters

@@ -29,7 +29,7 @@ Asterism Dataset_generator::generate_asterism_random () {
     static std::random_device rd;
     static std::mt19937 gen(rd());
 
-    double radius = GENERATED_DATASET_SIZE;
+    double radius = GENERATION_AREA_RADIUS;
     double radius_squared = radius * radius;
     std::uniform_real_distribution<> dis(-radius, radius);
 
@@ -57,7 +57,7 @@ Asterism Dataset_generator::generate_asterism_random_valid () {
     return new_asterism;
 }
 
-void Dataset_generator::generate_dataset_random_valid () {
+void Dataset_generator::generate_dataset () {
     dataset.clear();
     while (dataset.size() < GENERATED_DATASET_SIZE) {
         Asterism new_asterism = generate_asterism_random_valid();

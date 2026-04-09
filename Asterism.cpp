@@ -27,7 +27,7 @@ const Point& Asterism::operator[] (int index) const {
     return points[index];
 }
 
-// Used in A_star for hashing and comparing States (which are typedef-ed as Asterisms)
+// used in A_star for hashing and comparing States (which are typedef-ed as Asterisms)
 bool Asterism::operator==(const Asterism& other) const {
     for (int i = 0; i < BOARDS_COUNT; ++i) {
         long long x = static_cast<long long>(std::round(this->points[i].x() * HASH_PRECISION_FACTOR));

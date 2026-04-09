@@ -24,7 +24,7 @@ void Simulation_manager::simulate_dataset (Movement movement_type, const std::ve
 
 void Simulation_manager::simulate_dataset_random(Movement movement_type) {
     Dataset_generator dg;
-    dg.generate_dataset_random_valid();
+    dg.generate_dataset();
     simulate_dataset(movement_type, dg.get_dataset());
 }
 

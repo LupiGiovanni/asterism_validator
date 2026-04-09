@@ -7,9 +7,13 @@
 
 int main () {
     Graphic_viewer gv;
+    Dataset_generator dg;
 
-    for (int i = 1; i < cedric_dataset.size() - 1; ++i) {
-        gv.animate(Movement::A_star, cedric_dataset[i-1], cedric_dataset[i]);
+    dg.generate_dataset();
+    std::vector<Asterism> hard_mode_dataset = dg.get_dataset();
+
+    for (int i = 1; i < hard_mode_dataset.size(); ++i) {
+        gv.animate(Movement::A_star, hard_mode_dataset[i-1], hard_mode_dataset[i]);
     }
 
     return 0;

@@ -11,7 +11,7 @@ class Dataset_generator {
 public:
     const std::vector<Asterism>& get_dataset () const;
     void print_dataset () const;
-    void generate_dataset_random_valid ();
+    void generate_dataset (); // random and valid
 
 private:
     std::vector<Asterism> dataset = {};
