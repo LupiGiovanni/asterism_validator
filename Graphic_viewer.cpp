@@ -2,6 +2,7 @@
 // Created by gionimbus on 1/26/26.
 //
 
+#include <chrono>
 #include "Graphic_viewer.h"
 #include "CAD_coordinates.h"
 
@@ -590,6 +591,8 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
     State d =  destination;
     std::vector<State> path;
 
+    auto t1 = std::chrono::high_resolution_clock::now();
+
     if constexpr (GRID_TYPE == Grid_type::isometric) {
         if constexpr (FOV_OPTIONS == Fov_options::none)
             path = A_star::search_isometric (s, d, A_star::is_valid_state);
@@ -607,6 +610,10 @@ void Graphic_viewer::animate_A_star (const Asterism& start, const Asterism& dest
         else if constexpr (FOV_OPTIONS == Fov_options::fov_large_excluded)
             path = A_star::search_manhattan (s, d, A_star::is_valid_state_fov_large_excluded);
     }
+
+    auto t2 = std::chrono::high_resolution_clock::now();
+    auto search_time = duration_cast<std::chrono::milliseconds>(t2 - t1);
+    std::cout << "Search time: " << search_time.count() << " ms" << std::endl;
 
     if (path.empty()) {
         std::cout << "Warning: attempted to run Graphic_viewer::animate_A_star but no path was found" << std::endl;
