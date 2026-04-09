@@ -1,15 +1,15 @@
 # Asterism validator
 
-Given the coordinates of an asterism the program can establish if it is reachable by the LOR boards.
+Given the coordinates of an asterism the program can establish if it's valid, i.e. if it's reachable by the LOR boards.
 
-Given a start asterism and a destination asterism, the program simulates various movements that can be performed by the LOR boards to reach the destination asterism:
-* Linear movements
-* Safe-basic movements 
-* Outside-technical-field movements
+Given a start asterism and a destination asterism, the program simulates various movements that can be performed by the LOR boards:
+* ***Linear movement*** from start asterism to destination asterism
+* ***Safe-basic movement*** from start asterism to destination asterism
+* ***Outside-technical-field movement*** from start asterism
 
-**The program detects if a collision between the boards occurs at any moment during the movements.**
+The program detects if a collision between the boards occurs at any moment during the movements.
 
-**The program can also generate collision-free trajectories for the boards with A-star search algorithm. Trajectories generated with A-star can also selectively avoid the scientific FoVs.**
+The program can also ***generate collision-free trajectories*** for the boards with A-star search algorithm. Trajectories generated with A-star can also selectively avoid the scientific FoVs.
 
 Examples of these and other features are shown below.
 
