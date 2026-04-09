@@ -1,4 +1,4 @@
-# Asterism validator (and simulator)
+# Asterism validator
 
 Given the coordinates of an asterism the program can establish if it is reachable by the LOR boards.
 
