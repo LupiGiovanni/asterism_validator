@@ -71,7 +71,7 @@ constexpr int GENERATED_DATASET_SIZE = 100;
 // Other parameters
 constexpr double EPSILON = std::numeric_limits<double>::epsilon();
 constexpr int DECIMAL_PLACES_PRINTED = 6;
-constexpr int HISTOGRAM_INTERVALS_COUNT = 15; // default = 15
+constexpr int HISTOGRAM_INTERVALS_COUNT = 10; // default = 15
 constexpr int HISTOGRAM_FONT_SIZE = 12; // default = 12
 
 // Helper functions

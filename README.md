@@ -2,7 +2,15 @@
 
 Given XY coordinates of 3 Natural Guide Stars the program can establish if they are reachable by the LOR boards.
 
-The program also simulates the movement of the LOR boards to reach the NGSs.
+Given a start asterism and a destination asterism, the program also simulates various movements of the LOR boards to reach the NGSs:
+* Linear movement
+* Safe-basic movements 
+* Outside-technical-field movements
+
+**The program detects if a collision between the boards occurs at any moment.** <br>
+**The program can also generate collision-free trajectories for the boards with A-star search algorithm. Trajectories generated with A-star can also selectively avoid the scientific FoVs.**
+
+Examples of these and other features are shown below.
 
 Libraries used are:
 * CGAL (Computational Geometry Algorithms Library)
@@ -11,8 +19,19 @@ Libraries used are:
 
 The program can be normally built with ```cmake``` and ```make```.
 
-### Example of graphical output:
-![Example of graphical output](include/boards_gif.gif)
+#### Example of linear movement:
+![](include/10.gif)
+
+#### Example of safe-basic movement:
+![](include/11.gif)
+
+#### Example of outside-technical-field movement:
+![](include/12.gif)
+
+#### Example of A* collision-free trajectories:
+![](include/6.gif)
+![](include/8.gif)
+
 
 ### Example of main:
 ```c++
@@ -28,40 +47,39 @@ int main () {
 
 ### Example of command line output:
 ```c++
-Simulation from point 170 to point 171 failed.
-
-======================================================================================
-                              Single simulation results                               
-
-> Movement type		        linear trajectory
-> Start asterism	        {156.558380, -100.301720, -23.493893, 165.580800, -230.937740, -199.302780}
-> Start valid		        true
-> Destination asterism	    {190.285700, -142.410190, -98.780200, 89.886894, 180.640180, -153.202710}
-> Destination valid	        true
+Simulation from asterism 73 to asterism 74 of the dataset failed. Detailed info below: 
+---------------------------------------------------------------------------------------------------------
+> Movement type				linear
+> Start asterism			{-161.017300, -175.675520, 26.121872, 149.281560, 53.297924, -243.279530}
+> Start valid				true
+> Destination asterism		{164.464720, -146.879780, -97.516890, 61.492350, 187.146640, -238.569890}
+> Destination valid			true
 
 > Boards cruise velocity	10.000000 mm/s
-> Movement duration		    0.450000 seconds
-> Simulation iterations		9
+> Movement duration			2.500000 s
+> Simulation iterations		50
 > Max iterations exceeded	false
-> Iteration time step		0.050000 seconds
-> Iteration distance step	0.500000 mm
+> Simulation time step		0.050000 s
 > Destination reached		false
-> Distance from dest		inf
+> Distance from dest		522.753086 mm
 > Collision detected		true
 > FoV small vignetting		false
 > FoV large vignetting		false
-======================================================================================
+---------------------------------------------------------------------------------------------------------
 
-======================================================================================
-                             Dataset simulations results                              
 
-> Movement type			    linear trajectory
-> Boards cruise velocity	10.000000 mm/s
-> Total simulations		    333
-> Successful simulations	331
-> Average duration		    26.694864 s
-======================================================================================
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                      Dataset simulations results                                       
+
+> Movement type				A star
+> Boards cruise velocity	4.000000 mm/s
+> Dataset size				3696 asterisms
+> Total simulations			3695
+> Successful simulations	3695
+> Success rate				100.000000 %
+> Avg successful duration	56.333112 s
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 ```
 
 ### Example of histogram output:
-![Example of histogram output](include/histogram_output.png)
+![](include/histogram_output.png)
