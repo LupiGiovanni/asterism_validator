@@ -1,6 +1,6 @@
-# Asterism validator
+> **WARNING!** THIS IS OLD CODE, NEW CODE IS AVAILABLE AT <https://github.com/LupiGiovanni/Pathfinder> AND AT <https://github.com/LupiGiovanni/Simulator>
 
-> **WARNING**: THIS IS OLD CODE, NEW CODE IS AVAILABLE AT <https://github.com/LupiGiovanni/Pathfinder> AND AT <https://github.com/LupiGiovanni/Simulator>
+# Asterism validator
 
 Given the coordinates of an asterism the program can establish if it's valid, i.e. if it's reachable by the LOR boards.
 
