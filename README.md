@@ -1,5 +1,7 @@
 # Asterism validator
 
+> **WARNING**: THIS IS OLD CODE, NEW CODE IS AVAILABLE AT <https://github.com/LupiGiovanni/Pathfinder> AND AT <https://github.com/LupiGiovanni/Simulator>
+
 Given the coordinates of an asterism the program can establish if it's valid, i.e. if it's reachable by the LOR boards.
 
 Given a start asterism and a destination asterism, the program simulates various movements that can be performed by the LOR boards:
